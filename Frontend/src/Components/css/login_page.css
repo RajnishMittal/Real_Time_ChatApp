@@ -1,0 +1,361 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    overflow: clip;
+}
+
+.main_background {
+    display: flex;
+    justify-content: space-between;
+    background-image: url(../../assets/background.jpg);
+    background-position: center;
+    background-size: cover;
+    min-height: 100vh;
+    width: 100vw;
+    z-index: -99;
+}
+
+@property --angle {
+    syntax: "<angle>";
+    initial-value: 0deg;
+    inherits: false;
+}
+
+.circle_wrapper {
+    position: relative;
+    width: 920px;
+    height: 720px;
+    bottom: -315px;
+    left: -305px;
+    border-radius: 1000px;
+    background-image: conic-gradient(
+        from var(--angle),
+        #081917,
+        rgb(12, 33, 31),
+        #081917,
+        black,
+        #081917
+    );
+    animation: spin 4s linear infinite;
+    z-index: 0;
+}
+
+.circle {
+    position: absolute;
+    background: radial-gradient(circle at center, #143530 0%, #081917 70%, #020807 100%);
+    width: 900px;
+    height: 700px;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    border-radius: 1000px;
+    z-index: 1;
+    box-shadow: inset 0 0 60px rgba(0, 0, 0, 0.5);
+}
+
+@keyframes spin {
+    from {
+        --angle: 0deg;
+    }
+
+    to {
+        --angle: 360deg;
+    }
+}
+
+.web_app {
+    position: absolute;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    color: #F7F8F0;
+    gap: 20px;
+    padding: 40px;
+    height: 50vh;
+    width: 50vw;
+    top: 400px;
+    left: 70px;
+}
+
+.sign_up_wrapper {
+    position: relative;
+    width: 390px;
+    height: 70vh;
+    border-radius: 30px;
+    margin: 100px 170px 0 0;
+    animation: slideUp 0.4s ease;
+}
+
+.sign_in_box {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    padding: 40px 0 40px 40px;
+    top: 50%;
+    left: 50%;
+    translate: -50% -50%;
+    background-color:rgba(12, 33, 31, 0.3);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    border-radius: 30px;
+    color: #F7F8F0;
+    width: calc(100% - 10px);
+    height: calc(100% - 10px);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(122, 170, 206, 0.2);
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.sign_in_box form {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+input {
+    width: 288px;
+    padding: 10px;
+    border-radius: 30px;
+    background: none;
+    color: #F7F8F0;
+    border: thick double rgb(12, 33, 31);
+    font-size: medium;
+}
+
+input:focus {
+    outline: none;
+    border: thick double rgb(20, 33, 31);
+}
+
+.show_pass {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 8px;
+}
+
+input[type="checkbox"] {
+    width: auto;
+    padding: 0;
+}
+
+button {
+    margin-top: 10px;
+    width: 100px;
+    padding: 5px;
+    border-radius: 30px;
+    font-size: larger;
+    border: none;
+    background-color: #7AAACE;
+    color: #355872;
+    transition: all 0.2s ease-in;
+}
+
+button:hover {
+    cursor: pointer;
+    background-color: #9CD5FF;
+    color: #355872;
+}
+
+.error {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background-color: #4B7390;
+    border: 1px solid #ff5c5c;
+    border-left: 4px solid #ff5c5c;
+    border-radius: 10px;
+    padding: 10px 16px;
+    max-width: 88%;
+    color: #ffd0d0;
+    font-size: 14px;
+    font-weight: 500;
+    box-shadow: 0 0 0 3px rgba(255, 92, 92, 0.12);
+}
+
+.error::before {
+    content: "⚠";
+    font-size: 15px;
+    color: #ff5c5c;
+    flex-shrink: 0;
+}
+
+/* ===========================
+   Tablet (<= 1024px)
+=========================== */
+
+@media (max-width: 1024px) {
+
+    .main_background {
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 30px 20px;
+        gap: 40px;
+    }
+
+    .circle_wrapper {
+        width: 650px;
+        height: 650px;
+        left: -250px;
+        bottom: -250px;
+    }
+
+    .circle {
+        width: 630px;
+        height: 630px;
+    }
+
+    .web_app {
+        position: static;
+        width: 100%;
+        height: auto;
+        text-align: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .sign_up_wrapper {
+        margin: 0;
+        width: 420px;
+        max-width: 90%;
+    }
+}
+
+/* ===========================
+   Mobile (<=768px)
+=========================== */
+
+@media (max-width:768px) {
+
+    .main_background {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: flex-start;
+        padding: 0 20px 30px;
+        min-height: 100vh;
+        overflow: hidden;
+    }
+
+    .circle_wrapper {
+        position: absolute;
+        top: -180px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 500px;
+        height: 500px;
+        z-index: 0;
+    }
+
+    .circle {
+        width: 480px;
+        height: 480px;
+    }
+
+    .web_app {
+        position: relative;
+        top: 50px;
+        left: 0;
+        width: 100%;
+        height: auto;
+        padding: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        text-align: center;
+        z-index: 2;
+    }
+
+    .web_app h1 {
+        font-size: 2.5rem !important;
+    }
+
+    .web_app h2 {
+        font-size: 1.2rem !important;
+    }
+
+    .social_media {
+        display: none;
+    }
+
+    .sign_up_wrapper {
+        margin: 230px 0 0;
+        width: 100%;
+        max-width: 380px;
+        height: auto;
+        z-index: 2;
+    }
+
+    .sign_in_box {
+        position: relative;
+        top: auto;
+        left: auto;
+        translate: none;
+        width: calc(100% - 10px);
+        height: auto;
+        padding: 30px 20px;
+    }
+
+    input {
+        width: 100%;
+    }
+
+    button {
+        width: 100%;
+    }
+
+    .error {
+        max-width: 100%;
+    }
+}
+
+/* ===========================
+   Small Phones (<=480px)
+=========================== */
+
+@media (max-width:480px) {
+
+    .circle_wrapper {
+        width: 420px;
+        height: 420px;
+        top: -160px;
+    }
+
+    .circle {
+        width: 400px;
+        height: 400px;
+    }
+
+    .web_app {
+        top: 35px;
+    }
+
+    .web_app h1 {
+        font-size: 2rem !important;
+    }
+
+    .web_app h2 {
+        font-size: 1rem !important;
+    }
+
+    .sign_up_wrapper {
+        margin-top: 180px;
+        max-width: 95%;
+    }
+}
