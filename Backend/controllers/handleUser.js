@@ -1,10 +1,10 @@
 const userModel = require("../model/userModel")
-const {setUser} = require("../service/userAuth")
+const { setUser } = require("../service/userAuth")
 
 async function handleSignUp(req, res) {
     const body = req.body
 
-    if (!body) return res.status(400).json({ error: "no data" })
+    if (!body) return res.status(400).json({ message: "no data" })
 
     try {
         const response = await userModel.create({
@@ -12,14 +12,26 @@ async function handleSignUp(req, res) {
             email: body.email,
             pass: body.pass
         })
-        return res.status(201).json({message: "User created successfully"})
+        return res.status(201).json({ message: "User created successfully" })
     }
-    catch(error){
-        console.error(error)
-        if (error.code === 11000) {
-            return res.status(409).json({ error: "Email already exists" })
+    catch (err) {
+        if (err.name === "ValidationError") {
+            return res.status(400).json({
+                message: err.message,
+            });
         }
-        return res.status(500).json({ error: "Something went wrong" })
+
+        if (err.code === 11000) {
+            if (err.keyPattern.email) {
+                return res.status(409).json({
+                    message: "Email is already registered",
+                });
+            }
+        }
+
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
     }
 }
 
@@ -33,7 +45,7 @@ async function handleLogin(req, res) {
         });
 
         if (!user) {
-            return res.status(404).json({ error: "User not found" });
+            return res.status(404).json({ message: "User not found" });
         }
 
         const token = setUser(user);
@@ -51,10 +63,15 @@ async function handleLogin(req, res) {
             needsProfile: false
         });
 
-    } catch (error) {
-        console.error(error);
+    } catch (err) {
+        if (err.name === "ValidationError") {
+            return res.status(400).json({
+                message: err.message,
+            });
+        }
+
         return res.status(500).json({
-            error: "Something went wrong"
+            message: "Internal Server Error",
         });
     }
 }

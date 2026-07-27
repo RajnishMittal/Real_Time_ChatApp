@@ -12,7 +12,8 @@ const userSchema = new mongoose.Schema({
     },
     pass:{
         required:true,
-        type:String
+        type:String,
+        minlength: [8, "Password must be at least 8 characters long"],
     },
     profilePic:{
         type:String,
@@ -20,7 +21,10 @@ const userSchema = new mongoose.Schema({
     },
     username:{
         type:String,
-        default:null
+        default:null,
+        unique:true,
+        minlength: [8, "Username must be at least 8 characters long"],
+        match: [/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores are allowed"],
     },
     dob:{
         type:Date,

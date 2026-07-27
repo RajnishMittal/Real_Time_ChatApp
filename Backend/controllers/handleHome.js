@@ -1,9 +1,12 @@
+const path = require("path");
 const userModel = require("../model/userModel")
 const msgModel = require("../model/msgModel")
 
 async function allUsers(req, res) {
     try {
-        const allUsers = await userModel.find({})
+        const allUsers = await userModel.find({
+            username: { $ne: null }
+        });
 
         if (!allUsers) {
             return res.status(404).json({ error: "No User Found" })
@@ -27,21 +30,35 @@ function getme(req, res) {
 }
 
 async function setMessages(req, res) {
-    const body = req.body
-
-    if (!body) return res.status(400).json({ error: "no data" })
-
     try {
+        const filePath = req.file
+            ? path.join("uploads", req.file.filename).replace(/\\/g, "/")
+            : undefined;
+
         const response = await msgModel.create({
-            sender: body.sender,
-            to: body.to,
-            text: body.text
-        })
-        return res.status(201).json({ message: "Message sent successfully", data: response })
-    }
-    catch (error) {
-        console.error(error)
-        return res.status(500).json({ error: "Something went wrong" })
+            sender: req.body.sender,
+            to: req.body.to,
+            text: req.body.text,
+            file: req.file
+                ? {
+                    filename: req.file.filename,
+                    path: filePath,
+                    mimetype: req.file.mimetype,
+                    size: req.file.size,
+                }
+                : undefined,
+        });
+
+        return res.status(201).json({
+            message: "Message sent successfully",
+            data: response,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            error: "Something went wrong",
+        });
     }
 }
 

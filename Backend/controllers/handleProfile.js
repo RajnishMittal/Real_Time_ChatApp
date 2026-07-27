@@ -25,7 +25,23 @@ async function setProfile(req, res) {
 
         res.status(200).json(response);
     } catch (err) {
-        res.status(500).json({ error: err.message });
+        if (err.name === "ValidationError") {
+            return res.status(400).json({
+                message: err.message,
+            });
+        }
+
+        if (err.code === 11000) {
+            return res.status(409).json({
+                message: "Username already exists",
+            });
+        }
+
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Internal Server Error",
+        });
     }
 }
 

@@ -1,6 +1,9 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import './css/login_page.css'
+import insta_image from "../assets/icons/instagram.png"
+import github_image from "../assets/icons/github.png"
+import linkdin_image from "../assets/icons/linkedin.png"
 
 function LoginPage() {
   const [error, setError] = React.useState(null)
@@ -29,13 +32,14 @@ function LoginPage() {
       e.target.reset()
 
       if (!response.ok) {
-        setError(result.error);
+        setError(result.message);
         return;
       }
-
-      setError(null);
-      navigate(result.needsProfile ? "/profile" : "/linksync");
-
+      else{
+        setError(null);
+        navigate(result.needsProfile ? "/profile" : "/linksync");
+      }
+      
     } catch (error) {
       console.error(error);
       setError("Unable to connect to the server.");
@@ -54,9 +58,9 @@ function LoginPage() {
         <h2 style={{ fontSize: 30 }}>GET CONNECTED</h2>
 
         <div className="social_media">
-          <img src={null} alt="linkedin" />
-          <img src={null} alt="github" />
-          <img src={null} alt="instagram" />
+          <img style={{ width: "40px", height: "40px" }} src={linkdin_image} alt="linkedin" />
+          <img style={{ width: "40px", height: "40px" }} src={github_image} alt="github" />
+          <img style={{ width: "40px", height: "40px" }} src={insta_image} alt="instagram" />
         </div>
       </div>
 

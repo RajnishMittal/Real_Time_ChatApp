@@ -16,6 +16,7 @@ function Profile() {
 
     const [profile, setProfile] = useState(initialProfile);
     const [loggedIn, setLoggedIn] = React.useState(null);
+    const [error, setError] = React.useState(null)
     const [saved, setSaved] = useState(false);
 
     const handleChange = (e) => {
@@ -78,7 +79,7 @@ function Profile() {
             !profile.country ||
             !profile.state
         ) {
-            alert("Please fill all fields");
+            setError("Please fill all fields");
             return;
         }
 
@@ -93,12 +94,16 @@ function Profile() {
             })
 
             const result = await response.json();
+
             if (!response.ok) {
-                return;
+                setError(result.message);
             }
-            navigate("/linksync");
+            else{
+                setError(null)
+                navigate("/linksync");
+            }
         }
-        catch(error){
+        catch (error) {
             console.log(error)
         }
     };
@@ -149,53 +154,64 @@ function Profile() {
                         </label>
                     </div>
 
-                    <div className="form_group">
-                        <label>Username</label>
-                        <input
-                            type="text"
-                            name="username"
-                            placeholder="Enter your username"
-                            maxLength={30}
-                            value={profile.username}
-                            onChange={handleChange}
-                            autoComplete="off"
-                        />
+                    <div className="input_field">
+
+                        <div className="form_group">
+                            <label>Username</label>
+                            <input
+                                type="text"
+                                name="username"
+                                placeholder="username (min. 8 characters)"
+                                maxLength={30}
+                                value={profile.username}
+                                onChange={handleChange}
+                                autoComplete="off"
+                            />
+                        </div>
+
+                        <div className="form_group">
+                            <label>Date of Birth</label>
+                            <input
+                                type="date"
+                                name="dob"
+                                value={profile.dob}
+                                onChange={handleChange}
+                                autoComplete="off"
+                            />
+
+                        </div>
+
+                        <div className="form_group">
+                            <label>Country</label>
+                            <input
+                                type="text"
+                                name="country"
+                                placeholder="Enter your country"
+                                value={profile.country}
+                                onChange={handleChange}
+                                autoComplete="off"
+                            />
+                        </div>
+
+                        <div className="form_group">
+                            <label>State / Province</label>
+                            <input
+                                type="text"
+                                name="state"
+                                placeholder="Enter your state"
+                                value={profile.state}
+                                onChange={handleChange}
+                                autoComplete="off"
+                            />
+                        </div>
                     </div>
 
-                    <div className="form_group">
-                        <label>Date of Birth</label>
-                        <input
-                            type="date"
-                            name="dob"
-                            value={profile.dob}
-                            onChange={handleChange}
-                            autoComplete="off"
-                        />
-
-                    </div>
-
-                    <div className="form_group">
-                        <label>Country</label>
-                        <input
-                            type="text"
-                            name="country"
-                            placeholder="Enter your country"
-                            value={profile.country}
-                            onChange={handleChange}
-                            autoComplete="off"
-                        />
-                    </div>
-
-                    <div className="form_group">
-                        <label>State / Province</label>
-                        <input
-                            type="text"
-                            name="state"
-                            placeholder="Enter your state"
-                            value={profile.state}
-                            onChange={handleChange}
-                            autoComplete="off"
-                        />
+                    <div style={{ width: "100%", display:"flex", justifyContent:"center" }} >
+                        {error ? <div className="error">
+                            <p style={{ color: "white"}} >
+                                {error}
+                            </p>
+                        </div> : null}
                     </div>
 
                     <div className="button_group">
