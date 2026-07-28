@@ -1,10 +1,11 @@
 import React from 'react'
 
-function Sidebar({ activeContactId }) {
+function Sidebar({ activeContactId, loggedIn }) {
+
     return (
 
         <div className={`sidebar ${activeContactId ? "sidebar_collapsed" : ""}`}>
-            <h1>1</h1>
+            {loggedIn?.name || "Loading..."}
         </div>
         
     )

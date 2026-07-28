@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import io from "socket.io-client"
 import sendIcon from "../../assets/icons/send.png";
 import fileIcon from "../../assets/icons/file.png";
 
@@ -10,7 +11,27 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
     const [selectedFile, setSelectedFile] = React.useState(null)
     const messagesRef = React.useRef(null);
     const fileInputRef = React.useRef(null);
+    const socketRef = React.useRef(null);
     const navigate = useNavigate();
+
+    if (!socketRef.current) socketRef.current = io("http://localhost:8000");
+    const socket = socketRef.current;
+
+    React.useEffect(() => {
+        if (loggedIn?._id) {
+            socket.emit("join", loggedIn._id);
+        }
+    }, [loggedIn]);
+
+    React.useEffect(() => {
+        function onReceive(msg) {
+            if (msg.sender === activeContactId || msg.to === activeContactId) {
+                setMess(prev => [...prev, msg]);
+            }
+        }
+        socket.on("receive_message", onReceive);
+        return () => socket.off("receive_message", onReceive);
+    }, [activeContactId]);
 
     React.useEffect(() => {
         if (!activeContactId) return;
@@ -80,7 +101,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
             setSelectedFile(null);
             if (fileInputRef.current) fileInputRef.current.value = "";
             e.target.reset();
-
+            socket.emit("send_message", { to: activeContact._id, message: result.data });
             setMess(prev => [...prev, result.data]);
 
         } catch (error) {
@@ -104,7 +125,6 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
         setSelectedFile(e.target.files[0] || null);
     }
 
-    // Renders whatever file is attached to an already-sent message
     function renderMessageFile(file) {
         if (!file || !file.path) return null;
 
@@ -123,7 +143,6 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
             );
         }
 
-        // PDFs and anything else: show as a download link
         return (
             <a href={url} target="_blank" rel="noopener noreferrer" className="message-file">
                 {file.filename}
@@ -234,7 +253,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                                 className="file-input-hidden"
                             />
                             <label htmlFor="file-upload" className="file-upload-label">
-                                <img style={{width: "20px", height: "20px"}} src={fileIcon} alt="file" />
+                                <img style={{ width: "20px", height: "20px" }} src={fileIcon} alt="file" />
                             </label>
 
                             <button

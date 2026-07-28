@@ -86,7 +86,7 @@ function MainWindow() {
 
     <div className="mainWindow">
 
-      <Sidebar activeContactId={activeContactId} />
+      <Sidebar activeContactId={activeContactId} loggedIn={loggedIn}  />
 
       <ContactsList activeContactId={activeContactId} users={users} setActiveContactId={setActiveContactId} />
 

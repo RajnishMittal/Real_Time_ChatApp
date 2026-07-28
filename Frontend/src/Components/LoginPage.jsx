@@ -36,6 +36,7 @@ function LoginPage() {
         return;
       }
       else{
+        
         setError(null);
         navigate(result.needsProfile ? "/profile" : "/linksync");
       }
