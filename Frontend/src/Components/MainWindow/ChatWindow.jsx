@@ -1,4 +1,5 @@
 import React from 'react'
+import "../css/Mainwindow/ChatWindow.css"
 import { useNavigate } from 'react-router-dom'
 import io from "socket.io-client"
 import sendIcon from "../../assets/icons/send.png";
@@ -115,6 +116,10 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
             messagesRef.current.scrollTop =
                 messagesRef.current.scrollHeight;
         }
+        if (fileInputRef.current) {
+            fileInputRef.current.scrollTop =
+                fileInputRef.current.scrollHeight;
+        }
     }, [mess]);
 
     function goBack() {
@@ -128,10 +133,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
     function renderMessageFile(file) {
         if (!file || !file.path) return null;
 
-        const normalizedPath = file.path.replace(/\\/g, "/");
-        const url = normalizedPath.startsWith("/")
-            ? normalizedPath
-            : `/${normalizedPath}`;
+        const url = `http://localhost:8000/${file.path.replace(/\\/g, "/")}`;
 
         if (file.mimetype?.startsWith("image/")) {
             return (
@@ -162,7 +164,14 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                         <button className="back_btn" onClick={goBack} aria-label="Back to contacts">
                             ←
                         </button>
-                        <img src={activeContact.profilePic} />
+                        <img
+                            src={
+                                activeContact.profilePic.startsWith("http")
+                                    ? activeContact.profilePic
+                                    : `http://localhost:8000/${activeContact.profilePic}`
+                            }
+                            alt={activeContact.name}
+                        />
 
                         <h2 className="person_name">
                             {activeContact.name} <br />

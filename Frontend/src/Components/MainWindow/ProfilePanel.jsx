@@ -1,4 +1,5 @@
 import React from 'react'
+import "../css/Mainwindow/ProfilePanel.css"
 
 function getAge(dob) {
     if (!dob) return null;
@@ -17,7 +18,14 @@ function ProfilePanel({ activeContact }) {
         <div className="profile">
 
             <div className="profile_avatar_wrap">
-                <img src={activeContact?.profilePic} alt="" />
+                <img
+                    src={
+                        activeContact?.profilePic.startsWith("http")
+                            ? activeContact.profilePic
+                            : `http://localhost:8000/${activeContact?.profilePic}`
+                    }
+                    alt={activeContact?.name}
+                />
                 <span className="profile_status_dot" />
             </div>
 

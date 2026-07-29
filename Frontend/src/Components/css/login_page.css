@@ -78,6 +78,11 @@
     left: 70px;
 }
 
+.web_app h2 {
+    min-height: 38px;
+    line-height: 38px;
+}
+
 .social_media{
     display: flex;
     margin-top: 10px;
@@ -101,7 +106,7 @@
 .sign_up_wrapper {
     position: relative;
     width: 390px;
-    height: 70vh;
+    max-height: 76vh;
     border-radius: 30px;
     margin: 100px 170px 0 0;
     animation: slideUp 0.4s ease;
@@ -214,6 +219,33 @@ button:hover {
     flex-shrink: 0;
 }
 
+.dash {
+    display: inline-block;
+    background-color: white;
+    width: 2px;
+    height: 1em;
+    margin-left: 4px;
+    vertical-align: middle;
+    animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink {
+    50% {
+        opacity: 0;
+    }
+}
+
+.switch_auth {
+    color: #9CD5FF;
+    font-size: 14px;
+    margin-top: 10px;
+    text-decoration: none;
+}
+
+.switch_auth:hover {
+    text-decoration: underline;
+}
+
 /* ===========================
    Tablet (<= 1024px)
 =========================== */
@@ -255,6 +287,8 @@ button:hover {
         width: 420px;
         max-width: 90%;
     }
+
+    
 }
 
 /* ===========================
@@ -308,6 +342,8 @@ button:hover {
 
     .web_app h2 {
         font-size: 1.2rem !important;
+        min-height: 1.6em;
+        line-height: 1.6em;
     }
 
     .social_media {
@@ -372,6 +408,8 @@ button:hover {
 
     .web_app h2 {
         font-size: 1rem !important;
+        min-height: 1.4em;
+        line-height: 1.4em;
     }
 
     .sign_up_wrapper {

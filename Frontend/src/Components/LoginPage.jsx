@@ -1,15 +1,75 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import './css/login_page.css'
 import insta_image from "../assets/icons/instagram.png"
 import github_image from "../assets/icons/github.png"
 import linkdin_image from "../assets/icons/linkedin.png"
 
+const TYPED_WORDS = ["GET CONNECTED", "CHAT INSTANTLY", "STAY IN TOUCH", "MESSAGE ANYONE"]
+
+function rand(min, max) {
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 function LoginPage() {
   const [error, setError] = React.useState(null)
   const [showPass, setShowPass] = React.useState(false);
+  const [typed, setTyped] = React.useState("");
+  const [wordIdx, setWordIdx] = React.useState(0);
+  const [deleting, setDeleting] = React.useState(false);
+  const [phase, setPhase] = React.useState("typing");
 
   const navigate = useNavigate()
+
+  React.useEffect(() => {
+    const word = TYPED_WORDS[wordIdx % TYPED_WORDS.length];
+    let timeout;
+
+    if (phase === "typing") {
+      if (typed.length < word.length) {
+        const shouldTypo = Math.random() < 0.08 && typed.length < word.length - 1;
+
+        timeout = setTimeout(() => {
+          if (shouldTypo) {
+            const wrongChar = String.fromCharCode(65 + rand(0, 25));
+            setTyped(typed + wrongChar);
+            setPhase("typo");
+          } else {
+            setTyped(word.slice(0, typed.length + 1));
+          }
+        }, rand(60, 140));
+      } else {
+        // word fully typed — hold it visible before deleting starts
+        timeout = setTimeout(() => setPhase("deleting"), 1800);
+      }
+    }
+
+    else if (phase === "typo") {
+      timeout = setTimeout(() => setPhase("correcting"), rand(200, 400));
+    }
+
+    else if (phase === "correcting") {
+      timeout = setTimeout(() => {
+        setTyped(typed.slice(0, -1));
+        setPhase("typing");
+      }, rand(80, 150));
+    }
+
+    else if (phase === "deleting") {
+      if (typed.length > 0) {
+        timeout = setTimeout(() => {
+          setTyped(word.slice(0, typed.length - 1));
+        }, rand(30, 60));
+      } else {
+        timeout = setTimeout(() => {
+          setWordIdx((wordIdx + 1) % TYPED_WORDS.length);
+          setPhase("typing");
+        }, 400);
+      }
+    }
+
+    return () => clearTimeout(timeout);
+  }, [typed, phase, wordIdx]);
 
   async function handleUserCred(e) {
     e.preventDefault();
@@ -35,12 +95,12 @@ function LoginPage() {
         setError(result.message);
         return;
       }
-      else{
-        
+      else {
+
         setError(null);
         navigate(result.needsProfile ? "/profile" : "/linksync");
       }
-      
+
     } catch (error) {
       console.error(error);
       setError("Unable to connect to the server.");
@@ -56,7 +116,9 @@ function LoginPage() {
 
       <div className="web_app">
         <h1 style={{ fontSize: 50 }}>LinkSync</h1>
-        <h2 style={{ fontSize: 30 }}>GET CONNECTED</h2>
+        <h2 style={{ fontSize: 30 }}>
+          <span className="typed">{typed}</span>
+        </h2>
 
         <div className="social_media">
           <img style={{ width: "40px", height: "40px" }} src={linkdin_image} alt="linkedin" />
@@ -93,6 +155,8 @@ function LoginPage() {
               />
               <label htmlFor="showPass">Show Password</label>
             </div>
+
+            <Link to="/signup" className="switch_auth" >Don't have an account? Sign Up</Link>
 
             {error ? <div className="error">
               <p style={{ color: "white" }} >

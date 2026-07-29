@@ -1,6 +1,7 @@
 import React from 'react'
+import "../css/Mainwindow/ContactList.css"
 
-function ContactsList({setActiveContactId, activeContactId, users }) {
+function ContactsList({ setActiveContactId, activeContactId, users }) {
 
     function show_chats(id) {
         return setActiveContactId(id);
@@ -25,7 +26,14 @@ function ContactsList({setActiveContactId, activeContactId, users }) {
                         onClick={() => show_chats(user._id)}
                     >
 
-                        <img src={user.profilePic} />
+                        <img
+                            src={
+                                user.profilePic.startsWith("http")
+                                    ? user.profilePic
+                                    : `http://localhost:8000/${user.profilePic}`
+                            }
+                            alt={user.name}
+                        />
 
                         <h2 className="person_name">
                             {user.name}<br />

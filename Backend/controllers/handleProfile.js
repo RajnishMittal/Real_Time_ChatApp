@@ -1,9 +1,13 @@
 const userModel = require("../model/userModel")
+const path = require("path")
 
 async function setProfile(req, res) {
     try {
         const body = req.body;
         const id = req.params.id;
+        const imagePath = req.file
+            ? path.join("userImage", req.file.filename).replace(/\\/g, "/")
+            : undefined;
 
         const response = await userModel.findByIdAndUpdate(
             id,
@@ -12,9 +16,10 @@ async function setProfile(req, res) {
                 dob: body.dob,
                 country: body.country,
                 state: body.state,
+                profilePic: imagePath? imagePath: null
             },
             {
-                new: "after",
+                new: true,
                 runValidators: true,
             }
         );

@@ -15,8 +15,8 @@ function Profile() {
     };
 
     const [profile, setProfile] = useState(initialProfile);
-    const [loggedIn, setLoggedIn] = React.useState(null);
-    const [error, setError] = React.useState(null)
+    const [loggedIn, setLoggedIn] = useState(null);
+    const [error, setError] = useState(null)
     const [saved, setSaved] = useState(false);
 
     const handleChange = (e) => {
@@ -84,34 +84,37 @@ function Profile() {
         }
 
         try {
+            const formData = new FormData();
+
+            formData.append("image", profile.image);
+            formData.append("username", profile.username);
+            formData.append("dob", profile.dob);
+            formData.append("country", profile.country);
+            formData.append("state", profile.state);
+
             const response = await fetch(`/api/profile/${loggedIn._id}`, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
                 credentials: "include",
-                body: JSON.stringify(profile),
-            })
+                body: formData,
+            });
 
             const result = await response.json();
 
             if (!response.ok) {
                 setError(result.message);
-            }
-            else{
-                setError(null)
+            } else {
+                setError(null);
                 navigate("/linksync");
             }
-        }
-        catch (error) {
-            console.log(error)
+        } catch (error) {
+            console.error(error);
+            setError("Something went wrong");
         }
     };
 
-    const handleReset = () => {
-        setProfile(initialProfile);
-        setSaved(false);
-    };
+    const handleReset = (e) => {
+        e.target.reset()
+    }
 
 
     return (
@@ -206,9 +209,9 @@ function Profile() {
                         </div>
                     </div>
 
-                    <div style={{ width: "100%", display:"flex", justifyContent:"center" }} >
+                    <div style={{ width: "100%", display: "flex", justifyContent: "center" }} >
                         {error ? <div className="error">
-                            <p style={{ color: "white"}} >
+                            <p style={{ color: "white" }} >
                                 {error}
                             </p>
                         </div> : null}
