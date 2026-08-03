@@ -5,26 +5,76 @@ import io from "socket.io-client"
 import sendIcon from "../../assets/icons/send.png";
 import fileIcon from "../../assets/icons/file.png";
 
-function ChatWindow({ setActiveContactId, activeContactId, activeContact, loggedIn }) {
+function ChatWindow({ setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup }) {
 
     const [error, setError] = React.useState(null);
     const [mess, setMess] = React.useState([]);
     const [selectedFile, setSelectedFile] = React.useState(null)
+    const [socket, setSocket] = React.useState(null);
     const messagesRef = React.useRef(null);
     const fileInputRef = React.useRef(null);
     const socketRef = React.useRef(null);
     const navigate = useNavigate();
 
-    if (!socketRef.current) socketRef.current = io("http://localhost:8000");
-    const socket = socketRef.current;
+    React.useEffect(() => {
+        const s = io("http://localhost:8000");
+        setSocket(s);
+        return () => s.disconnect();
+    }, []);
 
     React.useEffect(() => {
-        if (loggedIn?._id) {
+        if (loggedIn?._id && socket) {
             socket.emit("join", loggedIn._id);
         }
-    }, [loggedIn]);
+    }, [loggedIn, socket]);
 
     React.useEffect(() => {
+        if (!socket || !isGroup || !activeContactId) return;
+        socket.emit("join_group_room", activeContactId);
+    }, [activeContactId, isGroup, socket]);
+
+    React.useEffect(() => {
+        if (!users || users.length === 0) return;
+
+        async function fetchAllStatuses() {
+            try {
+                const results = await Promise.all(
+                    users.map(u =>
+                        fetch(`/api/home/status/${u._id}`, { credentials: "include" })
+                            .then(r => r.json())
+                            .catch(() => null)
+                    )
+                );
+
+                setOnlineUsers(prev => {
+                    const updated = { ...prev };
+                    results.forEach(d => {
+                        if (d && d._id) updated[d._id] = d.status;
+                    });
+                    return updated;
+                });
+            } catch (err) {
+                console.error(err);
+            }
+        }
+
+        fetchAllStatuses();
+    }, [users]);
+
+    React.useEffect(() => {
+        if (!socket) return;
+        function onPresence({ userId, online }) {
+            setOnlineUsers(prev => ({
+                ...prev,
+                [userId]: online
+            }));
+        }
+        socket.on("online", onPresence);
+        return () => socket.off("online", onPresence);
+    }, [socket]);
+
+    React.useEffect(() => {
+        if (!socket) return;
         function onReceive(msg) {
             if (msg.sender === activeContactId || msg.to === activeContactId) {
                 setMess(prev => [...prev, msg]);
@@ -32,16 +82,29 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
         }
         socket.on("receive_message", onReceive);
         return () => socket.off("receive_message", onReceive);
-    }, [activeContactId]);
+    }, [activeContactId, socket]);
+
+    React.useEffect(() => {
+        if (!socket) return;
+        function onReceiveGroup(msg) {
+            if (isGroup && msg.group === activeContactId) {
+                setMess(prev => [...prev, msg]);
+            }
+        }
+        socket.on("receive_group_message", onReceiveGroup);
+        return () => socket.off("receive_group_message", onReceiveGroup);
+    }, [activeContactId, isGroup, socket]);
 
     React.useEffect(() => {
         if (!activeContactId) return;
 
         async function fetchMessages() {
             try {
-                const response = await fetch(`/api/home/messages/${activeContactId}`, {
-                    credentials: "include",
-                });
+                const url = isGroup
+                    ? `/api/home/group/messages/${activeContactId}`
+                    : `/api/home/messages/${activeContactId}`;
+
+                const response = await fetch(url, { credentials: "include" });
 
                 if (response.status === 401) {
                     navigate("/");
@@ -54,6 +117,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                     return;
                 }
 
+                setError(null)
                 const result = await response.json();
                 setMess(result);
 
@@ -65,7 +129,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
 
         fetchMessages();
 
-    }, [activeContactId, navigate]);
+    }, [activeContactId, isGroup, navigate]);
 
     async function handleSend(e) {
         e.preventDefault()
@@ -77,7 +141,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
         const formData = new FormData();
 
         formData.append("sender", loggedIn._id);
-        formData.append("to", activeContact._id);
+        { isGroup ? formData.append("group", activeContact._id) : formData.append("to", activeContact._id); }
         formData.append("text", text_message);
 
         if (selectedFile) {
@@ -85,7 +149,10 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
         }
 
         try {
-            const response = await fetch("/api/home/messages", {
+            const url = isGroup
+                ? `/api/home/group/messages`
+                : `/api/home/messages`;
+            const response = await fetch(url, {
                 method: "POST",
                 credentials: "include",
                 body: formData,
@@ -102,7 +169,11 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
             setSelectedFile(null);
             if (fileInputRef.current) fileInputRef.current.value = "";
             e.target.reset();
-            socket.emit("send_message", { to: activeContact._id, message: result.data });
+            if (isGroup) {
+                socket.emit("send_group_message", { group: activeContact._id, message: result.data });
+            } else {
+                socket.emit("send_message", { to: activeContact._id, message: result.data });
+            }
             setMess(prev => [...prev, result.data]);
 
         } catch (error) {
@@ -130,6 +201,17 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
         setSelectedFile(e.target.files[0] || null);
     }
 
+    const joiningGroup = async () => {
+        const grp_id = activeContactId
+
+        const response = await fetch(`/api/group/addUser/${grp_id}`, {
+            credentials: "include",
+            method: "post"
+        })
+
+        if (response.ok) setGroupJoin(false)
+    }
+
     function renderMessageFile(file) {
         if (!file || !file.path) return null;
 
@@ -152,62 +234,146 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
         );
     }
 
+    const colors = [
+        "#ef4444", // Red
+        "#f59e0b", // Orange
+        "#22c55e", // Green
+        "#06b6d4", // Cyan
+        "#3b82f6", // Blue
+        "#8b5cf6", // Purple
+        "#ec4899", // Pink
+    ];
+
+    const getUserColor = (id) => {
+        let hash = 0;
+        for (let i = 0; i < id.length; i++) {
+            hash += id.charCodeAt(i);
+        }
+        return colors[hash % colors.length];
+    };
+
     return (
         <div className="chats">
-
             {activeContact ? (
-
                 <>
-
                     <div className="contact_nav">
-
-                        <button className="back_btn" onClick={goBack} aria-label="Back to contacts">
+                        {!isGroup ? <> <button className="back_btn" onClick={goBack} aria-label="Back to contacts">
                             ←
                         </button>
-                        <img
-                            src={
-                                activeContact.profilePic.startsWith("http")
-                                    ? activeContact.profilePic
-                                    : `http://localhost:8000/${activeContact.profilePic}`
-                            }
-                            alt={activeContact.name}
-                        />
+                            <img
+                                src={
+                                    activeContact.profilePic.startsWith("http")
+                                        ? activeContact.profilePic
+                                        : `http://localhost:8000/${activeContact.profilePic}`
+                                }
+                                alt={activeContact.name}
+                            />
 
-                        <h2 className="person_name">
-                            {activeContact.name} <br />
-                            <p
-                                style={{
-                                    fontSize: "0.85rem",
-                                    color: "#888",
-                                    margin: "2px 0 0",
-                                }}
-                            >
-                                @{activeContact.username}
-                            </p>
-                        </h2>
+                            <h2 className="person_name">
+                                <span className="name_row">
+                                    {activeContact.name}
+                                    {onlineUsers?.[activeContact._id] && (
+                                        <span className="online_dot"></span>
+                                    )}
+                                </span>
 
+                                <p
+                                    style={{
+                                        fontSize: "0.85rem",
+                                        color: "#888",
+                                        margin: "2px 0 0",
+                                    }}
+                                >
+                                    @{activeContact.username}
+                                </p>
+                            </h2>
+                        </>
+                            : <>  <button className="back_btn" onClick={goBack} aria-label="Back to contacts">
+                                ←
+                            </button>
+                                <img
+                                    src={
+                                        activeContact.grpPic.startsWith("http")
+                                            ? activeContact.grpPic
+                                            : `http://localhost:8000/${activeContact.grpPic}`
+                                    }
+                                    alt=""
+                                />
+
+                                <h2 className="person_name">
+                                    <span className="name_row">
+                                        {activeContact.grpName}
+                                    </span>
+                                </h2>
+                            </>}
                     </div>
 
                     <div
                         className="messages"
                         ref={messagesRef}
                     >
+                        {!isGroup ? <>
+                            {mess.map(msg => (
+                                <div
+                                    key={msg?._id ?? msg.id}
+                                    className={msg.sender === loggedIn?._id ? "me" : "them"}
+                                >
+                                    {renderMessageFile(msg.file)}
+                                    {msg?.text && <p>{msg?.text}</p>}
+                                    <p>
+                                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                    </p>
+                                </div>
+                            ))}</> : <>
 
-                        {mess.map(msg => (
-                            <div
-                                key={msg._id ?? msg.id}
-                                className={msg.sender === loggedIn?._id ? "me" : "them"}
-                            >
-                                {renderMessageFile(msg.file)}
-                                {msg.text && <p>{msg.text}</p>}
-                                <p>
-                                    {new Date(msg.createdAt).toLocaleTimeString([], {
-                                        hour: "2-digit",
-                                        minute: "2-digit",
-                                    })}
-                                </p>
-                            </div>
-                        ))}
+                            {mess.map(msg => (
+
+                                <div
+                                    key={msg._id ?? msg.id}
+                                    className={(msg.sender?._id ?? msg.sender) === loggedIn?._id ? "me" : "them"}
+                                >
+                                    <p
+                                        style={{
+                                            fontSize: "0.75rem",
+                                            color: getUserColor(msg?.sender?._id || msg?.sender?.username || ""),
+                                            margin: "2px 0 6px",
+                                            fontWeight: "500",
+                                            fontStyle: "italic"
+                                        }}
+                                    >
+                                        <img
+                                            style={{
+                                                width: "20px",
+                                                height: "20px",
+                                                borderRadius: "50%",
+                                                objectFit: "cover",
+                                                marginRight: "6px",
+                                                verticalAlign: "middle",
+                                                border: "1px solid rgba(255,255,255,0.2)"
+                                            }}
+                                            src={
+                                                msg?.sender?.profilePic?.startsWith("http")
+                                                    ? msg.sender.profilePic
+                                                    : `http://localhost:8000/${msg.sender.profilePic}`
+                                            }
+                                            alt={activeContact.name}
+                                        />
+                                        ~{msg.sender.name} @{msg.sender.username}
+                                    </p>
+                                    {renderMessageFile(msg.file)}
+                                    {msg?.text && <p>{msg?.text}</p>}
+                                    <p>
+                                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                                            hour: "2-digit",
+                                            minute: "2-digit",
+                                        })}
+                                    </p>
+                                </div>
+
+                            ))}</>}
 
                     </div>
 
@@ -239,45 +405,49 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                             </button>
                         </div>
                     )}
+                    {!isGroup || joinGroup ?
+                        <form action="" onSubmit={handleSend}>
+                            <div className="chat_text">
 
-                    <form action="" onSubmit={handleSend}>
-                        <div className="chat_text">
+                                <input
+                                    type="text"
+                                    name="msg"
+                                    autoComplete="off"
+                                    style={{
+                                        width: "80%",
+                                        fontSize: "larger",
+                                    }}
+                                />
 
-                            <input
-                                type="text"
-                                name="msg"
-                                autoComplete="off"
-                                style={{
-                                    width: "80%",
-                                    fontSize: "larger",
-                                }}
-                            />
+                                <input
+                                    type="file"
+                                    name="file"
+                                    ref={fileInputRef}
+                                    onChange={handleChange}
+                                    id="file-upload"
+                                    className="file-input-hidden"
+                                />
+                                <label htmlFor="file-upload" className="file-upload-label">
+                                    <img style={{ width: "20px", height: "20px" }} src={fileIcon} alt="file" />
+                                </label>
 
-                            <input
-                                type="file"
-                                name="file"
-                                ref={fileInputRef}
-                                onChange={handleChange}
-                                id="file-upload"
-                                className="file-input-hidden"
-                            />
-                            <label htmlFor="file-upload" className="file-upload-label">
-                                <img style={{ width: "20px", height: "20px" }} src={fileIcon} alt="file" />
-                            </label>
+                                <button
+                                    style={{
+                                        width: "50px",
+                                        height: "50px",
+                                        marginBottom: "10px"
+                                    }}
+                                    type="submit"
+                                >
+                                    <img src={sendIcon} alt="send" />
+                                </button>
 
-                            <button
-                                style={{
-                                    width: "50px",
-                                    height: "50px",
-                                    marginBottom: "10px"
-                                }}
-                                type="submit"
-                            >
-                                <img src={sendIcon} alt="send" />
-                            </button>
+                            </div>
+                        </form>
 
-                        </div>
-                    </form>
+                        : <div className="join_chat"> <button onClick={joiningGroup} >Join Group</button> </div>
+
+                    }
                 </>
 
             ) : (

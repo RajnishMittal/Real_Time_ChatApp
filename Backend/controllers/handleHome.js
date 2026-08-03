@@ -19,14 +19,22 @@ async function allUsers(req, res) {
     }
 }
 
-function getme(req, res) {
-    const userr = req.user
+async function getme(req, res) {
+    const user_id = req.user._id
 
-    if (!userr) {
-        return res.status(404).json({ error: "User not found" })
+    try {
+        const userr = await userModel.findOne({
+            _id: user_id
+        })
+        if (!userr) {
+            return res.status(404).json({ error: "User not found" })
+        }
+        return res.status(200).json(userr)
     }
-
-    return res.status(200).json(userr)
+    catch (error) {
+        console.log(error)
+        return res.status(500).json({ error: "Something went wrong" })
+    }
 }
 
 async function setMessages(req, res) {
@@ -62,6 +70,41 @@ async function setMessages(req, res) {
     }
 }
 
+async function setGroupMessages(req, res) {
+    try {
+        const filePath = req.file
+            ? path.join("uploads", req.file.filename).replace(/\\/g, "/")
+            : undefined;
+
+        const response = await msgModel.create({
+            sender: req.body.sender,
+            text: req.body.text,
+            group: req.body.group,
+            file: req.file
+                ? {
+                    filename: req.file.filename,
+                    path: filePath,
+                    mimetype: req.file.mimetype,
+                    size: req.file.size,
+                }
+                : undefined,
+        });
+
+        await response.populate("sender", "name username profilePic");
+
+        return res.status(201).json({
+            message: "Message sent successfully",
+            data: response,
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            error: "Something went wrong",
+        });
+    }
+}
+
 async function getMessages(req, res) {
     const sender_id = req.user?._id || req.user
     const to_id = req.params.id
@@ -82,9 +125,53 @@ async function getMessages(req, res) {
     }
 }
 
+async function getGroupMessages(req, res) {
+    const group_id = req.params.id
+
+    try {
+        const body = await msgModel
+            .find({ group: group_id })
+            .sort({ createdAt: 1 })
+            .populate("sender", "name username profilePic")
+
+        return res.status(200).json(body)
+    }
+    catch (error) {
+        console.error(error)
+        return res.status(500).json({ error: "Something went wrong" })
+    }
+}
+
+async function getAnalytics(req, res) {
+    const user_id = req.user._id;
+
+    try {
+        const msg_sent = await msgModel.countDocuments({
+            sender: user_id,
+        });
+
+        const msg_received = await msgModel.countDocuments({
+            to: user_id,
+        });
+
+        return res.status(200).json({
+            msg_sent,
+            msg_received,
+        });
+
+    } catch (err) {
+        res.status(500).json({
+            message: err.message,
+        });
+    }
+}
+
 module.exports = {
     allUsers,
     getme,
     setMessages,
-    getMessages
+    setGroupMessages,
+    getMessages,
+    getGroupMessages,
+    getAnalytics
 }

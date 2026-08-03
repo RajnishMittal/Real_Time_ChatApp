@@ -22,6 +22,33 @@
     border-radius: 50%;
 }
 
+.name_row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.online_dot {
+    width: 10px;
+    height: 10px;
+    background-color: #22c55e;
+    border-radius: 50%;
+    display: inline-block;
+    animation: smooth-blink 1s linear infinite;
+}
+
+@keyframes smooth-blink {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0;
+    }
+}
+
 .back_btn {
     display: none;
     background: none;
@@ -266,6 +293,17 @@
 
 .chat_text button:active {
     transform: scale(0.94);
+}
+
+.join_chat{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+}
+
+.join_chat button{
+    width: 100%;
+    border-radius: 0;
 }
 
 @media (max-width: 700px) {

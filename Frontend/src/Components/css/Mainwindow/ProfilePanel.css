@@ -85,6 +85,49 @@
     color: var(--light);
     font-weight: 500;
 }
+.allContacts{
+    margin-top: 30px;
+    width: 100%;
+}
+
+.contact_tab {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.contact_tab:hover {
+    background-color: var(--panel-hover);
+}
+
+.contact_tab.active,
+.contact_tab:active {
+    background-color: var(--accent);
+}
+
+.contact_tab img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    flex-shrink: 0;
+    border: 2px solid var(--dark);
+    background: linear-gradient(135deg, var(--accent), var(--panel-hover));
+}
+
+.person_name {
+    margin: 0;
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--light);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
 
 @media (max-width: 900px) {
     .profile {
