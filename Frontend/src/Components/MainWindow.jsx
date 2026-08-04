@@ -44,10 +44,8 @@ function MainWindow() {
   };
 
   React.useEffect(() => {
-
     fetchGroups();
-
-  }, [group]);
+  }, []);
 
 
   React.useEffect(() => {

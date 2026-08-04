@@ -1,0 +1,343 @@
+.profile_settings {
+    display: flex;
+    height: 100vh;
+}
+
+.settings_content {
+    flex: 1;
+    padding: 2rem;
+    overflow-y: auto;
+    color: #eee;
+}
+
+.settings_title {
+    margin-bottom: 1.5rem;
+}
+
+.settings_section {
+    background: #1e2a2a;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.settings_form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+.settings_avatar_wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.settings_avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.settings_avatar_placeholder {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: #444;
+}
+
+.settings_avatar_edit {
+    cursor: pointer;
+    color: #22c55e;
+    font-size: 0.9rem;
+}
+
+.settings_label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    color: #aaa;
+}
+
+.settings_label input,
+.settings_label textarea {
+    padding: 0.5rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #12181818;
+    color: #eee;
+}
+
+.settings_row {
+    display: flex;
+    gap: 1rem;
+}
+
+.settings_row .settings_label {
+    flex: 1;
+}
+
+.settings_save_btn {
+    align-self: flex-start;
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    background: #22c55e;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.settings_save_btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.settings_danger {
+    border: 1px solid #7f1d1d;
+}
+
+.settings_logout_btn {
+    padding: 0.6rem 1.4rem;
+    border-radius: 8px;
+    background: #ef4444;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-top: 0.5rem;
+}
+
+.settings_error {
+    color: #ef4444;
+    margin-bottom: 1rem;
+}
+
+.settings_success {
+    color: #22c55e;
+    margin-bottom: 1rem;
+}
+
+.manage_groups_section {
+    width: min(520px, 100%);
+    background: #1e2a2a;
+    border-radius: 16px;
+    padding: 2rem;
+    margin: 2rem 0;
+    color: #eef2f2;
+}
+
+.admin_group_list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    margin-top: 1rem;
+    max-height: calc(100vh - 22rem);
+    overflow-y: auto;
+}
+
+.admin_group_tab {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.9rem 1rem;
+    border-radius: 14px;
+    background: #152020;
+    border: 1px solid #2c3a3a;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+.admin_group_tab:hover {
+    background: #18302f;
+}
+
+.admin_group_tab img {
+    width: 50px;
+    height: 50px;
+    border-radius: 14px;
+    object-fit: cover;
+}
+
+.admin_group_tab span {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: #eef2f2;
+}
+
+.manage_group_overlay {
+    margin-top: 1.5rem;
+}
+
+.manage_group_panel {
+    position: relative;
+    background: #162424;
+    border-radius: 18px;
+    padding: 1.75rem;
+    box-shadow: 0 18px 36px rgba(0, 0, 0, 0.25);
+}
+
+.manage_group_close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 34px;
+    height: 34px;
+    border: none;
+    border-radius: 50%;
+    background: #2c3d3d;
+    color: #fff;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.manage_group_avatar_wrap {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.manage_group_avatar_wrap img {
+    width: 84px;
+    height: 84px;
+    border-radius: 18px;
+    object-fit: cover;
+    border: 1px solid #2f4b4b;
+}
+
+.manage_group_pic_edit {
+    cursor: pointer;
+    color: #22c55e;
+    font-size: 0.95rem;
+}
+
+.manage_group_label {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: #cbd5d5;
+}
+
+.manage_group_label input,
+.manage_group_label textarea {
+    padding: 0.7rem;
+    border-radius: 10px;
+    border: 1px solid #334747;
+    background: #122323;
+    color: #eef2f2;
+    min-width: 0;
+}
+
+.manage_group_save_btn,
+.manage_group_delete_btn {
+    margin-top: 1rem;
+    padding: 0.75rem 1.2rem;
+    border: none;
+    border-radius: 12px;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.manage_group_save_btn {
+    background: #22c55e;
+    color: #fff;
+}
+
+.manage_group_save_btn:disabled {
+    opacity: 0.65;
+    cursor: not-allowed;
+}
+
+.manage_group_delete_btn {
+    background: #dc2626;
+    color: #fff;
+}
+
+.manage_group_members {
+    margin-top: 1.75rem;
+}
+
+.manage_group_members h4 {
+    margin-bottom: 0.9rem;
+}
+
+.manage_group_member_row {
+    display: flex;
+    align-items: center;
+    gap: 0.85rem;
+    padding: 0.85rem 0;
+    border-bottom: 1px solid #213232;
+}
+
+.manage_group_member_row:last-child {
+    border-bottom: none;
+}
+
+.manage_group_member_row img {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.manage_group_member_info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+}
+
+.manage_group_member_info span {
+    color: #eef2f2;
+    font-weight: 600;
+}
+
+.admin_badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    color: #22c55e;
+    background: rgba(34, 197, 94, 0.12);
+}
+
+.manage_group_member_actions {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+.manage_group_member_actions button {
+    border: none;
+    border-radius: 10px;
+    padding: 0.55rem 0.9rem;
+    background: #204b45;
+    color: #eef2f2;
+    cursor: pointer;
+}
+
+.manage_group_member_actions button:hover {
+    background: #1b3c38;
+}
+
+.manage_group_member_actions .remove_btn {
+    background: #991b1b;
+}
+
+.manage_group_member_actions .remove_btn:hover {
+    background: #7f1d1d;
+}
+
+.manage_groups_error {
+    color: #f87171;
+    margin-top: 0.75rem;
+}
+
+.manage_groups_empty {
+    margin-top: 1rem;
+    color: #cbd5d5;
+}
