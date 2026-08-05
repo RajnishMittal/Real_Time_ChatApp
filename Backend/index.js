@@ -11,6 +11,7 @@ const { restrictToLoggedIn } = require("./middlewares/restrictUser");
 const onlineUsers = require("./service/userStatus");
 
 const userRouter = require("./routes/user");
+const userLogout = require("./routes/logout")
 const homeRouter = require("./routes/home");
 const profileRouter = require("./routes/profile");
 const groupRouter = require("./routes/group");
@@ -89,6 +90,7 @@ app.use("/api", userRouter);
 app.use("/api/home", restrictToLoggedIn, homeRouter);
 app.use("/api/profile", restrictToLoggedIn, profileRouter);
 app.use("/api/group", restrictToLoggedIn, groupRouter);
+app.use("/api/logout", restrictToLoggedIn, userLogout)
 
 server.listen(8000, () => {
     console.log("Server Started");

@@ -1,5 +1,4 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom'
 import SideBar from "../MainWindow/Sidebar"
 import ProfileSettings from './Settings/ProfileSettings'
 import GroupSettings from './Settings/GroupSettings'
@@ -7,18 +6,22 @@ import '../css/Mainwindow/Settings.css'
 
 function Settings() {
 
-    const navigate = useNavigate();
-
     const [loggedIn, setLoggedIn] = React.useState(null);
 
     return (
-        <div className='profile_settings'>
+        <div className="settings_page">
             <SideBar />
 
-            <ProfileSettings loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
-
-            <GroupSettings/>
-
+            <div className="settings_scroll">
+                <header className="settings_header">
+                    <h1>Settings</h1>
+                    <p>Manage your profile and the groups you run.</p>
+                </header>
+                <div className="settings_inner">
+                        <ProfileSettings loggedIn={loggedIn} setLoggedIn={setLoggedIn} />
+                        <GroupSettings />
+                </div>
+            </div>
         </div>
     )
 }

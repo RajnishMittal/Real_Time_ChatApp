@@ -9,7 +9,14 @@ const groupSchema = new mongoose.Schema({
         type:String,
         default:"https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg?_=20200418092106"
     },
+    grpBio:{
+        type:String
+    },
     members:[{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "users"
+    }],
+    admins:[{
         type: mongoose.Schema.Types.ObjectId,
         ref: "users"
     }],

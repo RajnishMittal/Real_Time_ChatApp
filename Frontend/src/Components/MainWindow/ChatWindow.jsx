@@ -5,7 +5,7 @@ import io from "socket.io-client"
 import sendIcon from "../../assets/icons/send.png";
 import fileIcon from "../../assets/icons/file.png";
 
-function ChatWindow({ setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup }) {
+function ChatWindow({ setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup, setGroupJoin, fetchGroups }) {
 
     const [error, setError] = React.useState(null);
     const [mess, setMess] = React.useState([]);
@@ -209,6 +209,8 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
             method: "post"
         })
 
+        await fetchGroups();
+
         if (response.ok) setGroupJoin(false)
     }
 
@@ -235,13 +237,13 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
     }
 
     const colors = [
-        "#ef4444", // Red
-        "#f59e0b", // Orange
-        "#22c55e", // Green
-        "#06b6d4", // Cyan
-        "#3b82f6", // Blue
-        "#8b5cf6", // Purple
-        "#ec4899", // Pink
+        "#5FA8A8", // Cyan Teal
+        "#6FBF73", // Fresh Green
+        "#7C8CFF", // Indigo
+        "#A970FF", // Violet
+        "#F4B860", // Soft Gold
+        "#E07A5F", // Coral
+        "#D16BA5", // Rose
     ];
 
     const getUserColor = (id) => {
@@ -262,17 +264,17 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                         </button>
                             <img
                                 src={
-                                    activeContact.profilePic.startsWith("http")
-                                        ? activeContact.profilePic
-                                        : `http://localhost:8000/${activeContact.profilePic}`
+                                    activeContact?.profilePic?.startsWith("http")
+                                        ? activeContact?.profilePic
+                                        : `http://localhost:8000/${activeContact?.profilePic}`
                                 }
                                 alt={activeContact.name}
                             />
 
                             <h2 className="person_name">
                                 <span className="name_row">
-                                    {activeContact.name}
-                                    {onlineUsers?.[activeContact._id] && (
+                                    {activeContact?.name}
+                                    {onlineUsers?.[activeContact?._id] && (
                                         <span className="online_dot"></span>
                                     )}
                                 </span>
@@ -284,7 +286,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                                         margin: "2px 0 0",
                                     }}
                                 >
-                                    @{activeContact.username}
+                                    @{activeContact?.username}
                                 </p>
                             </h2>
                         </>
@@ -293,17 +295,20 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                             </button>
                                 <img
                                     src={
-                                        activeContact.grpPic.startsWith("http")
-                                            ? activeContact.grpPic
-                                            : `http://localhost:8000/${activeContact.grpPic}`
+                                        activeContact?.grpPic.startsWith("http")
+                                            ? activeContact?.grpPic
+                                            : `http://localhost:8000/${activeContact?.grpPic}`
                                     }
                                     alt=""
                                 />
 
                                 <h2 className="person_name">
                                     <span className="name_row">
-                                        {activeContact.grpName}
+                                        {activeContact?.grpName}
                                     </span>
+                                    <p className="group_members_row">
+                                        {activeContact?.members?.map(m => `~${m.username}`).join(" , ")}
+                                    </p>
                                 </h2>
                             </>}
                     </div>
@@ -313,15 +318,15 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                         ref={messagesRef}
                     >
                         {!isGroup ? <>
-                            {mess.map(msg => (
+                            {mess?.map(msg => (
                                 <div
-                                    key={msg?._id ?? msg.id}
-                                    className={msg.sender === loggedIn?._id ? "me" : "them"}
+                                    key={msg?._id ?? msg?.id}
+                                    className={msg?.sender === loggedIn?._id ? "me" : "them"}
                                 >
-                                    {renderMessageFile(msg.file)}
+                                    {renderMessageFile(msg?.file)}
                                     {msg?.text && <p>{msg?.text}</p>}
                                     <p>
-                                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                                        {new Date(msg?.createdAt).toLocaleTimeString([], {
                                             hour: "2-digit",
                                             minute: "2-digit",
                                         })}
@@ -329,10 +334,10 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                                 </div>
                             ))}</> : <>
 
-                            {mess.map(msg => (
+                            {mess?.map(msg => (
 
                                 <div
-                                    key={msg._id ?? msg.id}
+                                    key={msg?._id ?? msg?.id}
                                     className={(msg.sender?._id ?? msg.sender) === loggedIn?._id ? "me" : "them"}
                                 >
                                     <p
@@ -356,17 +361,17 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                                             }}
                                             src={
                                                 msg?.sender?.profilePic?.startsWith("http")
-                                                    ? msg.sender.profilePic
-                                                    : `http://localhost:8000/${msg.sender.profilePic}`
+                                                    ? msg?.sender.profilePic
+                                                    : `http://localhost:8000/${msg?.sender.profilePic}`
                                             }
-                                            alt={activeContact.name}
+                                            alt={activeContact?.name}
                                         />
-                                        ~{msg.sender.name} @{msg.sender.username}
+                                        ~{msg?.sender.name} @{msg?.sender.username}
                                     </p>
-                                    {renderMessageFile(msg.file)}
+                                    {renderMessageFile(msg?.file)}
                                     {msg?.text && <p>{msg?.text}</p>}
                                     <p>
-                                        {new Date(msg.createdAt).toLocaleTimeString([], {
+                                        {new Date(msg?.createdAt).toLocaleTimeString([], {
                                             hour: "2-digit",
                                             minute: "2-digit",
                                         })}

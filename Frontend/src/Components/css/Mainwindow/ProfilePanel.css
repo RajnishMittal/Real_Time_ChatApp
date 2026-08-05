@@ -129,6 +129,15 @@
     text-overflow: ellipsis;
 }
 
+.profile_empty{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 auto;
+}
+
 @media (max-width: 900px) {
     .profile {
         display: none;

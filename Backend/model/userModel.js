@@ -26,6 +26,10 @@ const userSchema = new mongoose.Schema({
         minlength: [8, "Username must be at least 8 characters long"],
         match: [/^[a-zA-Z0-9_]+$/, "Only letters, numbers, and underscores are allowed"],
     },
+    bio:{
+        type:String,
+        default: "Available on LinkSync."
+    },
     dob:{
         type:Date,
         default:null

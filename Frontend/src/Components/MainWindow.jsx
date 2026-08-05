@@ -185,7 +185,7 @@ function MainWindow() {
 
         <ContactsList activeContactId={activeContactId} isGroup={isGroup} setIsGroup={setIsGroup}  onlineUsers={onlineUsers} users={users} setActiveContactId={setActiveContactId} setNewGroup={setNewGroup} group={group} loggedIn={loggedIn} setGroupJoin={setGroupJoin} joinGroup={joinGroup} activeContact={activeContact} />
 
-        <ChatWindow setActiveContactId={setActiveContactId} isGroup={isGroup} setIsGroup={setIsGroup} activeContactId={activeContactId} activeContact={activeContact} users={users} loggedIn={loggedIn} onlineUsers={onlineUsers} setOnlineUsers={setOnlineUsers} joinGroup={joinGroup} />
+        <ChatWindow setActiveContactId={setActiveContactId} isGroup={isGroup} setIsGroup={setIsGroup} activeContactId={activeContactId} activeContact={activeContact} users={users} loggedIn={loggedIn} onlineUsers={onlineUsers} setOnlineUsers={setOnlineUsers} joinGroup={joinGroup} setGroupJoin={setGroupJoin} fetchGroups={fetchGroups} />
 
         <ProfilePanel loggedIn={loggedIn} activeContact={activeContact} isGroup={isGroup} group={group} activeContactId={activeContactId} onlineUsers={onlineUsers} setIsGroup={setIsGroup} setActiveContactId={setActiveContactId}/>
 

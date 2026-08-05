@@ -20,20 +20,32 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
         setIsGroup(isGroup)
     }
 
+    if (!activeContact) {
+        return (
+            <div className="profile">
+                <div className="profile_empty">
+                    <p>Select a contact or group to view details</p>
+                </div>
+            </div>
+        );
+    }
+
 
     return (
         <div className="profile">
 
             {!isGroup ? <>
                 <div className="profile_avatar_wrap">
-                    <img
+
+                    {activeContact?.profilePic ? <img
                         src={
                             activeContact?.profilePic.startsWith("http")
                                 ? activeContact.profilePic
                                 : `http://localhost:8000/${activeContact?.profilePic}`
                         }
                         alt={activeContact?.name}
-                    />
+                    /> : null}
+
                     {onlineUsers?.[activeContact?._id] ? <span className="profile_status_dot" /> : null}
                 </div>
 
@@ -41,7 +53,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                 <p className="profile_username">@{activeContact?.username}</p>
 
                 <p className="profile_bio">
-                    {activeContact?.bio || "This user hasn't added a bio yet."}
+                    {activeContact?.bio}
                 </p>
 
                 <div className="profile_divider" />
@@ -120,15 +132,23 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                             </span>
                         </div>
 
+                        <div className="profile_detail_row">
+                            <span className="profile_detail_label">Bio</span>
+                            <span className="profile_detail_value">
+                                {activeContact.grpBio}
+                            </span>
+                        </div>
+
                     </div>
 
                     <div className="profile_divider" />
+
 
                     <h1 style={{ marginTop: "30px", textAlign: "left" }}>Members</h1>
 
                     <div className="allContacts">
 
-                        {[...activeContact?.members]
+                        {[...(activeContact?.members ?? [])]
                             .sort((a, b) => {
                                 if (a._id === activeContact?.createdBy?._id) return -1;
                                 if (b._id === activeContact?.createdBy?._id) return 1;
@@ -137,29 +157,29 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                             .map(user => (
 
                                 <div
-                                    key={user._id}
+                                    key={user?._id}
                                     className="contact_tab"
-                                    onClick={() => show_chats(user._id, false)}
+                                    onClick={() => show_chats(user?._id, false)}
                                 >
 
                                     <img
                                         src={
-                                            user.profilePic.startsWith("http")
-                                                ? user.profilePic
-                                                : `http://localhost:8000/${user.profilePic}`
+                                            user?.profilePic?.startsWith("http")
+                                                ? user?.profilePic
+                                                : `http://localhost:8000/${user?.profilePic}`
                                         }
                                         style={{
-                                            border: onlineUsers?.[user._id]
+                                            border: onlineUsers?.[user?._id]
                                                 ? "3px solid #22c55e"
                                                 : "2px solid transparent"
                                         }}
-                                        alt={user.name}
+                                        alt={user?.name}
                                     />
 
                                     <h2 className="person_name">
-                                        {user.name}
+                                        {user?.name}
 
-                                        {activeContact?.createdBy?._id === user?._id && (
+                                        {activeContact?.admins?.some(admin => admin?._id === user?._id) && (
                                             <small
                                                 style={{
                                                     marginLeft: "8px",
@@ -183,7 +203,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                                                 margin: "2px 0 0",
                                             }}
                                         >
-                                            @{user.username}
+                                            @{user?.username}
                                         </p>
                                     </h2>
 

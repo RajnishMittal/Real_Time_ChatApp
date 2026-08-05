@@ -37,6 +37,17 @@
     animation: smooth-blink 1s linear infinite;
 }
 
+.group_members_row {
+    font-size: 0.85rem;
+    color: #888;
+    font-style: italic;
+    margin: 2px 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    width: 100%;
+}
+
 @keyframes smooth-blink {
 
     0%,

@@ -16,7 +16,7 @@ async function setProfile(req, res) {
                 dob: body.dob,
                 country: body.country,
                 state: body.state,
-                profilePic: imagePath? imagePath: null
+                profilePic: imagePath ? imagePath : null
             },
             {
                 new: true,
@@ -53,24 +53,26 @@ async function setProfile(req, res) {
 
 async function update_profile(req, res) {
     try {
-        const body = req.body;
-        const id = req.user && req.user._id ? req.user._id : null;
-        if (!id) return res.status(401).json({ message: "Unauthorized" });
+        const body = req.body
+        const id = req.user._id
 
-        const imagePath = req.file
-            ? path.join("userImage", req.file.filename).replace(/\\/g, "/")
-            : undefined;
+        const updateData = {
+            name: body.name,
+            bio: body.bio,
+            dob: body.dob,
+            country: body.country,
+            state: body.state,
+        };
+
+        if (req.file) {
+            updateData.profilePic = path
+                .join("userImage", req.file.filename)
+                .replace(/\\/g, "/");
+        }
 
         const response = await userModel.findByIdAndUpdate(
             id,
-            {
-                name: body.name,
-                bio: body.bio,
-                dob: body.dob,
-                country: body.country,
-                state: body.state,
-                profilePic: imagePath ? imagePath : (body.profilePic ?? null)
-            },
+            updateData,
             {
                 new: true,
                 runValidators: true,

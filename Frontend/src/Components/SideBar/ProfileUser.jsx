@@ -1,6 +1,7 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import SideBar from "../MainWindow/Sidebar"
+import locationIcon from "../../assets/icons/location.png"
 import '../css/Mainwindow/ProfileUser.css'
 
 function ProfileUser() {
@@ -64,12 +65,23 @@ function ProfileUser() {
             <div className="main_container">
                 <div className="profile-page">
                     <div className="profile_image">
-                        <img style={{ width: "160px" }} src="https://imgs.search.brave.com/7UxJPbaQOMMN2aNH-FYPDSkQM_wiOCkUhgvTydj4mJ0/rs:fit:860:0:0:0/g:ce/aHR0cHM6Ly9zdGF0/aWMudmVjdGVlenku/Y29tL3N5c3RlbS9y/ZXNvdXJjZXMvdGh1/bWJuYWlscy8wMjYv/NDE4LzgwOC9zbWFs/bC9tYW4taGVhZC11/c2VyLXByb2ZpbGUt/Y2hhcmFjdGVyLWZy/ZWUtcG5nLnBuZw" alt="image" />
+                        <img
+                            style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover" }}
+                            src={
+                                    loggedIn?.profilePic?.startsWith("http")
+                                        ? loggedIn?.profilePic
+                                        : `http://localhost:8000/${loggedIn?.profilePic}`
+                                }
+                            alt="image"
+                        />
 
                         <div className="info">
-                            <h1>name</h1>
-                            <h4>State, Country</h4>
-                            <h3>Bio</h3>
+                            <h1>{loggedIn?.name}</h1>
+                            <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
+                                <img src={locationIcon} alt="" style={{ width: "16px", height: "16px" }} />
+                                <h4>{loggedIn?.state}, {loggedIn?.country}</h4>
+                            </div>
+                            <h3>{loggedIn?.bio}</h3>
                         </div>
                     </div>
                 </div>
