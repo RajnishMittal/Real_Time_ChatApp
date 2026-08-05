@@ -10,7 +10,8 @@ const groupSchema = new mongoose.Schema({
         default:"https://upload.wikimedia.org/wikipedia/commons/a/ac/Default_pfp.jpg?_=20200418092106"
     },
     grpBio:{
-        type:String
+        type:String,
+        default: "Welcome to the group! Share ideas, chat freely, and stay connected."
     },
     members:[{
         type: mongoose.Schema.Types.ObjectId,

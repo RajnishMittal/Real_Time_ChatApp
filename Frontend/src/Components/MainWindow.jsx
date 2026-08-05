@@ -21,6 +21,7 @@ function MainWindow() {
   const [groupName, setGroupName] = React.useState("")
   const [grpIcon, setGrpIcon] = React.useState(userIcon)
   const [onlineUsers, setOnlineUsers] = React.useState({});
+  const [showProfile, setShowProfile] = React.useState(false)
 
   const activeContact = isGroup
     ? group.find(g => g._id === activeContactId)
@@ -185,9 +186,9 @@ function MainWindow() {
 
         <ContactsList activeContactId={activeContactId} isGroup={isGroup} setIsGroup={setIsGroup}  onlineUsers={onlineUsers} users={users} setActiveContactId={setActiveContactId} setNewGroup={setNewGroup} group={group} loggedIn={loggedIn} setGroupJoin={setGroupJoin} joinGroup={joinGroup} activeContact={activeContact} />
 
-        <ChatWindow setActiveContactId={setActiveContactId} isGroup={isGroup} setIsGroup={setIsGroup} activeContactId={activeContactId} activeContact={activeContact} users={users} loggedIn={loggedIn} onlineUsers={onlineUsers} setOnlineUsers={setOnlineUsers} joinGroup={joinGroup} setGroupJoin={setGroupJoin} fetchGroups={fetchGroups} />
+        <ChatWindow setShowProfile={setShowProfile} showProfile={showProfile} setActiveContactId={setActiveContactId} isGroup={isGroup} setIsGroup={setIsGroup} activeContactId={activeContactId} activeContact={activeContact} users={users} loggedIn={loggedIn} onlineUsers={onlineUsers} setOnlineUsers={setOnlineUsers} joinGroup={joinGroup} setGroupJoin={setGroupJoin} fetchGroups={fetchGroups} />
 
-        <ProfilePanel loggedIn={loggedIn} activeContact={activeContact} isGroup={isGroup} group={group} activeContactId={activeContactId} onlineUsers={onlineUsers} setIsGroup={setIsGroup} setActiveContactId={setActiveContactId}/>
+        <ProfilePanel setShowProfile={setShowProfile} showProfile={showProfile} loggedIn={loggedIn} activeContact={activeContact} isGroup={isGroup} group={group} activeContactId={activeContactId} onlineUsers={onlineUsers} setIsGroup={setIsGroup} setActiveContactId={setActiveContactId}/>
 
       </div>
     </>

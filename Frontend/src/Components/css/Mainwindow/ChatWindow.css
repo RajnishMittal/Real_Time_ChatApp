@@ -323,4 +323,10 @@
         display: block;
     }
 
+    .chats-collapsed-mobile {
+        width: 0;
+        opacity: 0;
+        padding: 0;
+        overflow: hidden;
+    }
 }

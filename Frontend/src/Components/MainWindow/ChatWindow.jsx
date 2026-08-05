@@ -5,7 +5,7 @@ import io from "socket.io-client"
 import sendIcon from "../../assets/icons/send.png";
 import fileIcon from "../../assets/icons/file.png";
 
-function ChatWindow({ setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup, setGroupJoin, fetchGroups }) {
+function ChatWindow({ setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup, setGroupJoin, fetchGroups, setShowProfile, showProfile }) {
 
     const [error, setError] = React.useState(null);
     const [mess, setMess] = React.useState([]);
@@ -236,6 +236,10 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
         );
     }
 
+    function showUser(){
+        setShowProfile(true)
+    }
+
     const colors = [
         "#5FA8A8", // Cyan Teal
         "#6FBF73", // Fresh Green
@@ -255,7 +259,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
     };
 
     return (
-        <div className="chats">
+        <div className={`chats ${showProfile ? "chats-collapsed-mobile" : ""}`}>
             {activeContact ? (
                 <>
                     <div className="contact_nav">
@@ -271,7 +275,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                                 alt={activeContact.name}
                             />
 
-                            <h2 className="person_name">
+                            <h2 className="person_name" onClick={showUser} >
                                 <span className="name_row">
                                     {activeContact?.name}
                                     {onlineUsers?.[activeContact?._id] && (
@@ -302,7 +306,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
                                     alt=""
                                 />
 
-                                <h2 className="person_name">
+                                <h2 className="person_name" onClick={showUser} >
                                     <span className="name_row">
                                         {activeContact?.grpName}
                                     </span>

@@ -1,7 +1,7 @@
 import React from 'react'
 import "../css/Mainwindow/ProfilePanel.css"
 
-function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUsers, setIsGroup, setActiveContactId }) {
+function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUsers, setIsGroup, setActiveContactId, setShowProfile, showProfile }) {
 
     function getAge(dob) {
         if (!dob) return null;
@@ -32,7 +32,11 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
 
 
     return (
-        <div className="profile">
+        <div className={`profile ${showProfile ? "profile-visible-mobile" : ""}`}>
+
+            <button className="back_btn" onClick={() => setShowProfile(false)} aria-label="Back to contacts">
+                ←
+            </button>
 
             {!isGroup ? <>
                 <div className="profile_avatar_wrap">
@@ -133,9 +137,8 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                         </div>
 
                         <div className="profile_detail_row">
-                            <span className="profile_detail_label">Bio</span>
                             <span className="profile_detail_value">
-                                {activeContact.grpBio}
+                                ~{activeContact.grpBio}~
                             </span>
                         </div>
 

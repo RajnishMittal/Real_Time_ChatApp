@@ -89,14 +89,14 @@
     cursor: pointer;
 }
 
-.choice{
+.choice {
     display: flex;
     justify-content: space-between;
     margin: 10px 25px;
 }
 
 .get_users,
-.get_groups{
+.get_groups {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -112,7 +112,7 @@
 }
 
 .get_users::before,
-.get_groups::before{
+.get_groups::before {
     content: "";
     position: absolute;
     top: 0;
@@ -125,14 +125,14 @@
 }
 
 .get_users:hover,
-.get_groups:hover{
+.get_groups:hover {
     transform: scale(0.95);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.2);
     cursor: pointer;
 }
 
 .get_users:hover::before,
-.get_groups:hover::before{
+.get_groups:hover::before {
     left: 100%;
 }
 
@@ -219,6 +219,17 @@
         width: 0;
         opacity: 0;
         padding: 0;
+    }
+
+    .choice {
+        display: flex;
+        width: 77%;
+        justify-content: space-between;
+        margin: 10px 22px;
+    }
+
+    .create_group {
+        width: 78%;
     }
 
 }
