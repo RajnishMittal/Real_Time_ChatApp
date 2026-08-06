@@ -687,3 +687,71 @@
     color: #C9A6FF;
     background: rgba(201, 166, 255, 0.14);
 }
+
+.settings_label select {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    background-color: rgba(255, 255, 255, 0.05);
+    color: #fff;
+    font-size: 0.95rem;
+    font-family: inherit;
+    appearance: none;
+    -webkit-appearance: none;
+    cursor: pointer;
+    transition: border-color 0.15s ease, background-color 0.15s ease;
+
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 12px center;
+    background-size: 16px;
+    padding-right: 36px;
+}
+
+.settings_label select:hover {
+    border-color: rgba(255, 255, 255, 0.3);
+}
+
+.settings_label select:focus {
+    outline: none;
+    border-color: #22c55e;
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+.settings_label select:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    background-color: rgba(255, 255, 255, 0.02);
+}
+
+/* dropdown list background */
+.settings_label select option {
+    background-color: rgb(17, 31, 34);;
+    color: #fff;
+}
+
+/* scrollbar inside the dropdown list — Chromium only */
+.settings_label select {
+    scrollbar-width: thin;              /* Firefox: thin scrollbar */
+    scrollbar-color: #22c55e #1e1e1e;   /* Firefox: thumb color, track color */
+}
+
+.settings_label select::-webkit-scrollbar {
+    width: 10px;
+}
+
+.settings_label select::-webkit-scrollbar-track {
+    background: #1e1e1e;
+}
+
+.settings_label select::-webkit-scrollbar-thumb {
+    background-color: #22c55e;
+    border-radius: 8px;
+    border: 2px solid #1e1e1e;
+}
+
+.settings_label select::-webkit-scrollbar-thumb:hover {
+    background-color: #16a34a;
+}

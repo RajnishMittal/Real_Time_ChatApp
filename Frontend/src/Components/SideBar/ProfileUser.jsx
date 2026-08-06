@@ -2,15 +2,24 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import SideBar from "../MainWindow/Sidebar"
 import locationIcon from "../../assets/icons/location.png"
+import { Country, State } from "country-state-city";
 import '../css/Mainwindow/ProfileUser.css'
 
 function ProfileUser() {
+    const navigate = useNavigate();
     const [loggedIn, setLoggedIn] = React.useState(null);
     const [analytics, setAnalytics] = React.useState({
         msg_sent: 0,
         msg_received: 0,
     });
     const [error, setError] = React.useState(null);
+
+    const countryName = loggedIn?.country
+        ? Country.getCountryByCode(loggedIn.country)?.name
+        : null;
+    const stateName = loggedIn?.state
+        ? State.getStateByCodeAndCountry(loggedIn.state, loggedIn.country)?.name
+        : null;
 
     React.useEffect(() => {
 
@@ -68,10 +77,10 @@ function ProfileUser() {
                         <img
                             style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover" }}
                             src={
-                                    loggedIn?.profilePic?.startsWith("http")
-                                        ? loggedIn?.profilePic
-                                        : `http://localhost:8000/${loggedIn?.profilePic}`
-                                }
+                                loggedIn?.profilePic?.startsWith("http")
+                                    ? loggedIn?.profilePic
+                                    : `http://localhost:8000/${loggedIn?.profilePic}`
+                            }
                             alt="image"
                         />
 
@@ -79,7 +88,7 @@ function ProfileUser() {
                             <h1>{loggedIn?.name}</h1>
                             <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
                                 <img src={locationIcon} alt="" style={{ width: "16px", height: "16px" }} />
-                                <h4>{loggedIn?.state}, {loggedIn?.country}</h4>
+                                <h4>{stateName}{stateName && countryName ? ", " : ""}{countryName}</h4>
                             </div>
                             <h3>{loggedIn?.bio}</h3>
                         </div>
@@ -100,11 +109,11 @@ function ProfileUser() {
                     </div>
                     <div className="data-row">
                         <span className="label">State</span>
-                        <span className="value">{loggedIn?.state}</span>
+                        <span className="value">{stateName || "Not specified"}</span>
                     </div>
                     <div className="data-row">
                         <span className="label">Country</span>
-                        <span className="value">{loggedIn?.country}</span>
+                        <span className="value">{countryName || "Not specified"}</span>
                     </div>
                 </div>
                 <div className="analytics">

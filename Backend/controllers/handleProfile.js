@@ -16,12 +16,9 @@ async function setProfile(req, res) {
                 dob: body.dob,
                 country: body.country,
                 state: body.state,
-                profilePic: imagePath ? imagePath : null
+                ...(imagePath ? { profilePic: imagePath } : {})
             },
-            {
-                new: true,
-                runValidators: true,
-            }
+            { new: true, runValidators: true }
         );
 
         if (!response) {
@@ -55,24 +52,24 @@ async function update_profile(req, res) {
     try {
         const body = req.body
         const id = req.user._id
+        const imagePath = req.file
+            ? path.join("userImage", req.file.filename).replace(/\\/g, "/")
+            : undefined;
 
-        const updateData = {
-            name: body.name,
-            bio: body.bio,
+        const update = {
+            username: body.username,
             dob: body.dob,
             country: body.country,
             state: body.state,
         };
 
-        if (req.file) {
-            updateData.profilePic = path
-                .join("userImage", req.file.filename)
-                .replace(/\\/g, "/");
+        if (imagePath) {
+            update.profilePic = imagePath;
         }
 
         const response = await userModel.findByIdAndUpdate(
             id,
-            updateData,
+            update,
             {
                 new: true,
                 runValidators: true,

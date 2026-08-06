@@ -258,6 +258,54 @@
     transition: background 0.15s ease;
 }
 
+.message-video {
+    max-width: 320px;
+    max-height: 350px;
+    border-radius: 12px;
+    display: block;
+    margin-bottom: 6px;
+}
+
+.audio_message {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 18px;
+    padding: 10px 14px;
+    backdrop-filter: blur(10px);
+    width: fit-content;
+    max-width: 320px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    transition: 0.2s ease;
+}
+
+.audio_message:hover {
+    background: rgba(255,255,255,0.12);
+}
+
+.audio_message audio {
+    width: 280px;
+    height: 40px;
+    border-radius: 12px;
+    outline: none;
+}
+
+.audio_message audio::-webkit-media-controls-panel {
+    background: #2B474C;
+}
+
+.audio_message audio::-webkit-media-controls-current-time-display,
+.audio_message audio::-webkit-media-controls-time-remaining-display {
+    color: white;
+}
+
+.audio_message audio::-webkit-media-controls-play-button {
+    filter: invert(1);
+}
+
+.audio_message audio::-webkit-media-controls-volume-slider {
+    filter: hue-rotate(160deg);
+}
+
 .file-preview button:hover {
     background: #c9302c;
 }

@@ -1,5 +1,6 @@
 import React from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Country, State } from "country-state-city";
 
 function ProfileSettings({ loggedIn, setLoggedIn }) {
 
@@ -16,6 +17,9 @@ function ProfileSettings({ loggedIn, setLoggedIn }) {
     const [error, setError] = React.useState("");
     const [success, setSuccess] = React.useState("");
     const [saving, setSaving] = React.useState(false);
+
+    const countries = Country.getAllCountries();
+    const states = country ? State.getStatesOfCountry(country) : [];
 
     React.useEffect(() => {
         async function fetchMe() {
@@ -55,6 +59,11 @@ function ProfileSettings({ loggedIn, setLoggedIn }) {
             setProfilePic(file);
             setPreview(URL.createObjectURL(file));
         }
+    }
+
+    function handleCountryChange(e) {
+        setCountry(e.target.value);
+        setState(""); // reset state when country changes
     }
 
     async function handleSave(e) {
@@ -212,21 +221,36 @@ function ProfileSettings({ loggedIn, setLoggedIn }) {
 
                     <div className="settings_row">
                         <label className="settings_label">
-                            State
-                            <input
-                                type="text"
-                                value={state}
-                                onChange={e => setState(e.target.value)}
-                            />
+                            Country
+                            <select
+                                value={country}
+                                onChange={handleCountryChange}
+                            >
+                                <option value="">Select Country</option>
+                                {countries.map((c) => (
+                                    <option key={c.isoCode} value={c.isoCode}>
+                                        {c.name}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
 
                         <label className="settings_label">
-                            Country
-                            <input
-                                type="text"
-                                value={country}
-                                onChange={e => setCountry(e.target.value)}
-                            />
+                            State
+                            <select
+                                value={state}
+                                onChange={e => setState(e.target.value)}
+                                disabled={!country}
+                            >
+                                <option value="">
+                                    {country ? "Select State" : "Select country first"}
+                                </option>
+                                {states.map((s) => (
+                                    <option key={s.isoCode} value={s.isoCode}>
+                                        {s.name}
+                                    </option>
+                                ))}
+                            </select>
                         </label>
                     </div>
                     <div className="buttonsss">

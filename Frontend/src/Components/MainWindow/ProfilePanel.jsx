@@ -1,9 +1,32 @@
 import React from 'react'
 import "../css/Mainwindow/ProfilePanel.css"
+import { Country, State } from "country-state-city";
 
 function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUsers, setIsGroup, setActiveContactId, setShowProfile, showProfile }) {
 
     const [searchUser, setSearchUser] = React.useState("")
+
+    const sortedMembers = React.useMemo(() => {
+        if (!activeContact?.members) return [];
+
+        const creatorId = (activeContact.createdBy?._id ?? activeContact.createdBy)?.toString();
+        const adminIds = new Set(
+            (activeContact.admins ?? []).map(a => (a._id ?? a).toString())
+        );
+
+        function rank(member) {
+            const id = member._id?.toString();
+            if (id === creatorId) return 0;
+            if (adminIds.has(id)) return 1;
+            return 2;
+        }
+
+        return [...activeContact.members].sort((a, b) => {
+            const rankDiff = rank(a) - rank(b);
+            if (rankDiff !== 0) return rankDiff;
+            return (a?.name ?? "").localeCompare(b?.name ?? "");
+        });
+    }, [activeContact]);
 
     const searchedUsers = activeContact?.members
         ?.filter(user =>
@@ -100,9 +123,18 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                     <div className="profile_detail_row">
                         <span className="profile_detail_label">Location</span>
                         <span className="profile_detail_value">
-                            {activeContact?.state || activeContact?.country
-                                ? `${activeContact?.state ?? ""}${activeContact?.state && activeContact?.country ? ", " : ""}${activeContact?.country ?? ""}`
-                                : "Not specified"}
+                            {(() => {
+                                const stateName = activeContact?.state
+                                    ? State.getStateByCodeAndCountry(activeContact.state, activeContact.country)?.name
+                                    : null;
+                                const countryName = activeContact?.country
+                                    ? Country.getCountryByCode(activeContact.country)?.name
+                                    : null;
+
+                                if (!stateName && !countryName) return "Not specified";
+
+                                return `${stateName ?? ""}${stateName && countryName ? ", " : ""}${countryName ?? ""}`;
+                            })()}
                         </span>
                     </div>
 
@@ -196,25 +228,26 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
 
                                 <h2 className="person_name">
                                     {user?.name}
-
-                                    {activeContact?.admins?.some(admin => admin?._id === user?._id) && (
-                                        <small
-                                            style={{
-                                                marginLeft: "8px",
-                                                background: "#22c55e",
-                                                color: "#fff",
-                                                padding: "2px 8px",
-                                                borderRadius: "10px",
-                                                fontSize: "0.65rem",
-                                                fontWeight: "600",
-                                                verticalAlign: "middle"
-                                            }}
-                                        >
-                                            ADMIN
+                                    <p className="username_row">
+                                    {activeContact?.createdBy?._id === user?._id && (
+                                        <small className="creator_badge">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5z" />
+                                            </svg>
+                                            Creator
                                         </small>
                                     )}
 
-                                    <p
+                                    {activeContact?.createdBy?._id === user?._id ? null : <>{activeContact?.admins?.some(admin => admin?._id === user?._id) && (
+                                        <small className="admin_badge">
+                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M2 20h20l-2-9-5 4-3-8-3 8-5-4z" />
+                                            </svg>
+                                            Admin
+                                        </small>
+                                    )}</>}
+
+                                    <span
                                         style={{
                                             fontSize: "0.85rem",
                                             color: "#888",
@@ -222,12 +255,13 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                                         }}
                                     >
                                         @{user?.username}
+                                    </span>
                                     </p>
                                 </h2>
 
                             </div>
 
-                        )) : <>{[...(activeContact?.members ?? [])]
+                        )) : <>{sortedMembers
                             .map(user => (
 
                                 <div
@@ -252,32 +286,36 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
 
                                     <h2 className="person_name">
                                         {user?.name}
+                                        <p className="username_row">
+                                            {activeContact?.createdBy?._id === user?._id && (
+                                                <small className="creator_badge">
+                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path d="M12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5z" />
+                                                    </svg>
+                                                    Creator
+                                                </small>
+                                            )}
 
-                                        {activeContact?.admins?.some(admin => admin?._id === user?._id) && (
-                                            <small
+                                            {activeContact?.createdBy?._id === user?._id ? null : <>{activeContact?.admins?.some(admin => admin?._id === user?._id) && (
+                                                <small className="admin_badge">
+                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+                                                        <path d="M2 20h20l-2-9-5 4-3-8-3 8-5-4z" />
+                                                    </svg>
+                                                    Admin
+                                                </small>
+                                            )}</>}
+
+
+                                            <span
                                                 style={{
-                                                    marginLeft: "8px",
-                                                    background: "#22c55e",
-                                                    color: "#fff",
-                                                    padding: "2px 8px",
-                                                    borderRadius: "10px",
-                                                    fontSize: "0.65rem",
-                                                    fontWeight: "600",
-                                                    verticalAlign: "middle"
+                                                    fontSize: "0.85rem",
+                                                    color: "#888",
+                                                    margin: "2px 0 0",
                                                 }}
                                             >
-                                                ADMIN
-                                            </small>
-                                        )}
+                                                @{user?.username}
+                                            </span>
 
-                                        <p
-                                            style={{
-                                                fontSize: "0.85rem",
-                                                color: "#888",
-                                                margin: "2px 0 0",
-                                            }}
-                                        >
-                                            @{user?.username}
                                         </p>
                                     </h2>
 

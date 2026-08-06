@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import "./css/ProfileMaker.css";
+import { Country, State } from "country-state-city";
+
 import { useNavigate } from "react-router-dom";
 
 function Profile() {
@@ -19,12 +21,24 @@ function Profile() {
     const [error, setError] = useState(null)
     const [saved, setSaved] = useState(false);
 
+    const countries = Country.getAllCountries();
+    const states = profile.country ? State.getStatesOfCountry(profile.country) : [];
+
     const handleChange = (e) => {
         const { name, value } = e.target;
 
         setProfile((prev) => ({
             ...prev,
             [name]: value,
+        }));
+    };
+
+    const handleCountryChange = (e) => {
+        const { value } = e.target;
+        setProfile((prev) => ({
+            ...prev,
+            country: value,
+            state: "",
         }));
     };
 
@@ -59,7 +73,6 @@ function Profile() {
 
                 const result = await response.json();
                 setLoggedIn(result);
-                console.log(result)
 
             } catch (err) {
                 console.error(err);
@@ -89,8 +102,8 @@ function Profile() {
             formData.append("image", profile.image);
             formData.append("username", profile.username);
             formData.append("dob", profile.dob);
-            formData.append("country", profile.country);
-            formData.append("state", profile.state);
+            formData.append("country", profile.country); // ISO code, e.g. "IN"
+            formData.append("state", profile.state);       // ISO code, e.g. "DL"
 
             const response = await fetch(`/api/profile/${loggedIn._id}`, {
                 method: "POST",
@@ -112,8 +125,8 @@ function Profile() {
         }
     };
 
-    const handleReset = (e) => {
-        e.target.reset()
+    const handleReset = () => {
+        setProfile(initialProfile);
     }
 
 
@@ -186,26 +199,37 @@ function Profile() {
 
                         <div className="form_group">
                             <label>Country</label>
-                            <input
-                                type="text"
+                            <select
                                 name="country"
-                                placeholder="Enter your country"
                                 value={profile.country}
-                                onChange={handleChange}
-                                autoComplete="off"
-                            />
+                                onChange={handleCountryChange}
+                            >
+                                <option value="">Select Country</option>
+                                {countries.map((c) => (
+                                    <option key={c.isoCode} value={c.isoCode}>
+                                        {c.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
 
                         <div className="form_group">
                             <label>State / Province</label>
-                            <input
-                                type="text"
+                            <select
                                 name="state"
-                                placeholder="Enter your state"
                                 value={profile.state}
                                 onChange={handleChange}
-                                autoComplete="off"
-                            />
+                                disabled={!profile.country}
+                            >
+                                <option value="">
+                                    {profile.country ? "Select State" : "Select country first"}
+                                </option>
+                                {states.map((s) => (
+                                    <option key={s.isoCode} value={s.isoCode}>
+                                        {s.name}
+                                    </option>
+                                ))}
+                            </select>
                         </div>
                     </div>
 

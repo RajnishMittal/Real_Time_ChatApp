@@ -73,14 +73,14 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
     }, [socket]);
 
     React.useEffect(() => {
-    if (!activeContactId) return;
-    setUnreadCounts(prev => {
-        if (!prev[activeContactId]) return prev;
-        const updated = { ...prev };
-        delete updated[activeContactId];
-        return updated;
-    });
-}, [activeContactId]);
+        if (!activeContactId) return;
+        setUnreadCounts(prev => {
+            if (!prev[activeContactId]) return prev;
+            const updated = { ...prev };
+            delete updated[activeContactId];
+            return updated;
+        });
+    }, [activeContactId]);
 
     React.useEffect(() => {
         if (!socket) return;
@@ -250,8 +250,42 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
             );
         }
 
+        if (file.mimetype?.startsWith("video/")) {
+            return (
+                <video
+                    className="message-video"
+                    controls
+                    preload="metadata"
+                >
+                    <source src={url} type={file.mimetype} />
+                    Your browser does not support the video tag.
+                </video>
+            );
+        }
+
+
+        if (file.mimetype?.startsWith("audio/")) {
+            return (
+                <div className="audio_message">
+                    <audio controls>
+                        <source
+                            src={url}
+                            type={file.mimetype}
+                        />
+                        Your browser does not support the audio element.
+                    </audio>
+                </div>
+            );
+        }
+
+
         return (
-            <a href={url} target="_blank" rel="noopener noreferrer" className="message-file">
+            <a
+                href={url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="message-file"
+            >
                 {file.filename}
             </a>
         );
