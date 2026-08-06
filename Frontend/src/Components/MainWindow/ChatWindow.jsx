@@ -5,10 +5,9 @@ import io from "socket.io-client"
 import sendIcon from "../../assets/icons/send.png";
 import fileIcon from "../../assets/icons/file.png";
 
-function ChatWindow({ setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup, setGroupJoin, fetchGroups, setShowProfile, showProfile }) {
+function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup, setGroupJoin, fetchGroups, setShowProfile, showProfile, setUnreadCounts }) {
 
     const [error, setError] = React.useState(null);
-    const [mess, setMess] = React.useState([]);
     const [selectedFile, setSelectedFile] = React.useState(null)
     const [socket, setSocket] = React.useState(null);
     const messagesRef = React.useRef(null);
@@ -74,9 +73,25 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
     }, [socket]);
 
     React.useEffect(() => {
+    if (!activeContactId) return;
+    setUnreadCounts(prev => {
+        if (!prev[activeContactId]) return prev;
+        const updated = { ...prev };
+        delete updated[activeContactId];
+        return updated;
+    });
+}, [activeContactId]);
+
+    React.useEffect(() => {
         if (!socket) return;
         function onReceive(msg) {
-            if (msg.sender === activeContactId || msg.to === activeContactId) {
+            if (msg.sender !== activeContactId) {
+                setUnreadCounts(prev => ({
+                    ...prev,
+                    [msg.sender]: (prev[msg.sender] || 0) + 1
+                }));
+            }
+            if (msg.sender === activeContactId) {
                 setMess(prev => [...prev, msg]);
             }
         }
@@ -87,6 +102,12 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
     React.useEffect(() => {
         if (!socket) return;
         function onReceiveGroup(msg) {
+            if (msg.group !== activeContactId) {
+                setUnreadCounts(prev => ({
+                    ...prev,
+                    [msg.group]: (prev[msg.group] || 0) + 1
+                }));
+            }
             if (isGroup && msg.group === activeContactId) {
                 setMess(prev => [...prev, msg]);
             }
@@ -236,7 +257,7 @@ function ChatWindow({ setActiveContactId, activeContactId, activeContact, logged
         );
     }
 
-    function showUser(){
+    function showUser() {
         setShowProfile(true)
     }
 

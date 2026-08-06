@@ -17,7 +17,6 @@ const profileRouter = require("./routes/profile");
 const groupRouter = require("./routes/group");
 
 const msgModel = require("./model/msgModel")
-const sessionSchema = require("./model/userSession")
 
 const app = express();
 const server = http.createServer(app);

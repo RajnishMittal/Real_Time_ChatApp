@@ -13,6 +13,7 @@ function MainWindow() {
   const [loggedIn, setLoggedIn] = React.useState(null);
   const [users, setUsers] = React.useState([]);
   const [group, setGroup] = React.useState([])
+  const [mess, setMess] = React.useState([]);
   const [joinGroup, setGroupJoin] = React.useState(false)
   const [activeContactId, setActiveContactId] = React.useState(null);
   const [error, setError] = React.useState("")
@@ -22,6 +23,9 @@ function MainWindow() {
   const [grpIcon, setGrpIcon] = React.useState(userIcon)
   const [onlineUsers, setOnlineUsers] = React.useState({});
   const [showProfile, setShowProfile] = React.useState(false)
+  const [unreadCounts, setUnreadCounts] = React.useState({});
+
+  console.log(unreadCounts)
 
   const activeContact = isGroup
     ? group.find(g => g._id === activeContactId)
@@ -184,9 +188,9 @@ function MainWindow() {
 
         <Sidebar activeContactId={activeContactId} loggedIn={loggedIn} />
 
-        <ContactsList activeContactId={activeContactId} isGroup={isGroup} setIsGroup={setIsGroup}  onlineUsers={onlineUsers} users={users} setActiveContactId={setActiveContactId} setNewGroup={setNewGroup} group={group} loggedIn={loggedIn} setGroupJoin={setGroupJoin} joinGroup={joinGroup} activeContact={activeContact} />
+        <ContactsList unreadCounts={unreadCounts} mess={mess} activeContactId={activeContactId} isGroup={isGroup} setIsGroup={setIsGroup}  onlineUsers={onlineUsers} users={users} setActiveContactId={setActiveContactId} setNewGroup={setNewGroup} group={group} loggedIn={loggedIn} setGroupJoin={setGroupJoin} joinGroup={joinGroup} activeContact={activeContact} />
 
-        <ChatWindow setShowProfile={setShowProfile} showProfile={showProfile} setActiveContactId={setActiveContactId} isGroup={isGroup} setIsGroup={setIsGroup} activeContactId={activeContactId} activeContact={activeContact} users={users} loggedIn={loggedIn} onlineUsers={onlineUsers} setOnlineUsers={setOnlineUsers} joinGroup={joinGroup} setGroupJoin={setGroupJoin} fetchGroups={fetchGroups} />
+        <ChatWindow setUnreadCounts={setUnreadCounts} mess={mess} setMess={setMess} setShowProfile={setShowProfile} showProfile={showProfile} setActiveContactId={setActiveContactId} isGroup={isGroup} setIsGroup={setIsGroup} activeContactId={activeContactId} activeContact={activeContact} users={users} loggedIn={loggedIn} onlineUsers={onlineUsers} setOnlineUsers={setOnlineUsers} joinGroup={joinGroup} setGroupJoin={setGroupJoin} fetchGroups={fetchGroups} />
 
         <ProfilePanel setShowProfile={setShowProfile} showProfile={showProfile} loggedIn={loggedIn} activeContact={activeContact} isGroup={isGroup} group={group} activeContactId={activeContactId} onlineUsers={onlineUsers} setIsGroup={setIsGroup} setActiveContactId={setActiveContactId}/>
 

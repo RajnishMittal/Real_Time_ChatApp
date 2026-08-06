@@ -3,6 +3,19 @@ import "../css/Mainwindow/ProfilePanel.css"
 
 function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUsers, setIsGroup, setActiveContactId, setShowProfile, showProfile }) {
 
+    const [searchUser, setSearchUser] = React.useState("")
+
+    const searchedUsers = activeContact?.members
+        ?.filter(user =>
+            user?.name?.toLowerCase().includes(searchUser.toLowerCase()) ||
+            user?.username?.toLowerCase().includes(searchUser.toLowerCase())
+        )
+
+    React.useEffect(() => {
+        setSearchUser("")
+    }, [activeContactId])
+
+
     function getAge(dob) {
         if (!dob) return null;
         const birthDate = new Date(dob);
@@ -34,7 +47,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
     return (
         <div className={`profile ${showProfile ? "profile-visible-mobile" : ""}`}>
 
-            <button className="back_btn" onClick={() => setShowProfile(false)} aria-label="Back to contacts">
+            <button style={{ marginBottom: "20px" }} className="back_btn" onClick={() => setShowProfile(false)} aria-label="Back to contacts">
                 ←
             </button>
 
@@ -149,14 +162,72 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
 
                     <h1 style={{ marginTop: "30px", textAlign: "left" }}>Members</h1>
 
+                    {activeContact?.members?.length > 4 ? <input
+                        type="search"
+                        placeholder="SEARCH CHAT"
+                        autoComplete='off'
+                        value={searchUser}
+                        onChange={(e) => setSearchUser(e.target.value)}
+                    /> : null}
+
                     <div className="allContacts">
 
-                        {[...(activeContact?.members ?? [])]
-                            .sort((a, b) => {
-                                if (a._id === activeContact?.createdBy?._id) return -1;
-                                if (b._id === activeContact?.createdBy?._id) return 1;
-                                return 0;
-                            })
+                        {searchUser ? searchedUsers.map(user => (
+
+                            <div
+                                key={user?._id}
+                                className="contact_tab"
+                                onClick={() => show_chats(user?._id, false)}
+                            >
+
+                                <img
+                                    src={
+                                        user?.profilePic?.startsWith("http")
+                                            ? user?.profilePic
+                                            : `http://localhost:8000/${user?.profilePic}`
+                                    }
+                                    style={{
+                                        border: onlineUsers?.[user?._id]
+                                            ? "3px solid #22c55e"
+                                            : "2px solid transparent"
+                                    }}
+                                    alt={user?.name}
+                                />
+
+                                <h2 className="person_name">
+                                    {user?.name}
+
+                                    {activeContact?.admins?.some(admin => admin?._id === user?._id) && (
+                                        <small
+                                            style={{
+                                                marginLeft: "8px",
+                                                background: "#22c55e",
+                                                color: "#fff",
+                                                padding: "2px 8px",
+                                                borderRadius: "10px",
+                                                fontSize: "0.65rem",
+                                                fontWeight: "600",
+                                                verticalAlign: "middle"
+                                            }}
+                                        >
+                                            ADMIN
+                                        </small>
+                                    )}
+
+                                    <p
+                                        style={{
+                                            fontSize: "0.85rem",
+                                            color: "#888",
+                                            margin: "2px 0 0",
+                                        }}
+                                    >
+                                        @{user?.username}
+                                    </p>
+                                </h2>
+
+                            </div>
+
+                        )) : <>{[...(activeContact?.members ?? [])]
                             .map(user => (
 
                                 <div
@@ -212,7 +283,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
 
                                 </div>
 
-                            ))}
+                            ))} </>}
 
                     </div>
 
