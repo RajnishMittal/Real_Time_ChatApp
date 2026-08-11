@@ -1,9 +1,10 @@
 import React from 'react'
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from "react-router-dom";
 import "../css/Mainwindow/Sidebar.css"
 import userImg from "../../assets/icons/user.png";
 import settingImg from "../../assets/icons/settings.png";
 import chatImg from "../../assets/icons/chat.png";
+import addFriend from "../../assets/icons/add-friend.png";
 
 function Sidebar({ activeContactId, loggedIn }) {
 
@@ -12,17 +13,35 @@ function Sidebar({ activeContactId, loggedIn }) {
     return (
 
         <div className={`sidebar ${activeContactId ? "sidebar_collapsed" : ""}`}>
-            <button style={{width: "50px", height: "50px"}} className='sideBar' onClick={() => navigate("/linksync")}  >
-                <img style={{width: "20px", height: "20px"}} src={chatImg} alt="" />
+            <button
+                className={`sideBar ${location.pathname === "/linksync" ? "active" : ""}`}
+                onClick={() => navigate("/linksync")}
+            >
+                <img src={chatImg} alt="Chats" />
             </button>
-            <button style={{width: "50px", height: "50px"}} className='sideBar' onClick={() => navigate("/UserProfile")}  >
-                <img style={{width: "20px", height: "20px"}} src={userImg} alt="" />
+
+            <button
+                className={`sideBar ${location.pathname === "/FriendRequests" ? "active" : ""}`}
+                onClick={() => navigate("/FriendRequests")}
+            >
+                <img src={addFriend} alt="Chats" />
             </button>
-            <button style={{width: "50px", height: "50px"}} className='sideBar' onClick={() => navigate("/Settings")}>
-                <img style={{width: "20px", height: "20px"}} src={settingImg} alt="" />
+
+            <button
+                className={`sideBar ${location.pathname === "/UserProfile" ? "active" : ""}`}
+                onClick={() => navigate("/UserProfile")}
+            >
+                <img src={userImg} alt="Profile" />
+            </button>
+
+            <button
+                className={`sideBar ${location.pathname === "/Settings" ? "active" : ""}`}
+                onClick={() => navigate("/Settings")}
+            >
+                <img src={settingImg} alt="Settings" />
             </button>
         </div>
-        
+
     )
 }
 

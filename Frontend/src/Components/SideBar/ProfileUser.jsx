@@ -11,6 +11,7 @@ function ProfileUser() {
     const [analytics, setAnalytics] = React.useState({
         msg_sent: 0,
         msg_received: 0,
+        account_age: 0
     });
     const [error, setError] = React.useState(null);
 
@@ -20,6 +21,39 @@ function ProfileUser() {
     const stateName = loggedIn?.state
         ? State.getStateByCodeAndCountry(loggedIn.state, loggedIn.country)?.name
         : null;
+
+    function get_account_age(createdAt) {
+        const created = new Date(createdAt);
+        const now = new Date();
+
+        const years = now.getFullYear() - created.getFullYear();
+        const months = now.getMonth() - created.getMonth();
+        const days = now.getDate() - created.getDate();
+
+        let totalMonths = years * 12 + months;
+
+        if (days < 0) {
+            totalMonths--;
+        }
+
+        if (totalMonths >= 12) {
+            const y = Math.floor(totalMonths / 12);
+            return `${y} ${y === 1 ? "year" : "years"}`;
+        }
+
+        if (totalMonths > 0) {
+            return `${totalMonths} ${totalMonths === 1 ? "month" : "months"}`;
+        }
+
+        const diffDays = Math.floor(
+            (now - created) / (1000 * 60 * 60 * 24)
+        );
+
+        if (diffDays === 0) return "Today";
+        if (diffDays === 1) return "1 day";
+
+        return `${diffDays} days`;
+    }
 
     React.useEffect(() => {
 
@@ -54,6 +88,8 @@ function ProfileUser() {
 
     }, []);
 
+
+
     React.useEffect(() => {
         async function fetchAnalytics() {
             const res = await fetch("/api/home/analytics", {
@@ -72,9 +108,10 @@ function ProfileUser() {
         <div className='hero' >
             <SideBar />
             <div className="main_container">
-                <div className="profile-page">
+                <div className="profile-pagee">
                     <div className="profile_image">
                         <img
+                            className='userPhoto'
                             style={{ width: "80px", height: "80px", borderRadius: "50%", objectFit: "cover" }}
                             src={
                                 loggedIn?.profilePic?.startsWith("http")
@@ -130,8 +167,8 @@ function ProfileUser() {
                         <span className="stat-label">TOTAL SCORE</span>
                     </div>
                     <div className="total_time">
-                        <span className="stat-number">0</span>
-                        <span className="stat-label">TIME</span>
+                        <span className="stat-number">{get_account_age(analytics?.account_age?.createdAt)}</span>
+                        <span className="stat-label">ACCOUNT AGE</span>
                     </div>
                 </div>
             </div>

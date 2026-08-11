@@ -1,16 +1,15 @@
 const { group } = require("console");
 const groupModel = require("../model/groupModel")
+const connectionsModel = require("../model/userConnections")
 const path = require("path");
 
 async function createGroup(req, res) {
-    const userId = req.user._id
-    const body = req.body
+    const userId = req.user._id;
+    const body = req.body;
+
     const imagePath = req.file
         ? path.join("userImage", req.file.filename).replace(/\\/g, "/")
         : undefined;
-
-    console.log(req.body);
-    console.log(req.file);
 
     try {
         const response = await groupModel.create({
@@ -19,13 +18,31 @@ async function createGroup(req, res) {
             members: [userId],
             admins: [userId],
             createdBy: userId
-        })
+        });
 
-        return res.status(200).json({ message: "New Group Created" })
-    }
-    catch (err) {
-        console.log(err)
-        return res.status(500).json({ message: "Server Error" })
+        await connectionsModel.findOneAndUpdate(
+            { userId: userId },
+            {
+                $addToSet: {
+                    groupJoined: response._id
+                }
+            },
+            {
+                upsert: true,
+                new: true
+            }
+        );
+
+        return res.status(200).json({
+            message: "New Group Created"
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Server Error"
+        });
     }
 }
 
@@ -47,29 +64,61 @@ async function allGroups(req, res) {
         res.status(200).json(allGroups)
     }
     catch (error) {
-        console.log(error)
+        console.error(error)
         return res.status(500).json({ error: "Something went wrong" })
     }
 }
 
 async function addUser(req, res) {
-    const user = req.user._id
-    const grp_id = req.params.id
+    const user = req.user._id;
+    const grp_id = req.params.id;
 
     try {
-        const response = await groupModel.findByIdAndUpdate(grp_id, { $addToSet: { members: user } }, { returnDocument: "after" })
+        const response = await groupModel.findByIdAndUpdate(
+            grp_id,
+            {
+                $addToSet: {
+                    members: user
+                }
+            },
+            {
+                new: true
+            }
+        );
 
         if (!response) {
-            return res.status(404).json({ message: "Group not found" });
+            return res.status(404).json({
+                message: "Group not found"
+            });
         }
 
-        return res.status(200).json({ message: "new user added" })
-    }
-    catch (err) {
-        console.log(err)
-        return res.status(500).json({ message: "server error" })
-    }
+        const response2 = await connectionsModel.findOneAndUpdate(
+            { userId: user },
+            {
+                $addToSet: {
+                    groupJoined: grp_id
+                }
+            },
+            {
+                new: true,
+                upsert: true
+            }
+        );
 
+        console.log("GROUP CONNECTION:", response2);
+
+        return res.status(200).json({
+            message: "New user added",
+            data: response2
+        });
+
+    } catch (err) {
+        console.error(err);
+
+        return res.status(500).json({
+            message: "Server error"
+        });
+    }
 }
 
 async function update_group(req, res) {
@@ -109,7 +158,7 @@ async function update_group(req, res) {
         });
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return res.status(500).json({
             message: "Internal Server Error"
         });
@@ -148,7 +197,7 @@ async function promote_user(req, res) {
         });
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return res.status(500).json({
             message: "Internal Server Error"
         });
@@ -199,7 +248,7 @@ async function kick_user(req, res) {
         });
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return res.status(500).json({
             message: "Internal Server Error"
         });
@@ -248,7 +297,7 @@ async function demote_User(req, res) {
         });
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return res.status(500).json({
             message: "Internal Server Error"
         });
@@ -273,7 +322,7 @@ async function delete_group(req, res) {
         });
 
     } catch (err) {
-        console.log(err);
+        console.error(err);
         return res.status(500).json({
             message: "Internal Server Error"
         });

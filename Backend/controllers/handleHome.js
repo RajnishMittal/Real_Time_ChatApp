@@ -1,6 +1,8 @@
 const path = require("path");
 const userModel = require("../model/userModel")
 const msgModel = require("../model/msgModel")
+const metaModel = require("../model/UserMeta")
+const groupModel = require("../model/groupModel");
 
 async function allUsers(req, res) {
     try {
@@ -47,15 +49,23 @@ async function setMessages(req, res) {
             sender: req.body.sender,
             to: req.body.to,
             text: req.body.text,
-            file: req.file
-                ? {
-                    filename: req.file.filename,
-                    path: filePath,
-                    mimetype: req.file.mimetype,
-                    size: req.file.size,
-                }
-                : undefined,
+            file: req.file ? {
+                filename: req.file.filename,
+                path: filePath,
+                mimetype: req.file.mimetype,
+                size: req.file.size,
+            } : undefined,
         });
+
+        // Persist unread state for the recipient regardless of online status
+        await metaModel.findOneAndUpdate(
+            { userId: req.body.to },
+            {
+                $inc: { [`number_of_unreadMsg.${req.body.sender}`]: 1 },
+                $set: { [`lastUnread.${req.body.sender}`]: response }
+            },
+            { upsert: true, new: true }
+        );
 
         return res.status(201).json({
             message: "Message sent successfully",
@@ -64,9 +74,7 @@ async function setMessages(req, res) {
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({
-            error: "Something went wrong",
-        });
+        return res.status(500).json({ error: "Something went wrong" });
     }
 }
 
@@ -80,17 +88,34 @@ async function setGroupMessages(req, res) {
             sender: req.body.sender,
             text: req.body.text,
             group: req.body.group,
-            file: req.file
-                ? {
-                    filename: req.file.filename,
-                    path: filePath,
-                    mimetype: req.file.mimetype,
-                    size: req.file.size,
-                }
-                : undefined,
+            file: req.file ? {
+                filename: req.file.filename,
+                path: filePath,
+                mimetype: req.file.mimetype,
+                size: req.file.size,
+            } : undefined,
         });
 
         await response.populate("sender", "name username profilePic");
+
+        const grp = await groupModel.findById(req.body.group).select("members");
+
+        if (grp?.members?.length) {
+            const bulkOps = grp.members
+                .filter(m => m.toString() !== req.body.sender)
+                .map(memberId => ({
+                    updateOne: {
+                        filter: { userId: memberId },
+                        update: {
+                            $inc: { [`number_of_unreadMsg.${req.body.group}`]: 1 },
+                            $set: { [`lastUnread.${req.body.group}`]: response } // add this
+                        },
+                        upsert: true
+                    }
+                }));
+
+            if (bulkOps.length) await metaModel.bulkWrite(bulkOps);
+        }
 
         return res.status(201).json({
             message: "Message sent successfully",
@@ -99,9 +124,7 @@ async function setGroupMessages(req, res) {
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({
-            error: "Something went wrong",
-        });
+        return res.status(500).json({ error: "Something went wrong" });
     }
 }
 
@@ -154,9 +177,15 @@ async function getAnalytics(req, res) {
             to: user_id,
         });
 
+        const account_age = await userModel.findOne(
+            { _id: user_id },
+            { createdAt: 1, _id: 0 }
+        );
+
         return res.status(200).json({
             msg_sent,
             msg_received,
+            account_age
         });
 
     } catch (err) {
@@ -166,6 +195,129 @@ async function getAnalytics(req, res) {
     }
 }
 
+async function handleInfo(req, res) {
+    try {
+        const userId = req.user._id;
+        const { unreadCounts, lastUnread } = req.body;
+        console.log(unreadCounts, lastUnread)
+
+        const meta = await metaModel.findOneAndUpdate(
+            { userId },
+            {
+                $set: {
+                    number_of_unreadMsg: unreadCounts || {},
+                    lastUnread: lastUnread || {}
+                }
+            },
+            {
+                new: true,
+                upsert: true
+            }
+        );
+
+        res.json({
+            success: true,
+            data: meta
+        });
+
+    } catch (error) {
+        console.error(error);
+
+        res.status(500).json({
+            success: false,
+            error: "Failed to save user meta"
+        });
+    }
+};
+
+async function getInfo(req, res) {
+    try {
+        const userId = req.user._id;
+
+        const meta = await metaModel.findOne({ userId });
+
+        if (!meta) {
+            return res.status(200).json({
+                success: true,
+                data: {
+                    userId,
+                    lastOnline: null,
+                    number_of_unreadMsg: {},
+                    lastUnread: {}
+                }
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: meta
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            error: "Failed to fetch user meta"
+        });
+    }
+}
+
+
+async function gettInfo(req, res) {
+    try {
+        const userId = req.params.id;
+
+        const meta = await metaModel.findOne({ userId });
+
+        if (!meta) {
+            return res.status(200).json({
+                success: true,
+                data: {
+                    userId,
+                    lastOnline: null,
+                    number_of_unreadMsg: {},
+                    lastUnread: {}
+                }
+            });
+        }
+
+        return res.status(200).json({
+            success: true,
+            data: meta
+        });
+
+    } catch (error) {
+        console.error(error);
+        return res.status(500).json({
+            success: false,
+            error: "Failed to fetch user meta"
+        });
+    }
+}
+
+async function markAsRead(req, res) {
+    try {
+        const userId = req.user._id;
+        const contactId = req.params.id;
+
+        await metaModel.findOneAndUpdate(
+            { userId },
+            {
+                $unset: {
+                    [`number_of_unreadMsg.${contactId}`]: "",
+                    [`lastUnread.${contactId}`]: ""
+                }
+            }
+        );
+
+        res.json({ success: true });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false });
+    }
+}
+
+
 module.exports = {
     allUsers,
     getme,
@@ -173,5 +325,9 @@ module.exports = {
     setGroupMessages,
     getMessages,
     getGroupMessages,
-    getAnalytics
+    getAnalytics,
+    handleInfo,
+    getInfo,
+    gettInfo,
+    markAsRead,
 }

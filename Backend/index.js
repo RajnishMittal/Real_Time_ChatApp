@@ -15,8 +15,11 @@ const userLogout = require("./routes/logout")
 const homeRouter = require("./routes/home");
 const profileRouter = require("./routes/profile");
 const groupRouter = require("./routes/group");
+const connectionRouter = require("./routes/connection");
+
 
 const msgModel = require("./model/msgModel")
+const metaModel = require("./model/UserMeta");
 
 const app = express();
 const server = http.createServer(app);
@@ -44,18 +47,30 @@ io.on("connection", (socket) => {
         socket.join(grpId)
     })
 
-    socket.on("disconnect", () => {
+    socket.on("disconnect", async () => {
         if (!socket.userId) return;
-
         const sockets = onlineUsers.get(socket.userId);
-
+        if (!sockets) return;
         sockets.delete(socket.id);
-
         if (sockets.size === 0) {
             onlineUsers.delete(socket.userId);
+
+            const lastOnline = new Date();
+
+            await metaModel.findOneAndUpdate(
+                { userId: socket.userId },
+                {
+                    lastOnline: lastOnline
+                },
+                {
+                    upsert: true,
+                    new: true
+                }
+            );
             io.emit("online", {
                 userId: socket.userId,
-                online: false
+                online: false,
+                lastOnline: lastOnline
             });
         }
     });
@@ -90,6 +105,8 @@ app.use("/api/home", restrictToLoggedIn, homeRouter);
 app.use("/api/profile", restrictToLoggedIn, profileRouter);
 app.use("/api/group", restrictToLoggedIn, groupRouter);
 app.use("/api/logout", restrictToLoggedIn, userLogout)
+app.use("/api/connections", restrictToLoggedIn, connectionRouter)
+
 
 server.listen(8000, () => {
     console.log("Server Started");

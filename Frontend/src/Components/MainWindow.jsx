@@ -1,5 +1,6 @@
 import React from "react";
 import "./css/Mainwindow.css";
+import { FiPlus } from "react-icons/fi";
 import userIcon from "../assets/icons/group.png"
 import { useNavigate } from "react-router-dom";
 import Sidebar from "./MainWindow/Sidebar";
@@ -12,7 +13,9 @@ function MainWindow() {
   const navigate = useNavigate();
   const [loggedIn, setLoggedIn] = React.useState(null);
   const [users, setUsers] = React.useState([]);
+  const [friends, setFriends] = React.useState([])
   const [group, setGroup] = React.useState([])
+  const [groupJoined,setGroupsJoined] = React.useState([])
   const [mess, setMess] = React.useState([]);
   const [joinGroup, setGroupJoin] = React.useState(false)
   const [activeContactId, setActiveContactId] = React.useState(null);
@@ -23,13 +26,90 @@ function MainWindow() {
   const [grpIcon, setGrpIcon] = React.useState(userIcon)
   const [onlineUsers, setOnlineUsers] = React.useState({});
   const [showProfile, setShowProfile] = React.useState(false)
-  const [unreadCounts, setUnreadCounts] = React.useState({});
+  const [isPrivate, setIsPrivate] = React.useState(false)
 
-  console.log(unreadCounts)
+
+  const [userChatData, setUserChatData] = React.useState({
+    number_of_unreadMsg: {},
+    lastUnread: {},
+    lastOnline: null,
+  });
+
+  const [othersChatData, setOthersChatData] = React.useState({
+    number_of_unreadMsg: {},
+    lastUnread: {},
+    lastOnline: null,
+  });
 
   const activeContact = isGroup
     ? group.find(g => g._id === activeContactId)
     : users.find(u => u._id === activeContactId);
+
+
+  const setUnreadCounts = React.useCallback((updater) => {
+    setUserChatData(prev => ({
+      ...prev,
+      number_of_unreadMsg: typeof updater === "function"
+        ? updater(prev.number_of_unreadMsg || {})
+        : updater,
+    }));
+  }, []);
+
+  const setLastUnread = React.useCallback((updater) => {
+    setUserChatData(prev => ({
+      ...prev,
+      lastUnread: typeof updater === "function"
+        ? updater(prev.lastUnread || {})
+        : updater,
+    }));
+  }, []);
+
+  const fetchMeta = React.useCallback(async () => {
+    if (!loggedIn?._id) return;
+    try {
+      const response = await fetch("/api/home/userMeta", {
+        credentials: "include"
+      });
+      if (!response.ok) return;
+      const { data } = await response.json();
+      setUserChatData({
+        number_of_unreadMsg: data.number_of_unreadMsg || {},
+        lastUnread: data.lastUnread || {},
+        lastOnline: data.lastOnline || null,
+      });
+    } catch (err) {
+      console.error(err);
+    }
+  }, [loggedIn]);
+
+  React.useEffect(() => {
+    fetchMeta();
+  }, [fetchMeta]);
+
+
+  React.useEffect(() => {
+    if (!loggedIn?._id) return;
+
+    async function fetchMeta() {
+      try {
+        const response = await fetch(`/api/home/userMeta/${activeContactId}`, {
+          credentials: "include"
+        });
+        if (!response.ok) return;
+        const { data } = await response.json();
+        setOthersChatData({
+          number_of_unreadMsg: data.number_of_unreadMsg || {},
+          lastUnread: data.lastUnread || {},
+          lastOnline: data.lastOnline || null,
+        });
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    fetchMeta();
+  }, [activeContactId]);
+
 
   const fetchGroups = async () => {
     try {
@@ -77,12 +157,75 @@ function MainWindow() {
         setUsers(result);
 
       } catch (err) {
-        console.error(err);
         setError(err.message);
       }
     }
 
     fetchData();
+
+  }, []);
+
+  React.useEffect(() => {
+
+    async function fetchFriends() {
+      try {
+        const response = await fetch("/api/connections/friends", {
+          credentials: "include"
+        });
+
+        if (response.status === 401) {
+          navigate("/");
+          return;
+        }
+
+        if (!response.ok) {
+          const errBody = await response.json().catch(() => ({}));
+          setError(errBody.error || "Failed to fetch users");
+          return;
+        }
+
+        const result = await response.json();
+        setError(null)
+        setFriends(result.data);
+
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+
+    fetchFriends();
+
+  }, []);
+
+  React.useEffect(() => {
+
+    async function fetchJoinedGroups() {
+      try {
+        const response = await fetch("/api/connections/joinedGroups", {
+          credentials: "include"
+        });
+
+        if (response.status === 401) {
+          navigate("/");
+          return;
+        }
+
+        if (!response.ok) {
+          const errBody = await response.json().catch(() => ({}));
+          setError(errBody.error || "Failed to fetch users");
+          return;
+        }
+
+        const result = await response.json();
+        setError(null)
+        setGroupsJoined(result.data);
+
+      } catch (err) {
+        setError(err.message);
+      }
+    }
+
+    fetchJoinedGroups();
 
   }, []);
 
@@ -107,11 +250,9 @@ function MainWindow() {
 
         const result = await response.json();
         setError(null)
-        setLoggedIn(result);
-        console.log(result)
+        setLoggedIn(result)
 
       } catch (err) {
-        console.error(err);
         setError(err.message);
       }
     }
@@ -132,13 +273,45 @@ function MainWindow() {
     })
 
     if (!response) {
-      console.log("errrorororooror")
+      console.error("error")
     }
 
     await fetchGroups();
     setGrpIcon(userIcon)
     setNewGroup(false);
   }
+
+  React.useEffect(() => {
+    if (!activeContactId || isGroup) return;
+
+    async function getPrivateStatus() {
+      try {
+        const response = await fetch(
+          `/api/connections/privateConnection/${activeContactId}`,
+          {
+            credentials: "include"
+          }
+        );
+
+        if (!response.ok) {
+          const errBody = await response.json().catch(() => ({}));
+          setError(errBody.error || "Failed to fetch privacy status");
+          return;
+        }
+
+        const result = await response.json();
+
+        setIsPrivate(result.data);
+
+      } catch (err) {
+        console.error(err);
+        setError(err.message);
+      }
+    }
+
+    getPrivateStatus();
+  }, [activeContactId, isGroup]);
+
 
   return (
     <>
@@ -153,7 +326,7 @@ function MainWindow() {
                 setNewGroup(false);
                 setGrpIcon(userIcon)
                 setGroupName()
-              }} >x</h1>
+              }} ><FiPlus size={22} style={{ transform: "rotate(45deg)" }} /></h1>
               <label htmlFor="groupPhoto" className="groupPhoto">
                 <img src={grpIcon} alt="Group" />
               </label>
@@ -186,13 +359,68 @@ function MainWindow() {
 
       <div className="mainWindow">
 
-        <Sidebar activeContactId={activeContactId} loggedIn={loggedIn} />
+        <Sidebar
+          activeContactId={activeContactId}
+          loggedIn={loggedIn}
+        />
 
-        <ContactsList unreadCounts={unreadCounts} mess={mess} activeContactId={activeContactId} isGroup={isGroup} setIsGroup={setIsGroup}  onlineUsers={onlineUsers} users={users} setActiveContactId={setActiveContactId} setNewGroup={setNewGroup} group={group} loggedIn={loggedIn} setGroupJoin={setGroupJoin} joinGroup={joinGroup} activeContact={activeContact} />
+        <ContactsList
+          userChatData={userChatData}
+          mess={mess}
+          activeContactId={activeContactId}
+          isGroup={isGroup}
+          setIsGroup={setIsGroup}
+          onlineUsers={onlineUsers}
+          users={users}
+          setActiveContactId={setActiveContactId}
+          setNewGroup={setNewGroup}
+          group={group}
+          loggedIn={loggedIn}
+          setGroupJoin={setGroupJoin}
+          joinGroup={joinGroup}
+          activeContact={activeContact}
+          friends={friends}
+          othersChatData={othersChatData}
+          groupJoined={groupJoined}
+        />
 
-        <ChatWindow setUnreadCounts={setUnreadCounts} mess={mess} setMess={setMess} setShowProfile={setShowProfile} showProfile={showProfile} setActiveContactId={setActiveContactId} isGroup={isGroup} setIsGroup={setIsGroup} activeContactId={activeContactId} activeContact={activeContact} users={users} loggedIn={loggedIn} onlineUsers={onlineUsers} setOnlineUsers={setOnlineUsers} joinGroup={joinGroup} setGroupJoin={setGroupJoin} fetchGroups={fetchGroups} />
+        <ChatWindow
+          setLastUnread={setLastUnread}
+          setUnreadCounts={setUnreadCounts}
+          mess={mess}
+          setMess={setMess}
+          setShowProfile={setShowProfile}
+          showProfile={showProfile}
+          setActiveContactId={setActiveContactId}
+          isGroup={isGroup}
+          setIsGroup={setIsGroup}
+          activeContactId={activeContactId}
+          activeContact={activeContact}
+          users={users}
+          loggedIn={loggedIn}
+          onlineUsers={onlineUsers}
+          setOnlineUsers={setOnlineUsers}
+          joinGroup={joinGroup}
+          setGroupJoin={setGroupJoin}
+          fetchGroups={fetchGroups}
+          othersChatData={othersChatData}
+          isPrivate={isPrivate}
+          friends={friends}
+          fetchMeta={fetchMeta}
+        />
 
-        <ProfilePanel setShowProfile={setShowProfile} showProfile={showProfile} loggedIn={loggedIn} activeContact={activeContact} isGroup={isGroup} group={group} activeContactId={activeContactId} onlineUsers={onlineUsers} setIsGroup={setIsGroup} setActiveContactId={setActiveContactId}/>
+        <ProfilePanel
+          setShowProfile={setShowProfile}
+          showProfile={showProfile}
+          loggedIn={loggedIn}
+          activeContact={activeContact}
+          isGroup={isGroup}
+          group={group}
+          activeContactId={activeContactId}
+          onlineUsers={onlineUsers}
+          setIsGroup={setIsGroup}
+          setActiveContactId={setActiveContactId}
+        />
 
       </div>
     </>

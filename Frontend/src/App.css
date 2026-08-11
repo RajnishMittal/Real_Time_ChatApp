@@ -5,3 +5,1338 @@
     font-weight: 400;
     font-style: normal;
 }
+
+html,
+body,
+#root {
+    transition:
+        background-color var(--transition),
+        color var(--transition);
+}
+
+:root, :root[data-theme="ember"] {
+
+/* ========= SURFACES ========= */
+
+--bg-main: #1b1815;
+--bg-secondary: #211915;
+--bg-card: #251a14;
+--bg-card-hover: #302219;
+--bg-elevated: #35261d;
+
+/* ========= TEXT ========= */
+
+--text-primary: #f3ead9;
+--text-secondary: #c7b8a4;
+--text-muted: #968474;
+--text-inverse: #251a14;
+
+/* ========= ACCENT ========= */
+
+--accent-color: #e8973a;
+--accent-hover: #f0b35d;
+--accent-soft: #cf8530;
+--accent-glow: rgba(232,151,58,.25);
+
+/* ========= SUCCESS / ERROR ========= */
+
+--success-color: #7fdc9a;
+--danger-color: #ef4444;
+--warning-color: #f59e0b;
+
+/* ========= SIDEBAR ========= */
+
+--sidebar-bg: var(--bg-card);
+--sidebar-border: rgba(243,234,217,.08);
+
+--sidebar-btn-bg: rgba(255,255,255,.04);
+--sidebar-btn-hover: rgba(232,151,58,.14);
+--sidebar-btn-active: var(--accent-color);
+
+--sidebar-icon: var(--text-secondary);
+--sidebar-icon-active: var(--text-inverse);
+
+--sidebar-radius: 16px;
+--sidebar-btn-size: 54px;
+--sidebar-icon-size: 22px;
+--sidebar-gap: 18px;
+
+/* ========= CONTACT LIST ========= */
+
+--contact-bg: var(--bg-card);
+--contact-hover: var(--bg-card-hover);
+--contact-active: rgba(232,151,58,.12);
+
+/* ========= PROFILE ========= */
+
+--profile-bg: var(--bg-card);
+
+/* ========= CHAT ========= */
+
+--chat-bg: var(--bg-main);
+--chat-header: rgba(37,26,20,.92);
+--chat-input: var(--bg-card);
+
+--message-me:
+    linear-gradient(
+        135deg,
+        #f0b35d,
+        #e8973a
+    );
+
+--message-them: #2b241f;
+
+--message-shadow:
+    0 8px 20px rgba(0,0,0,.18);
+
+/* ========= INPUT ========= */
+
+--input-bg: var(--bg-card);
+--input-border: rgba(243,234,217,.08);
+--input-focus: var(--accent-color);
+
+/* ========= BUTTON ========= */
+
+--button-bg: var(--accent-color);
+--button-hover: var(--accent-hover);
+--button-text: var(--text-inverse);
+
+/* ========= BADGES ========= */
+
+--badge-bg: rgba(232,151,58,.15);
+--badge-border: rgba(232,151,58,.3);
+
+/* ========= GLASS ========= */
+
+--glass-bg: rgba(255,255,255,.05);
+--glass-border: rgba(255,255,255,.08);
+
+/* ========= BORDERS ========= */
+
+--border-color: rgba(243,234,217,.08);
+--border-hover: rgba(243,234,217,.18);
+
+/* ========= SHADOWS ========= */
+
+--shadow-soft:
+    0 6px 16px rgba(0,0,0,.18);
+
+--shadow-medium:
+    0 10px 28px rgba(0,0,0,.25);
+
+--shadow-large:
+    0 18px 40px rgba(0,0,0,.35);
+
+/* ========= SCROLLBAR ========= */
+
+--scroll-thumb: #5a4435;
+--scroll-thumb-hover: #7a5a46;
+
+/* ========= ANIMATION ========= */
+
+--transition-fast: .2s ease;
+
+--transition:
+    .3s cubic-bezier(.4,0,.2,1);
+
+/* ========= LEGACY ALIASES =========
+   Old component CSS references these names directly. Point them at the
+   token that already resolves correctly for this theme's contrast —
+   ember is a dark theme, so "light" text is genuinely light here.
+   Mirrors the fuller alias set used by neon/eclipse so every component
+   rule (--dark-soft, --border-soft, --panel-hover, --accent-dim,
+   --danger, --success, --danger-dim, --success-dim) resolves in every
+   theme, not just neon/eclipse. */
+--light: var(--text-primary);
+--light-dim: var(--text-secondary);
+
+--dark: var(--bg-main);
+--dark-soft: var(--bg-secondary);
+
+--panel: var(--bg-card);
+--panel-hover: var(--bg-card-hover);
+
+--accent: var(--accent-color);
+--accent-dim: var(--accent-glow);
+
+--border-soft: var(--border-color);
+
+--danger: var(--danger-color);
+--success: var(--success-color);
+
+--danger-dim: rgba(239,68,68,.12);
+--success-dim: rgba(127,220,154,.12);
+
+}
+
+:root[data-theme="forest"]{
+
+/* ========= SURFACES ========= */
+
+--bg-main:#14281d;
+--bg-secondary:#1b4332;
+--bg-card:#24503d;
+--bg-card-hover:#2e6048;
+--bg-elevated:#386b55;
+
+/* ========= TEXT ========= */
+
+--text-primary:#edf8f1;
+--text-secondary:#cde7d6;
+--text-muted:#94b8a3;
+--text-inverse:#183025;
+
+/* ========= ACCENT ========= */
+
+--accent-color:#56C596;
+--accent-hover:#7DDCB2;
+--accent-soft:#43AF81;
+--accent-glow:rgba(86,197,150,.25);
+
+/* ========= SUCCESS / ERROR ========= */
+
+--success-color:#56C596;
+--danger-color:#FF6B6B;
+--warning-color:#F9C74F;
+
+/* ========= SIDEBAR ========= */
+
+--sidebar-bg:var(--bg-card);
+--sidebar-border:rgba(237,248,241,.08);
+
+--sidebar-btn-bg:rgba(255,255,255,.04);
+--sidebar-btn-hover:rgba(86,197,150,.14);
+--sidebar-btn-active:var(--accent-color);
+
+--sidebar-icon:var(--text-secondary);
+--sidebar-icon-active:var(--text-inverse);
+
+--sidebar-radius:16px;
+--sidebar-btn-size:54px;
+--sidebar-icon-size:22px;
+--sidebar-gap:18px;
+
+/* ========= CONTACT LIST ========= */
+
+--contact-bg:var(--bg-card);
+--contact-hover:var(--bg-card-hover);
+--contact-active:rgba(86,197,150,.12);
+
+/* ========= PROFILE ========= */
+
+--profile-bg:var(--bg-card);
+
+/* ========= CHAT ========= */
+
+--chat-bg:var(--bg-main);
+--chat-header:rgba(36,80,61,.92);
+--chat-input:var(--bg-card);
+
+--message-me:
+linear-gradient(
+135deg,
+#7DDCB2,
+#56C596
+);
+
+--message-them:#214133;
+
+--message-shadow:
+0 8px 20px rgba(0,0,0,.18);
+
+/* ========= INPUT ========= */
+
+--input-bg:var(--bg-card);
+--input-border:rgba(237,248,241,.08);
+--input-focus:var(--accent-color);
+
+/* ========= BUTTON ========= */
+
+--button-bg:var(--accent-color);
+--button-hover:var(--accent-hover);
+--button-text:var(--text-inverse);
+
+/* ========= BADGES ========= */
+
+--badge-bg:rgba(86,197,150,.15);
+--badge-border:rgba(86,197,150,.3);
+
+/* ========= GLASS ========= */
+
+--glass-bg:rgba(255,255,255,.05);
+--glass-border:rgba(255,255,255,.08);
+
+/* ========= BORDERS ========= */
+
+--border-color:rgba(237,248,241,.08);
+--border-hover:rgba(237,248,241,.18);
+
+/* ========= SHADOWS ========= */
+
+--shadow-soft:
+0 6px 16px rgba(0,0,0,.18);
+
+--shadow-medium:
+0 10px 28px rgba(0,0,0,.25);
+
+--shadow-large:
+0 18px 40px rgba(0,0,0,.35);
+
+/* ========= SCROLLBAR ========= */
+
+--scroll-thumb:#487A61;
+--scroll-thumb-hover:#67A985;
+
+/* ========= ANIMATION ========= */
+
+--transition-fast:.2s ease;
+
+--transition:
+.3s cubic-bezier(.4,0,.2,1);
+
+/* ========= LEGACY ALIASES ========= */
+--light: var(--text-primary);
+--light-dim: var(--text-secondary);
+
+--dark: var(--bg-main);
+--dark-soft: var(--bg-secondary);
+
+--panel: var(--bg-card);
+--panel-hover: var(--bg-card-hover);
+
+--accent: var(--accent-color);
+--accent-dim: var(--accent-glow);
+
+--border-soft: var(--border-color);
+
+--danger: var(--danger-color);
+--success: var(--success-color);
+
+--danger-dim: rgba(255,107,107,.12);
+--success-dim: rgba(86,197,150,.12);
+
+}
+
+
+
+:root[data-theme="ocean"]{
+
+/* ========= SURFACES ========= */
+
+--bg-main:#0d1b2a;
+--bg-secondary:#132238;
+--bg-card:#1b2f49;
+--bg-card-hover:#24415f;
+--bg-elevated:#2d5374;
+
+/* ========= TEXT ========= */
+
+--text-primary:#f4fbff;
+--text-secondary:#c6e5f8;
+--text-muted:#8fb4cb;
+--text-inverse:#112030;
+
+/* ========= ACCENT ========= */
+
+--accent-color:#4EA8DE;
+--accent-hover:#77C6F4;
+--accent-soft:#3B94CB;
+--accent-glow:rgba(78,168,222,.25);
+
+/* ========= SUCCESS / ERROR ========= */
+
+--success-color:#63D2FF;
+--danger-color:#EF4444;
+--warning-color:#F6C453;
+
+/* ========= SIDEBAR ========= */
+
+--sidebar-bg:var(--bg-card);
+--sidebar-border:rgba(244,251,255,.08);
+
+--sidebar-btn-bg:rgba(255,255,255,.04);
+--sidebar-btn-hover:rgba(78,168,222,.14);
+--sidebar-btn-active:var(--accent-color);
+
+--sidebar-icon:var(--text-secondary);
+--sidebar-icon-active:var(--text-inverse);
+
+--sidebar-radius:16px;
+--sidebar-btn-size:54px;
+--sidebar-icon-size:22px;
+--sidebar-gap:18px;
+
+/* ========= CONTACT LIST ========= */
+
+--contact-bg:var(--bg-card);
+--contact-hover:var(--bg-card-hover);
+--contact-active:rgba(78,168,222,.12);
+
+/* ========= PROFILE ========= */
+
+--profile-bg:var(--bg-card);
+
+/* ========= CHAT ========= */
+
+--chat-bg:var(--bg-main);
+--chat-header:rgba(27,47,73,.92);
+--chat-input:var(--bg-card);
+
+--message-me:
+linear-gradient(
+135deg,
+#77C6F4,
+#4EA8DE
+);
+
+--message-them:#22354d;
+
+--message-shadow:
+0 8px 20px rgba(0,0,0,.18);
+
+/* ========= INPUT ========= */
+
+--input-bg:var(--bg-card);
+--input-border:rgba(244,251,255,.08);
+--input-focus:var(--accent-color);
+
+/* ========= BUTTON ========= */
+
+--button-bg:var(--accent-color);
+--button-hover:var(--accent-hover);
+--button-text:var(--text-inverse);
+
+/* ========= BADGES ========= */
+
+--badge-bg:rgba(78,168,222,.15);
+--badge-border:rgba(78,168,222,.3);
+
+/* ========= GLASS ========= */
+
+--glass-bg:rgba(255,255,255,.05);
+--glass-border:rgba(255,255,255,.08);
+
+/* ========= BORDERS ========= */
+
+--border-color:rgba(244,251,255,.08);
+--border-hover:rgba(244,251,255,.18);
+
+/* ========= SHADOWS ========= */
+
+--shadow-soft:
+0 6px 16px rgba(0,0,0,.18);
+
+--shadow-medium:
+0 10px 28px rgba(0,0,0,.25);
+
+--shadow-large:
+0 18px 40px rgba(0,0,0,.35);
+
+/* ========= SCROLLBAR ========= */
+
+--scroll-thumb:#3E6A91;
+--scroll-thumb-hover:#5A8FBD;
+
+/* ========= ANIMATION ========= */
+
+--transition-fast:.2s ease;
+
+--transition:
+.3s cubic-bezier(.4,0,.2,1);
+
+/* ========= LEGACY ALIASES ========= */
+--light: var(--text-primary);
+--light-dim: var(--text-secondary);
+
+--dark: var(--bg-main);
+--dark-soft: var(--bg-secondary);
+
+--panel: var(--bg-card);
+--panel-hover: var(--bg-card-hover);
+
+--accent: var(--accent-color);
+--accent-dim: var(--accent-glow);
+
+--border-soft: var(--border-color);
+
+--danger: var(--danger-color);
+--success: var(--success-color);
+
+--danger-dim: rgba(239,68,68,.12);
+--success-dim: rgba(99,210,255,.12);
+
+}
+
+:root[data-theme="royal"]{
+
+/* ========= SURFACES ========= */
+
+--bg-main:#1b1530;
+--bg-secondary:#241c3f;
+--bg-card:#312552;
+--bg-card-hover:#3c2f64;
+--bg-elevated:#493a77;
+
+/* ========= TEXT ========= */
+
+--text-primary:#f7f3ff;
+--text-secondary:#d8cff5;
+--text-muted:#ab9bcf;
+--text-inverse:#2b1b45;
+
+/* ========= ACCENT ========= */
+
+--accent-color:#8B5CF6;
+--accent-hover:#A47BFF;
+--accent-soft:#7646E6;
+--accent-glow:rgba(139,92,246,.25);
+
+/* ========= SUCCESS / ERROR ========= */
+
+--success-color:#7FDCA3;
+--danger-color:#EF4444;
+--warning-color:#F5C451;
+
+/* ========= SIDEBAR ========= */
+
+--sidebar-bg:var(--bg-card);
+--sidebar-border:rgba(247,243,255,.08);
+
+--sidebar-btn-bg:rgba(255,255,255,.04);
+--sidebar-btn-hover:rgba(139,92,246,.14);
+--sidebar-btn-active:var(--accent-color);
+
+--sidebar-icon:var(--text-secondary);
+--sidebar-icon-active:var(--text-inverse);
+
+--sidebar-radius:16px;
+--sidebar-btn-size:54px;
+--sidebar-icon-size:22px;
+--sidebar-gap:18px;
+
+/* ========= CONTACT LIST ========= */
+
+--contact-bg:var(--bg-card);
+--contact-hover:var(--bg-card-hover);
+--contact-active:rgba(139,92,246,.12);
+
+/* ========= PROFILE ========= */
+
+--profile-bg:var(--bg-card);
+
+/* ========= CHAT ========= */
+
+--chat-bg:var(--bg-main);
+--chat-header:rgba(49,37,82,.92);
+--chat-input:var(--bg-card);
+
+--message-me:
+linear-gradient(
+135deg,
+#A47BFF,
+#8B5CF6
+);
+
+--message-them:#2d2448;
+
+--message-shadow:
+0 8px 20px rgba(0,0,0,.18);
+
+/* ========= INPUT ========= */
+
+--input-bg:var(--bg-card);
+--input-border:rgba(247,243,255,.08);
+--input-focus:var(--accent-color);
+
+/* ========= BUTTON ========= */
+
+--button-bg:var(--accent-color);
+--button-hover:var(--accent-hover);
+--button-text:var(--text-inverse);
+
+/* ========= BADGES ========= */
+
+--badge-bg:rgba(139,92,246,.15);
+--badge-border:rgba(139,92,246,.3);
+
+/* ========= GLASS ========= */
+
+--glass-bg:rgba(255,255,255,.05);
+--glass-border:rgba(255,255,255,.08);
+
+/* ========= BORDERS ========= */
+
+--border-color:rgba(247,243,255,.08);
+--border-hover:rgba(247,243,255,.18);
+
+/* ========= SHADOWS ========= */
+
+--shadow-soft:
+0 6px 16px rgba(0,0,0,.18);
+
+--shadow-medium:
+0 10px 28px rgba(0,0,0,.25);
+
+--shadow-large:
+0 18px 40px rgba(0,0,0,.35);
+
+/* ========= SCROLLBAR ========= */
+
+--scroll-thumb:#5D4A8A;
+--scroll-thumb-hover:#7A63B5;
+
+/* ========= ANIMATION ========= */
+
+--transition-fast:.2s ease;
+
+--transition:
+.3s cubic-bezier(.4,0,.2,1);
+
+/* ========= LEGACY ALIASES ========= */
+--light: var(--text-primary);
+--light-dim: var(--text-secondary);
+
+--dark: var(--bg-main);
+--dark-soft: var(--bg-secondary);
+
+--panel: var(--bg-card);
+--panel-hover: var(--bg-card-hover);
+
+--accent: var(--accent-color);
+--accent-dim: var(--accent-glow);
+
+--border-soft: var(--border-color);
+
+--danger: var(--danger-color);
+--success: var(--success-color);
+
+--danger-dim: rgba(239,68,68,.12);
+--success-dim: rgba(127,220,163,.12);
+
+}
+
+:root[data-theme="crimson"]{
+
+/* ========= SURFACES ========= */
+
+--bg-main:#180E10;
+--bg-secondary:#211214;
+--bg-card:#2B171A;
+--bg-card-hover:#381E22;
+--bg-elevated:#47252B;
+
+/* ========= TEXT ========= */
+
+--text-primary:#FFF4F4;
+--text-secondary:#EBC8C8;
+--text-muted:#B69191;
+--text-inverse:#2B171A;
+
+/* ========= ACCENT ========= */
+
+--accent-color:#EF4444;
+--accent-hover:#F87171;
+--accent-soft:#DC2626;
+--accent-glow:rgba(239,68,68,.25);
+
+/* ========= SUCCESS / ERROR ========= */
+
+--success-color:#7FDCA3;
+--danger-color:#EF4444;
+--warning-color:#F5C451;
+
+/* ========= SIDEBAR ========= */
+
+--sidebar-bg:var(--bg-card);
+--sidebar-border:rgba(255,244,244,.08);
+
+--sidebar-btn-bg:rgba(255,255,255,.04);
+--sidebar-btn-hover:rgba(239,68,68,.14);
+--sidebar-btn-active:var(--accent-color);
+
+--sidebar-icon:var(--text-secondary);
+--sidebar-icon-active:var(--text-inverse);
+
+--sidebar-radius:16px;
+--sidebar-btn-size:54px;
+--sidebar-icon-size:22px;
+--sidebar-gap:18px;
+
+/* ========= CONTACT LIST ========= */
+
+--contact-bg:var(--bg-card);
+--contact-hover:var(--bg-card-hover);
+--contact-active:rgba(239,68,68,.12);
+
+/* ========= PROFILE ========= */
+
+--profile-bg:var(--bg-card);
+
+/* ========= CHAT ========= */
+
+--chat-bg:var(--bg-main);
+--chat-header:rgba(43,23,26,.92);
+--chat-input:var(--bg-card);
+
+--message-me:
+linear-gradient(
+135deg,
+#F87171,
+#EF4444
+);
+
+--message-them:#382226;
+
+--message-shadow:
+0 8px 20px rgba(0,0,0,.18);
+
+/* ========= INPUT ========= */
+
+--input-bg:var(--bg-card);
+--input-border:rgba(255,244,244,.08);
+--input-focus:var(--accent-color);
+
+/* ========= BUTTON ========= */
+
+--button-bg:var(--accent-color);
+--button-hover:var(--accent-hover);
+--button-text:var(--text-primary);
+
+/* ========= BADGES ========= */
+
+--badge-bg:rgba(239,68,68,.15);
+--badge-border:rgba(239,68,68,.3);
+
+/* ========= GLASS ========= */
+
+--glass-bg:rgba(255,255,255,.05);
+--glass-border:rgba(255,255,255,.08);
+
+/* ========= BORDERS ========= */
+
+--border-color:rgba(255,244,244,.08);
+--border-hover:rgba(255,244,244,.18);
+
+/* ========= SHADOWS ========= */
+
+--shadow-soft:
+0 6px 16px rgba(0,0,0,.18);
+
+--shadow-medium:
+0 10px 28px rgba(0,0,0,.25);
+
+--shadow-large:
+0 18px 40px rgba(0,0,0,.35);
+
+/* ========= SCROLLBAR ========= */
+
+--scroll-thumb:#8B3A3A;
+--scroll-thumb-hover:#B34A4A;
+
+/* ========= ANIMATION ========= */
+
+--transition-fast:.2s ease;
+
+--transition:
+.3s cubic-bezier(.4,0,.2,1);
+
+/* ========= LEGACY ALIASES ========= */
+--light: var(--text-primary);
+--light-dim: var(--text-secondary);
+
+--dark: var(--bg-main);
+--dark-soft: var(--bg-secondary);
+
+--panel: var(--bg-card);
+--panel-hover: var(--bg-card-hover);
+
+--accent: var(--accent-color);
+--accent-dim: var(--accent-glow);
+
+--border-soft: var(--border-color);
+
+--danger: var(--danger-color);
+--success: var(--success-color);
+
+--danger-dim: rgba(239,68,68,.12);
+--success-dim: rgba(127,220,163,.12);
+
+}
+
+:root[data-theme="midnight"]{
+
+/* ========= SURFACES ========= */
+
+--bg-main:#0F172A;
+--bg-secondary:#162033;
+--bg-card:#1E293B;
+--bg-card-hover:#273549;
+--bg-elevated:#334155;
+
+/* ========= TEXT ========= */
+
+--text-primary:#F8FAFC;
+--text-secondary:#CBD5E1;
+--text-muted:#94A3B8;
+--text-inverse:#0F172A;
+
+/* ========= ACCENT ========= */
+
+--accent-color:#94A3B8;
+--accent-hover:#CBD5E1;
+--accent-soft:#64748B;
+--accent-glow:rgba(148,163,184,.25);
+
+/* ========= SUCCESS / ERROR ========= */
+
+--success-color:#4ADE80;
+--danger-color:#F87171;
+--warning-color:#FACC15;
+
+/* ========= SIDEBAR ========= */
+
+--sidebar-bg:var(--bg-card);
+--sidebar-border:rgba(248,250,252,.08);
+
+--sidebar-btn-bg:rgba(255,255,255,.04);
+--sidebar-btn-hover:rgba(148,163,184,.14);
+--sidebar-btn-active:var(--accent-color);
+
+--sidebar-icon:var(--text-secondary);
+--sidebar-icon-active:var(--text-inverse);
+
+--sidebar-radius:16px;
+--sidebar-btn-size:54px;
+--sidebar-icon-size:22px;
+--sidebar-gap:18px;
+
+/* ========= CONTACT LIST ========= */
+
+--contact-bg:var(--bg-card);
+--contact-hover:var(--bg-card-hover);
+--contact-active:rgba(148,163,184,.12);
+
+/* ========= PROFILE ========= */
+
+--profile-bg:var(--bg-card);
+
+/* ========= CHAT ========= */
+
+--chat-bg:var(--bg-main);
+--chat-header:rgba(30,41,59,.92);
+--chat-input:var(--bg-card);
+
+--message-me:
+linear-gradient(
+135deg,
+#CBD5E1,
+#94A3B8
+);
+
+--message-them:#2A3447;
+
+--message-shadow:
+0 8px 20px rgba(0,0,0,.18);
+
+/* ========= INPUT ========= */
+
+--input-bg:var(--bg-card);
+--input-border:rgba(248,250,252,.08);
+--input-focus:var(--accent-color);
+
+/* ========= BUTTON ========= */
+
+--button-bg:var(--accent-color);
+--button-hover:var(--accent-hover);
+--button-text:var(--text-inverse);
+
+/* ========= BADGES ========= */
+
+--badge-bg:rgba(148,163,184,.15);
+--badge-border:rgba(148,163,184,.3);
+
+/* ========= GLASS ========= */
+
+--glass-bg:rgba(255,255,255,.05);
+--glass-border:rgba(255,255,255,.08);
+
+/* ========= BORDERS ========= */
+
+--border-color:rgba(248,250,252,.08);
+--border-hover:rgba(248,250,252,.18);
+
+/* ========= SHADOWS ========= */
+
+--shadow-soft:
+0 6px 16px rgba(0,0,0,.18);
+
+--shadow-medium:
+0 10px 28px rgba(0,0,0,.25);
+
+--shadow-large:
+0 18px 40px rgba(0,0,0,.35);
+
+/* ========= SCROLLBAR ========= */
+
+--scroll-thumb:#475569;
+--scroll-thumb-hover:#64748B;
+
+/* ========= ANIMATION ========= */
+
+--transition-fast:.2s ease;
+
+--transition:
+.3s cubic-bezier(.4,0,.2,1);
+
+/* ========= LEGACY ALIASES ========= */
+--light: var(--text-primary);
+--light-dim: var(--text-secondary);
+
+--dark: var(--bg-main);
+--dark-soft: var(--bg-secondary);
+
+--panel: var(--bg-card);
+--panel-hover: var(--bg-card-hover);
+
+--accent: var(--accent-color);
+--accent-dim: var(--accent-glow);
+
+--border-soft: var(--border-color);
+
+--danger: var(--danger-color);
+--success: var(--success-color);
+
+--danger-dim: rgba(248,113,113,.12);
+--success-dim: rgba(74,222,128,.12);
+
+}
+
+
+:root[data-theme="sakura"]{
+
+/* ========= SURFACES ========= */
+
+--bg-main:#FFF5F8;
+--bg-secondary:#FFEFF4;
+--bg-card:#FFF9FB;
+--bg-card-hover:#FFE8F1;
+--bg-elevated:#FFFFFF;
+
+/* ========= TEXT ========= */
+
+--text-primary:#4B2E39;
+--text-secondary:#805667;
+--text-muted:#B28796;
+--text-inverse:#FFF9FB;
+
+/* ========= ACCENT ========= */
+
+--accent-color:#F472B6;
+--accent-hover:#FB8BC5;
+--accent-soft:#EC4899;
+--accent-glow:rgba(244,114,182,.22);
+
+/* ========= SUCCESS / ERROR ========= */
+
+--success-color:#34D399;
+--danger-color:#F87171;
+--warning-color:#FBBF24;
+
+/* ========= SIDEBAR ========= */
+
+--sidebar-bg:var(--bg-card);
+--sidebar-border:rgba(75,46,57,.08);
+
+--sidebar-btn-bg:rgba(244,114,182,.08);
+--sidebar-btn-hover:rgba(244,114,182,.16);
+--sidebar-btn-active:var(--accent-color);
+
+--sidebar-icon:var(--text-secondary);
+--sidebar-icon-active:var(--text-inverse);
+
+--sidebar-radius:16px;
+--sidebar-btn-size:54px;
+--sidebar-icon-size:22px;
+--sidebar-gap:18px;
+
+/* ========= CONTACT LIST ========= */
+
+--contact-bg:var(--bg-card);
+--contact-hover:var(--bg-card-hover);
+--contact-active:rgba(244,114,182,.12);
+
+/* ========= PROFILE ========= */
+
+--profile-bg:var(--bg-card);
+
+/* ========= CHAT ========= */
+
+--chat-bg:var(--bg-main);
+--chat-header:rgba(255,249,251,.92);
+--chat-input:var(--bg-card);
+
+--message-me:
+linear-gradient(
+135deg,
+#FB8BC5,
+#F472B6
+);
+
+--message-them:#FFE6F0;
+
+--message-shadow:
+0 8px 20px rgba(244,114,182,.12);
+
+/* ========= INPUT ========= */
+
+--input-bg:var(--bg-card);
+--input-border:rgba(75,46,57,.08);
+--input-focus:var(--accent-color);
+
+/* ========= BUTTON ========= */
+
+--button-bg:var(--accent-color);
+--button-hover:var(--accent-hover);
+--button-text:#FFFFFF;
+
+/* ========= BADGES ========= */
+
+--badge-bg:rgba(244,114,182,.14);
+--badge-border:rgba(244,114,182,.28);
+
+/* ========= GLASS ========= */
+
+--glass-bg:rgba(255,255,255,.55);
+--glass-border:rgba(255,255,255,.7);
+
+/* ========= BORDERS ========= */
+
+--border-color:rgba(75,46,57,.08);
+--border-hover:rgba(244,114,182,.25);
+
+/* ========= SHADOWS ========= */
+
+--shadow-soft:
+0 6px 16px rgba(244,114,182,.10);
+
+--shadow-medium:
+0 10px 28px rgba(244,114,182,.15);
+
+--shadow-large:
+0 18px 40px rgba(244,114,182,.18);
+
+/* ========= SCROLLBAR ========= */
+
+--scroll-thumb:#F9A8D4;
+--scroll-thumb-hover:#F472B6;
+
+/* ========= ANIMATION ========= */
+
+--transition-fast:.2s ease;
+
+--transition:
+.3s cubic-bezier(.4,0,.2,1);
+
+/* ========= LEGACY ALIASES =========
+   Sakura is a LIGHT theme, so this is the important flip: "light" text
+   here must resolve to the dark plum ink (#4B2E39), and "dark" text
+   must resolve to the near-white (#FFF9FB) used on filled accent
+   surfaces — the reverse of every other (dark) theme above. --dark-soft
+   and --panel now correctly resolve to sakura's own light surfaces
+   (--bg-secondary / --bg-card) instead of falling through undefined. */
+--light: var(--text-primary);
+--light-dim: var(--text-secondary);
+
+--dark: var(--bg-main);
+--dark-soft: var(--bg-secondary);
+
+--panel: var(--bg-card);
+--panel-hover: var(--bg-card-hover);
+
+--accent: var(--accent-color);
+--accent-dim: var(--accent-glow);
+
+--border-soft: var(--border-color);
+
+--danger: var(--danger-color);
+--success: var(--success-color);
+
+--danger-dim: rgba(248,113,113,.12);
+--success-dim: rgba(52,211,153,.12);
+
+}
+
+:root[data-theme="neon"] {
+
+    /* ========= SURFACES ========= */
+
+    --bg-main: #09090B;
+    --bg-secondary: #111117;
+    --bg-card: #17171F;
+    --bg-card-hover: #20202B;
+    --bg-elevated: #262633;
+
+    /* ========= TEXT ========= */
+
+    --text-primary: #F4F7FF;
+    --text-secondary: #A7B0D1;
+    --text-muted: #6F7692;
+    --text-inverse: #09090B;
+
+    /* ========= ACCENT ========= */
+
+    --accent-color: #00F5D4;
+    --accent-hover: #00E5FF;
+    --accent-soft: #5EEAD4;
+    --accent-glow: rgba(0,245,212,.28);
+
+    /* ========= SUCCESS / ERROR ========= */
+
+    --success-color: #22C55E;
+    --danger-color: #FF4D6D;
+    --warning-color: #FBBF24;
+
+    /* ========= SIDEBAR ========= */
+
+    --sidebar-bg: var(--bg-card);
+    --sidebar-border: rgba(255,255,255,.06);
+
+    --sidebar-btn-bg: rgba(255,255,255,.03);
+    --sidebar-btn-hover: rgba(0,245,212,.14);
+    --sidebar-btn-active: var(--accent-color);
+
+    --sidebar-icon: var(--text-secondary);
+    --sidebar-icon-active: #09090B;
+
+    --sidebar-radius: 16px;
+    --sidebar-btn-size: 54px;
+    --sidebar-icon-size: 22px;
+    --sidebar-gap: 18px;
+
+    /* ========= CONTACT LIST ========= */
+
+    --contact-bg: var(--bg-card);
+    --contact-hover: var(--bg-card-hover);
+    --contact-active: rgba(0,245,212,.12);
+
+    /* ========= PROFILE ========= */
+
+    --profile-bg: var(--bg-card);
+
+    /* ========= CHAT ========= */
+
+    --chat-bg: var(--bg-main);
+    --chat-header: rgba(23,23,31,.94);
+    --chat-input: var(--bg-card);
+
+    --message-me: linear-gradient(135deg,#00F5D4,#00E5FF);
+    --message-them: #252534;
+
+    --message-shadow: 0 10px 24px rgba(0,0,0,.4);
+
+    /* ========= INPUT ========= */
+
+    --input-bg: var(--bg-card);
+    --input-border: rgba(255,255,255,.08);
+    --input-focus: var(--accent-color);
+
+    /* ========= BUTTON ========= */
+
+    --button-bg: var(--accent-color);
+    --button-hover: var(--accent-hover);
+    --button-text: #09090B;
+
+    /* ========= BADGES ========= */
+
+    --badge-bg: rgba(0,245,212,.15);
+    --badge-border: rgba(0,245,212,.3);
+
+    /* ========= GLASS ========= */
+
+    --glass-bg: rgba(255,255,255,.03);
+    --glass-border: rgba(255,255,255,.08);
+
+    /* ========= BORDERS ========= */
+
+    --border-color: rgba(255,255,255,.08);
+    --border-hover: rgba(0,245,212,.25);
+
+    /* ========= SHADOWS ========= */
+
+    --shadow-soft: 0 6px 16px rgba(0,0,0,.35);
+    --shadow-medium: 0 10px 28px rgba(0,0,0,.45);
+    --shadow-large: 0 20px 45px rgba(0,0,0,.55);
+
+    /* ========= SCROLLBAR ========= */
+
+    --scroll-thumb: #00F5D4;
+    --scroll-thumb-hover: #00E5FF;
+
+    /* ========= ANIMATION ========= */
+
+    --transition-fast: .2s ease;
+    --transition: .3s cubic-bezier(.4,0,.2,1);
+
+    /* ========= LEGACY ========= */
+
+    --light: var(--text-primary);
+    --light-dim: var(--text-secondary);
+
+    --dark: var(--bg-main);
+    --dark-soft: var(--bg-secondary);
+
+    --panel: var(--bg-card);
+    --panel-hover: var(--bg-card-hover);
+
+    --accent: var(--accent-color);
+    --accent-dim: var(--accent-glow);
+
+    --border-soft: var(--border-color);
+
+    --danger: var(--danger-color);
+    --success: var(--success-color);
+
+    --danger-dim: rgba(255,77,109,.12);
+    --success-dim: rgba(34,197,94,.12);
+}
+
+
+:root[data-theme="eclipse"] {
+
+    /* ========= SURFACES ========= */
+
+    --bg-main: #101010;
+    --bg-secondary: #171717;
+    --bg-card: #1F1F1F;
+    --bg-card-hover: #2A2A2A;
+    --bg-elevated: #343434;
+
+    /* ========= TEXT ========= */
+
+    --text-primary: #F8F3E7;
+    --text-secondary: #CBBFA5;
+    --text-muted: #8F8576;
+    --text-inverse: #111111;
+
+    /* ========= ACCENT ========= */
+
+    --accent-color: #F6C453;
+    --accent-hover: #FFD977;
+    --accent-soft: #DFAE39;
+    --accent-glow: rgba(246,196,83,.22);
+
+    /* ========= SUCCESS / ERROR ========= */
+
+    --success-color: #58D68D;
+    --danger-color: #FF6464;
+    --warning-color: #F6C453;
+
+    /* ========= SIDEBAR ========= */
+
+    --sidebar-bg: var(--bg-card);
+    --sidebar-border: rgba(255,255,255,.05);
+
+    --sidebar-btn-bg: rgba(255,255,255,.03);
+    --sidebar-btn-hover: rgba(246,196,83,.14);
+    --sidebar-btn-active: var(--accent-color);
+
+    --sidebar-icon: var(--text-secondary);
+    --sidebar-icon-active: var(--text-inverse);
+
+    --sidebar-radius: 16px;
+    --sidebar-btn-size: 54px;
+    --sidebar-icon-size: 22px;
+    --sidebar-gap: 18px;
+
+    /* ========= CONTACT LIST ========= */
+
+    --contact-bg: var(--bg-card);
+    --contact-hover: var(--bg-card-hover);
+    --contact-active: rgba(246,196,83,.10);
+
+    /* ========= PROFILE ========= */
+
+    --profile-bg: var(--bg-card);
+
+    /* ========= CHAT ========= */
+
+    --chat-bg: var(--bg-main);
+    --chat-header: rgba(31,31,31,.94);
+    --chat-input: var(--bg-card);
+
+    --message-me:
+        linear-gradient(
+            135deg,
+            #FFD977,
+            #F6C453
+        );
+
+    --message-them: #292929;
+
+    --message-shadow:
+        0 10px 24px rgba(0,0,0,.35);
+
+    /* ========= INPUT ========= */
+
+    --input-bg: var(--bg-card);
+    --input-border: rgba(255,255,255,.07);
+    --input-focus: var(--accent-color);
+
+    /* ========= BUTTON ========= */
+
+    --button-bg: var(--accent-color);
+    --button-hover: var(--accent-hover);
+    --button-text: #101010;
+
+    /* ========= BADGES ========= */
+
+    --badge-bg: rgba(246,196,83,.14);
+    --badge-border: rgba(246,196,83,.28);
+
+    /* ========= GLASS ========= */
+
+    --glass-bg: rgba(255,255,255,.03);
+    --glass-border: rgba(255,255,255,.06);
+
+    /* ========= BORDERS ========= */
+
+    --border-color: rgba(255,255,255,.07);
+    --border-hover: rgba(246,196,83,.22);
+
+    /* ========= SHADOWS ========= */
+
+    --shadow-soft:
+        0 8px 18px rgba(0,0,0,.22);
+
+    --shadow-medium:
+        0 14px 30px rgba(0,0,0,.30);
+
+    --shadow-large:
+        0 24px 55px rgba(0,0,0,.42);
+
+    /* ========= SCROLLBAR ========= */
+
+    --scroll-thumb: #A37C28;
+    --scroll-thumb-hover: #D4A73D;
+
+    /* ========= ANIMATION ========= */
+
+    --transition-fast: .2s ease;
+    --transition: .3s cubic-bezier(.4,0,.2,1);
+
+    /* ========= LEGACY ========= */
+
+    --light: var(--text-primary);
+    --light-dim: var(--text-secondary);
+    --dark: var(--bg-main);
+    --dark-soft: var(--bg-secondary);
+    --panel: var(--bg-card);
+    --panel-hover: var(--bg-card-hover);
+    --accent: var(--accent-color);
+    --accent-dim: var(--accent-glow);
+    --border-soft: var(--border-color);
+    --danger: var(--danger-color);
+    --success: var(--success-color);
+    --danger-dim: rgba(255,100,100,.14);
+    --success-dim: rgba(88,214,141,.14);
+}

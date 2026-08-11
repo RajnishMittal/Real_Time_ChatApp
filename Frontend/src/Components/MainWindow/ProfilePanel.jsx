@@ -1,12 +1,11 @@
-import React from 'react'
-import "../css/Mainwindow/ProfilePanel.css"
+import React, { useState, useMemo, useEffect } from 'react';
+import "../css/Mainwindow/ProfilePanel.css";
 import { Country, State } from "country-state-city";
 
 function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUsers, setIsGroup, setActiveContactId, setShowProfile, showProfile }) {
+    const [searchUser, setSearchUser] = useState("");
 
-    const [searchUser, setSearchUser] = React.useState("")
-
-    const sortedMembers = React.useMemo(() => {
+    const sortedMembers = useMemo(() => {
         if (!activeContact?.members) return [];
 
         const creatorId = (activeContact.createdBy?._id ?? activeContact.createdBy)?.toString();
@@ -28,16 +27,14 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
         });
     }, [activeContact]);
 
-    const searchedUsers = activeContact?.members
-        ?.filter(user =>
-            user?.name?.toLowerCase().includes(searchUser.toLowerCase()) ||
-            user?.username?.toLowerCase().includes(searchUser.toLowerCase())
-        )
+    const searchedUsers = activeContact?.members?.filter(user =>
+        user?.name?.toLowerCase().includes(searchUser.toLowerCase()) ||
+        user?.username?.toLowerCase().includes(searchUser.toLowerCase())
+    );
 
-    React.useEffect(() => {
-        setSearchUser("")
-    }, [activeContactId])
-
+    useEffect(() => {
+        setSearchUser("");
+    }, [activeContactId]);
 
     function getAge(dob) {
         if (!dob) return null;
@@ -51,284 +48,221 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
         return age;
     }
 
-    function show_chats(id, isGroup) {
+    function show_chats(id, isGroupTarget) {
         setActiveContactId(id);
-        setIsGroup(isGroup)
+        setIsGroup(isGroupTarget);
     }
+
+    const displayedMembers = searchUser ? searchedUsers : sortedMembers;
 
     if (!activeContact) {
         return (
-            <div className="profile">
-                <div className="profile_empty">
-                    <p>Select a contact or group to view details</p>
-                </div>
-            </div>
+            <aside className="profile-panel empty-state">
+                <p>Select a contact or group to view details</p>
+            </aside>
         );
     }
 
-
     return (
-        <div className={`profile ${showProfile ? "profile-visible-mobile" : ""}`}>
+        <aside className={`profile-panel ${showProfile ? "profile-visible-mobile" : ""}`}>
+            <header className="panel-header">
+                <button className="back-btn" onClick={() => setShowProfile(false)} aria-label="Back to contacts">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M19 12H5M12 19l-7-7 7-7" />
+                    </svg>
+                </button>
+            </header>
 
-            <button style={{ marginBottom: "20px" }} className="back_btn" onClick={() => setShowProfile(false)} aria-label="Back to contacts">
-                ←
-            </button>
-
-            {!isGroup ? <>
-                <div className="profile_avatar_wrap">
-
-                    {activeContact?.profilePic ? <img
-                        src={
-                            activeContact?.profilePic.startsWith("http")
-                                ? activeContact.profilePic
-                                : `http://localhost:8000/${activeContact?.profilePic}`
-                        }
-                        alt={activeContact?.name}
-                    /> : null}
-
-                    {onlineUsers?.[activeContact?._id] ? <span className="profile_status_dot" /> : null}
-                </div>
-
-                <h1 className="profile_name">{activeContact?.name}</h1>
-                <p className="profile_username">@{activeContact?.username}</p>
-
-                <p className="profile_bio">
-                    {activeContact?.bio}
-                </p>
-
-                <div className="profile_divider" />
-
-                <div className="profile_details">
-
-                    <div className="profile_detail_row">
-                        <span className="profile_detail_label">Date of Birth</span>
-                        <span className="profile_detail_value">
-                            {activeContact?.dob
-                                ? new Date(activeContact.dob).toLocaleDateString(undefined, {
-                                    year: "numeric",
-                                    month: "long",
-                                    day: "numeric",
-                                })
-                                : "Not specified"}
-                        </span>
-                    </div>
-
-                    <div className="profile_detail_row">
-                        <span className="profile_detail_label">Age</span>
-                        <span className="profile_detail_value">
-                            {activeContact?.dob ? `${getAge(activeContact.dob)} years` : "Not specified"}
-                        </span>
-                    </div>
-
-                    <div className="profile_detail_row">
-                        <span className="profile_detail_label">Location</span>
-                        <span className="profile_detail_value">
-                            {(() => {
-                                const stateName = activeContact?.state
-                                    ? State.getStateByCodeAndCountry(activeContact.state, activeContact.country)?.name
-                                    : null;
-                                const countryName = activeContact?.country
-                                    ? Country.getCountryByCode(activeContact.country)?.name
-                                    : null;
-
-                                if (!stateName && !countryName) return "Not specified";
-
-                                return `${stateName ?? ""}${stateName && countryName ? ", " : ""}${countryName ?? ""}`;
-                            })()}
-                        </span>
-                    </div>
-
-                </div>
-
-            </> :
-
-                <>
-
-                    <div className="profile_avatar_wrap">
-                        <img
-                            src={
-                                activeContact?.grpPic.startsWith("http")
-                                    ? activeContact.grpPic
-                                    : `http://localhost:8000/${activeContact?.grpPic}`
-                            }
-                            alt={activeContact?.grpName}
-                        />
-                    </div>
-
-                    <h1 className="profile_name">{activeContact?.grpName}</h1>
-
-                    <div className="profile_divider" />
-
-                    <div className="profile_details">
-
-                        <div className="profile_detail_row">
-                            <span className="profile_detail_label">Created By</span>
-                            <span className="profile_detail_value">
-                                {activeContact?.createdBy?.name ?? "Unknown"}
-                            </span>
-                        </div>
-
-                        <div className="profile_detail_row">
-                            <span className="profile_detail_label">Created At</span>
-                            <span className="profile_detail_value">
-                                {activeContact?.createdAt
-                                    ? new Date(activeContact.createdAt).toLocaleDateString(undefined, {
-                                        year: "numeric",
-                                        month: "long",
-                                        day: "numeric",
-                                    })
-                                    : "Not specified"}
-                            </span>
-                        </div>
-
-                        <div className="profile_detail_row">
-                            <span className="profile_detail_value">
-                                ~{activeContact.grpBio}~
-                            </span>
-                        </div>
-
-                    </div>
-
-                    <div className="profile_divider" />
-
-
-                    <h1 style={{ marginTop: "30px", textAlign: "left" }}>Members</h1>
-
-                    {activeContact?.members?.length > 4 ? <input
-                        type="search"
-                        placeholder="SEARCH CHAT"
-                        autoComplete='off'
-                        value={searchUser}
-                        onChange={(e) => setSearchUser(e.target.value)}
-                    /> : null}
-
-                    <div className="allContacts">
-
-                        {searchUser ? searchedUsers.map(user => (
-
-                            <div
-                                key={user?._id}
-                                className="contact_tab"
-                                onClick={() => show_chats(user?._id, false)}
-                            >
-
+            <div className="profile-scroll-content">
+                {!isGroup ? (
+                    /* --- INDIVIDUAL USER PROFILE --- */
+                    <div className="profile-content-wrapper">
+                        <div className="avatar-container">
+                            {activeContact?.profilePic && (
                                 <img
+                                    className="panel-avatar"
                                     src={
-                                        user?.profilePic?.startsWith("http")
-                                            ? user?.profilePic
-                                            : `http://localhost:8000/${user?.profilePic}`
+                                        activeContact.profilePic.startsWith("http")
+                                            ? activeContact.profilePic
+                                            : `http://localhost:8000/${activeContact.profilePic}`
                                     }
-                                    style={{
-                                        border: onlineUsers?.[user?._id]
-                                            ? "3px solid #22c55e"
-                                            : "2px solid transparent"
-                                    }}
-                                    alt={user?.name}
+                                    alt={activeContact?.name}
                                 />
+                            )}
+                            {onlineUsers?.[activeContact?._id] && <span className="online-indicator" />}
+                        </div>
 
-                                <h2 className="person_name">
-                                    {user?.name}
-                                    <p className="username_row">
-                                    {activeContact?.createdBy?._id === user?._id && (
-                                        <small className="creator_badge">
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5z" />
-                                            </svg>
-                                            Creator
-                                        </small>
-                                    )}
+                        <div className="profile-primary-info">
+                            <h2 className="profile-name">{activeContact?.name}</h2>
+                            <p className="profile-username">@{activeContact?.username}</p>
+                            {activeContact?.bio && <p className="profile-bio">{activeContact.bio}</p>}
+                        </div>
 
-                                    {activeContact?.createdBy?._id === user?._id ? null : <>{activeContact?.admins?.some(admin => admin?._id === user?._id) && (
-                                        <small className="admin_badge">
-                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                                                <path d="M2 20h20l-2-9-5 4-3-8-3 8-5-4z" />
-                                            </svg>
-                                            Admin
-                                        </small>
-                                    )}</>}
+                        <hr className="panel-divider" />
 
-                                    <span
-                                        style={{
-                                            fontSize: "0.85rem",
-                                            color: "#888",
-                                            margin: "2px 0 0",
-                                        }}
-                                    >
-                                        @{user?.username}
-                                    </span>
-                                    </p>
-                                </h2>
-
+                        <div className="details-list">
+                            <div className="detail-row">
+                                <span className="detail-label">Date of Birth</span>
+                                <span className="detail-value">
+                                    {activeContact?.dob
+                                        ? new Date(activeContact.dob).toLocaleDateString(undefined, {
+                                            year: "numeric", month: "long", day: "numeric",
+                                        })
+                                        : "Not specified"}
+                                </span>
                             </div>
+                            <div className="detail-row">
+                                <span className="detail-label">Age</span>
+                                <span className="detail-value">
+                                    {activeContact?.dob ? `${getAge(activeContact.dob)} years` : "Not specified"}
+                                </span>
+                            </div>
+                            <div className="detail-row">
+                                <span className="detail-label">Location</span>
+                                <span className="detail-value">
+                                    {(() => {
+                                        const stateName = activeContact?.state
+                                            ? State.getStateByCodeAndCountry(activeContact.state, activeContact.country)?.name
+                                            : null;
+                                        const countryName = activeContact?.country
+                                            ? Country.getCountryByCode(activeContact.country)?.name
+                                            : null;
 
-                        )) : <>{sortedMembers
-                            .map(user => (
-
-                                <div
-                                    key={user?._id}
-                                    className="contact_tab"
-                                    onClick={() => show_chats(user?._id, false)}
-                                >
-
-                                    <img
-                                        src={
-                                            user?.profilePic?.startsWith("http")
-                                                ? user?.profilePic
-                                                : `http://localhost:8000/${user?.profilePic}`
-                                        }
-                                        style={{
-                                            border: onlineUsers?.[user?._id]
-                                                ? "3px solid #22c55e"
-                                                : "2px solid transparent"
-                                        }}
-                                        alt={user?.name}
-                                    />
-
-                                    <h2 className="person_name">
-                                        {user?.name}
-                                        <p className="username_row">
-                                            {activeContact?.createdBy?._id === user?._id && (
-                                                <small className="creator_badge">
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                                                        <path d="M12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5z" />
-                                                    </svg>
-                                                    Creator
-                                                </small>
-                                            )}
-
-                                            {activeContact?.createdBy?._id === user?._id ? null : <>{activeContact?.admins?.some(admin => admin?._id === user?._id) && (
-                                                <small className="admin_badge">
-                                                    <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
-                                                        <path d="M2 20h20l-2-9-5 4-3-8-3 8-5-4z" />
-                                                    </svg>
-                                                    Admin
-                                                </small>
-                                            )}</>}
-
-
-                                            <span
-                                                style={{
-                                                    fontSize: "0.85rem",
-                                                    color: "#888",
-                                                    margin: "2px 0 0",
-                                                }}
-                                            >
-                                                @{user?.username}
-                                            </span>
-
-                                        </p>
-                                    </h2>
-
-                                </div>
-
-                            ))} </>}
-
+                                        if (!stateName && !countryName) return "Not specified";
+                                        return `${stateName ?? ""}${stateName && countryName ? ", " : ""}${countryName ?? ""}`;
+                                    })()}
+                                </span>
+                            </div>
+                        </div>
                     </div>
+                ) : (
+                    /* --- GROUP PROFILE --- */
+                    <div className="profile-content-wrapper">
+                        <div className="avatar-container">
+                            <img
+                                className="panel-avatar"
+                                src={
+                                    activeContact?.grpPic?.startsWith("http")
+                                        ? activeContact.grpPic
+                                        : `http://localhost:8000/${activeContact?.grpPic}`
+                                }
+                                alt={activeContact?.grpName}
+                            />
+                        </div>
 
-                </>}
+                        <div className="profile-primary-info">
+                            <h2 className="profile-name">{activeContact?.grpName}</h2>
+                        </div>
 
-        </div>
-    )
+                        <hr className="panel-divider" />
+
+                        <div className="details-list">
+                            <div className="detail-row">
+                                <span className="detail-label">Created By</span>
+                                <span className="detail-value">{activeContact?.createdBy?.name ?? "Unknown"}</span>
+                            </div>
+                            <div className="detail-row">
+                                <span className="detail-label">Created At</span>
+                                <span className="detail-value">
+                                    {activeContact?.createdAt
+                                        ? new Date(activeContact.createdAt).toLocaleDateString(undefined, {
+                                            year: "numeric", month: "long", day: "numeric",
+                                        })
+                                        : "Not specified"}
+                                </span>
+                            </div>
+                            {activeContact?.grpBio && (
+                                <div className="detail-row">
+                                    <span className="detail-value italic text-muted text-center w-full">
+                                        ~ {activeContact.grpBio} ~
+                                    </span>
+                                </div>
+                            )}
+                        </div>
+
+                        <hr className="panel-divider" />
+
+                        <div className="members-section">
+                            <h3 className="section-title">Members ({activeContact?.members?.length || 0})</h3>
+
+                            {activeContact?.members?.length >= 3 && (
+                                <input
+                                    className="modern-search"
+                                    type="search"
+                                    placeholder="Search members..."
+                                    autoComplete='off'
+                                    value={searchUser}
+                                    onChange={(e) => setSearchUser(e.target.value)}
+                                />
+                            )}
+
+                            <div className="member-list">
+                                {displayedMembers?.map(user => {
+                                    const isCreator = activeContact?.createdBy?._id === user?._id;
+                                    const isAdmin = !isCreator && activeContact?.admins?.some(admin => admin?._id === user?._id);
+                                    const isOnline = onlineUsers?.[user?._id];
+
+                                    return (
+                                        <div
+                                            key={user?._id}
+                                            className="member-item hover-effect"
+                                            onClick={() => show_chats(user?._id, false)}
+                                        >
+                                            <div className="member-avatar-wrapper">
+                                                <img
+                                                    className={`member-avatar ${isOnline ? 'is-online' : ''}`}
+                                                    src={
+                                                        user?.profilePic?.startsWith("http")
+                                                            ? user?.profilePic
+                                                            : `http://localhost:8000/${user?.profilePic}`
+                                                    }
+                                                    alt={user?.name}
+                                                />
+                                            </div>
+
+                                            <div className="member-info">
+                                                <span className="member-name">{user?.name}</span>
+                                                <div className="member-meta">
+                                                    <span className="member-handle">@{user?.username}</span>
+
+                                                    {isCreator && (
+                                                        <small className="creator_badgee">
+
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+
+                                                                <path d="M12 2 15 8.5 22 9.5 17 14.5 18.5 21.5 12 18 5.5 21.5 7 14.5 2 9.5 9 8.5z" />
+
+                                                            </svg>
+
+                                                            Creator
+
+                                                        </small>
+                                                    )}
+                                                    {isAdmin && (
+                                                        <small className="admin_badgee">
+
+                                                            <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor">
+
+                                                                <path d="M2 20h20l-2-9-5 4-3-8-3 8-5-4z" />
+
+                                                            </svg>
+
+                                                            Admin
+
+                                                        </small>
+                                                    )}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
+                            </div>
+                        </div>
+                    </div>
+                )}
+            </div>
+        </aside>
+    );
 }
 
-export default ProfilePanel
+export default ProfilePanel;

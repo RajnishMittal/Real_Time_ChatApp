@@ -1,4 +1,6 @@
 import React from 'react'
+import "../../css/Settings/GroupSettings.css"
+import { FiUserPlus, FiUserMinus, FiTrash2 } from "react-icons/fi";
 import { useNavigate } from 'react-router-dom'
 
 function GroupSettings() {
@@ -14,6 +16,7 @@ function GroupSettings() {
     const [saving, setSaving] = React.useState(false);
     const [error, setError] = React.useState(null);
     const [creator, setCreator] = React.useState(null)
+    const [searchUser, setSearchUser] = React.useState("");
 
     const sortedMembers = React.useMemo(() => {
         if (!activeManageGroup?.members) return [];
@@ -36,6 +39,13 @@ function GroupSettings() {
             return (a?.name ?? "").localeCompare(b?.name ?? "");
         });
     }, [activeManageGroup]);
+
+    const searchedUsers = activeManageGroup?.members?.filter(user =>
+        user?.name?.toLowerCase().includes(searchUser.toLowerCase()) ||
+        user?.username?.toLowerCase().includes(searchUser.toLowerCase())
+    );
+
+    const displayedMembers = searchUser ? searchedUsers : sortedMembers;
 
     const fetchAdminGroups = React.useCallback(async () => {
         try {
@@ -250,132 +260,138 @@ function GroupSettings() {
     }
 
     return (
-        <section className="settings_card">
-            <div className="settings_card_head">
-                <h2>Manage groups</h2>
-                <p className="settings_card_subtitle">Groups you admin, and their members.</p>
-            </div>
-
-            {error && (
-                <div className="settings_alert settings_alert--error">
-                    <svg className="settings_alert_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                        <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="13" /><line x1="12" y1="16.5" x2="12" y2="16.5" />
-                    </svg>
-                    {error}
+        <>
+            <section className="settings_card">
+                <div className="settings_card_head">
+                    <h2>Manage groups</h2>
+                    <p className="settings_card_subtitle">Groups you admin, and their members.</p>
                 </div>
-            )}
 
-            {adminGroups.length === 0 ? (
-                <div className="manage_groups_empty">
-                    <span>You aren't an admin of any group yet.</span>
-                </div>
-            ) : (
-                <div className="admin_group_list">
-                    {adminGroups.map(g => {
-                        const src = groupImgSrc(g.grpPic);
-                        return (
-                            <div
-                                key={g._id}
-                                className="admin_group_tab"
-                                onClick={() => openManageGroup(g)}
-                            >
-                                {src ? (
-                                    <img src={src} alt={g.grpName} />
-                                ) : (
-                                    <div className="admin_group_tab_placeholder">
-                                        {g.grpName?.charAt(0).toUpperCase() ?? "?"}
-                                    </div>
-                                )}
-                                <span>{g.grpName}</span>
-                                <svg className="admin_group_tab_chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                    <polyline points="9 18 15 12 9 6" />
-                                </svg>
-                            </div>
-                        );
-                    })}
-                </div>
-            )}
+                {error && (
+                    <div className="settings_alert settings_alert--error">
+                        <svg className="settings_alert_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                            <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="13" /><line x1="12" y1="16.5" x2="12" y2="16.5" />
+                        </svg>
+                        {error}
+                    </div>
+                )}
 
+                {adminGroups.length === 0 ? (
+                    <div className="manage_groups_empty">
+                        <span>You aren't an admin of any group yet.</span>
+                    </div>
+                ) : (
+                    <div className="admin_group_list">
+                        {adminGroups.map(g => {
+                            const src = groupImgSrc(g.grpPic);
+                            return (
+                                <div
+                                    key={g._id}
+                                    className="admin_group_tabs"
+                                    onClick={() => openManageGroup(g)}
+                                >
+                                    {src ? (
+                                        <img src={src} alt={g.grpName} />
+                                    ) : (
+                                        <div className="admin_group_tab_placeholder">
+                                            {g.grpName?.charAt(0).toUpperCase() ?? "?"}
+                                        </div>
+                                    )}
+                                    <span>{g.grpName}</span>
+                                    <svg className="admin_group_tab_chevron" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                        <polyline points="9 18 15 12 9 6" />
+                                    </svg>
+                                </div>
+                            );
+                        })}
+                    </div>
+                )}
+            </section>
             {activeManageGroup && (
                 <div className="manage_group_overlay">
                     <div className="manage_group_backdrop" onClick={closeManageGroup} />
                     <div className="manage_group_panel">
+                        <div className="basicSettings">
+                            <button className="manage_group_closee" onClick={closeManageGroup} aria-label="Close">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
+                                </svg>
+                            </button>
 
-                        <button className="manage_group_close" onClick={closeManageGroup} aria-label="Close">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                                <line x1="18" y1="6" x2="6" y2="18" /><line x1="6" y1="6" x2="18" y2="18" />
-                            </svg>
-                        </button>
+                            <h3>Manage "{activeManageGroup.grpName}"</h3>
 
-                        <h3>Manage "{activeManageGroup.grpName}"</h3>
+                            <form onSubmit={handleSaveGroupInfo} className="manage_group_form">
 
-                        <form onSubmit={handleSaveGroupInfo} className="manage_group_form">
-
-                            <div className="manage_group_avatar_wrap">
-                                {(grpPicPreview || groupImgSrc(activeManageGroup.grpPic)) ? (
-                                    <img
-                                        src={grpPicPreview ? grpPicPreview : groupImgSrc(activeManageGroup.grpPic)}
-                                        alt=""
+                                <div className="manage_group_avatar_wrap">
+                                    {(grpPicPreview || groupImgSrc(activeManageGroup.grpPic)) ? (
+                                        <img
+                                            src={grpPicPreview ? grpPicPreview : groupImgSrc(activeManageGroup.grpPic)}
+                                            alt=""
+                                        />
+                                    ) : (
+                                        <div className="manage_group_avatar_placeholder">
+                                            {activeManageGroup.grpName?.charAt(0).toUpperCase() ?? "?"}
+                                        </div>
+                                    )}
+                                    <label htmlFor="grpPicInput" className="manage_group_pic_edit">
+                                        Change photo
+                                    </label>
+                                    <input
+                                        id="grpPicInput"
+                                        type="file"
+                                        accept="image/*"
+                                        hidden
+                                        onChange={handleGrpPicChange}
                                     />
-                                ) : (
-                                    <div className="manage_group_avatar_placeholder">
-                                        {activeManageGroup.grpName?.charAt(0).toUpperCase() ?? "?"}
-                                    </div>
-                                )}
-                                <label htmlFor="grpPicInput" className="manage_group_pic_edit">
-                                    Change photo
+                                </div>
+
+                                <label className="manage_group_label">
+                                    Group name
+                                    <input
+                                        type="text"
+                                        value={grpNameEdit}
+                                        onChange={e => setGrpNameEdit(e.target.value)}
+                                        required
+                                    />
                                 </label>
-                                <input
-                                    id="grpPicInput"
-                                    type="file"
-                                    accept="image/*"
-                                    hidden
-                                    onChange={handleGrpPicChange}
-                                />
-                            </div>
 
-                            <label className="manage_group_label">
-                                Group name
-                                <input
-                                    type="text"
-                                    value={grpNameEdit}
-                                    onChange={e => setGrpNameEdit(e.target.value)}
-                                    required
-                                />
-                            </label>
+                                <label className="manage_group_label">
+                                    Bio
+                                    <textarea
+                                        rows={3}
+                                        value={grpBioEdit}
+                                        onChange={e => setGrpBioEdit(e.target.value)}
+                                        placeholder="What's this group about?"
+                                    />
+                                </label>
 
-                            <label className="manage_group_label">
-                                Bio
-                                <textarea
-                                    rows={3}
-                                    value={grpBioEdit}
-                                    onChange={e => setGrpBioEdit(e.target.value)}
-                                    placeholder="What's this group about?"
-                                />
-                            </label>
-
-                            <div className="manage_group_form_actions">
-                                <button type="submit" disabled={saving} className="manage_group_save_btn">
-                                    {saving ? "Saving…" : "Save changes"}
-                                </button>
-
-                                {loggedIn && (activeManageGroup.createdBy?._id ?? activeManageGroup.createdBy)?.toString() === loggedIn._id?.toString() && (
-                                    <button
-                                        type="button"
-                                        className="manage_group_delete_btn"
-                                        onClick={handleDeleteGroup}
-                                    >
-                                        Delete group
+                                <div className="manage_group_form_action">
+                                    <button type="submit" disabled={saving} className="manage_group_save_btn">
+                                        {saving ? "Saving…" : "Save changes"}
                                     </button>
-                                )}
-                            </div>
 
-                        </form>
+                                    {loggedIn && (activeManageGroup.createdBy?._id ?? activeManageGroup.createdBy)?.toString() === loggedIn._id?.toString() && (
+                                        <button
+                                            type="button"
+                                            className="manage_group_delete_btn"
+                                            onClick={handleDeleteGroup}
+                                        >
+                                            Delete group
+                                        </button>
+                                    )}
+                                </div>
+
+                            </form>
+                        </div>
 
                         <div className="manage_group_members">
-                            <h4>Members</h4>
 
-                            {sortedMembers.map(member => {
+                            <div className="manage_group_headerr">
+                                <h4>Members ({displayedMembers?.length})</h4>
+                                <input type="search" onChange={(e) => setSearchUser(e.target.value)} />
+                            </div>
+
+                            {displayedMembers.map(member => {
                                 const isSelf = (loggedIn?._id ?? loggedIn)?.toString() === member._id?.toString();
 
                                 const isAdmin = activeManageGroup.admins?.some(
@@ -426,6 +442,7 @@ function GroupSettings() {
                                                     loggedIn_isCreator && (
                                                         <button
                                                             type="button"
+                                                            className='demote_user'
                                                             onClick={() => handleDemoteMember(member._id, loggedIn._id)}
                                                         >
                                                             <svg
@@ -441,6 +458,7 @@ function GroupSettings() {
                                                                 <line x1="12" y1="5" x2="12" y2="19" />
                                                                 <polyline points="5 12 12 19 19 12" />
                                                             </svg>
+                                                            <FiUserMinus size={15} />
                                                             Demote
                                                         </button>
                                                     )
@@ -448,11 +466,13 @@ function GroupSettings() {
                                                     loggedIn_isCreator && (
                                                         <button
                                                             type="button"
+                                                            className='promote_user'
                                                             onClick={() => handlePromoteMember(member._id, loggedIn._id)}
                                                         >
                                                             <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                                                                 <line x1="12" y1="19" x2="12" y2="5" /><polyline points="5 12 12 5 19 12" />
                                                             </svg>
+                                                            <FiUserPlus size={15} />
                                                             Promote
                                                         </button>
                                                     )
@@ -464,6 +484,7 @@ function GroupSettings() {
                                                         className="remove_btn"
                                                         onClick={() => handleRemoveMember(member._id, loggedIn._id)}
                                                     >
+                                                        <FiTrash2 size={15} />
                                                         Remove
                                                     </button>
                                                 )}
@@ -472,13 +493,12 @@ function GroupSettings() {
                                     </div>
                                 );
                             })}
-
                         </div>
 
                     </div>
                 </div>
             )}
-        </section>
+        </>
     )
 }
 

@@ -3,7 +3,7 @@ import { FiPlus } from "react-icons/fi";
 import { FiUser, FiUsers } from "react-icons/fi";
 import "../css/Mainwindow/ContactList.css"
 
-function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup, group, onlineUsers, setIsGroup, isGroup, loggedIn, setOnlineUsers, joinGroup, activeContact, setGroupJoin, mess, unreadCounts }) {
+function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup, group, onlineUsers, setIsGroup, isGroup, loggedIn, setOnlineUsers, joinGroup, activeContact, setGroupJoin, mess, userChatData, friends, othersChatData, groupJoined }) {
 
     const [showChat, setShowChat] = React.useState(true)
     const [searchUser, setSearchUser] = React.useState("")
@@ -32,8 +32,6 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
             m => (m._id ?? m).toString() === userId?.toString()
         );
     }
-
-
 
     React.useEffect(() => {
         if (!isGroup || !activeContact || !loggedIn) {
@@ -112,14 +110,20 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
 
                                         <h2 className="person_name">
                                             {user?.name}
+
+                                            {friends?.some(friend => friend._id === user._id) && (
+                                                <span className="friend_badge" style={{
+                                                    fontSize: "0.65rem",
+                                                    color: "var(--accent)",
+                                                    marginLeft: "6px",
+                                                    fontWeight: "500",
+                                                    opacity: "0.8"
+                                                }} > ✓ Friend</span>
+                                            )}
+
                                             <br />
-                                            <p
-                                                style={{
-                                                    fontSize: "0.85rem",
-                                                    color: "#888",
-                                                    margin: "2px 0 0",
-                                                }}
-                                            >
+
+                                            <p>
                                                 @{user?.username}
                                             </p>
                                         </h2>
@@ -185,7 +189,7 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
 
             <div className="contacts_list">
 
-                {showChat ? <> {users?.map(user => (
+                {showChat ? <> {friends?.map(user => (
 
                     <div
                         key={user?._id}
@@ -208,26 +212,44 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
                             alt={user?.name}
                         />
 
-                        <h2 className="person_name">
-                            {user?.name}<br />
-                            <p
-                                style={{
-                                    fontSize: "0.85rem",
-                                    color: "#888",
-                                    margin: "2px 0 0",
-                                }}
-                            >
-                                @{user?.username}
-                            </p>
-                            {unreadCounts[user?._id] > 0 && (
-                                <span className="unread_badge">{unreadCounts[user?._id]}</span>
+                        <div className="person_name">
+                            <div>
+                                {user?._id === loggedIn?._id ? <> {user?.name}(me) </> : <>{user?.name}</>}
+                                <p
+                                    style={
+                                        userChatData?.lastUnread?.[user?._id]
+                                            ? {
+                                                fontSize: "0.85rem",
+                                                fontWeight: 600,
+                                                margin: "2px 0 0",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                maxWidth: "160px",
+                                            }
+                                            : {
+                                                fontSize: "0.85rem",
+                                                color: "#888",
+                                                margin: "2px 0 0",
+                                            }
+                                    }
+                                >
+                                    {userChatData?.lastUnread?.[user?._id]
+                                        ? `: ${userChatData.lastUnread[user._id].text || "Attachment"}`
+                                        : `@${user?.username}`}
+                                </p>
+                            </div>
+                            {userChatData?.number_of_unreadMsg?.[user?._id] > 0 && (
+                                <div className="unread_badge">
+                                    {userChatData.number_of_unreadMsg[user._id]}
+                                </div>
                             )}
-                        </h2>
+                        </div>
 
                     </div>
 
                 ))} </> : <> {
-                    group?.map(user => (
+                    groupJoined?.map(user => (
 
                         <div
                             key={user?._id}
@@ -244,9 +266,45 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
                                 alt=""
                             />
 
-                            <h2 className="person_name">
+
+
+                            <div className="person_name">
                                 {user?.grpName}
-                            </h2>
+                                <p
+                                    className="group_members_row"
+                                    style={
+                                        userChatData?.lastUnread?.[user?._id]
+                                            ? {
+                                                fontSize: "0.85rem",
+                                                fontWeight: 600,
+                                                margin: "2px 0 0",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }
+                                            : {
+                                                fontSize: "0.85rem",
+                                                color: "#888",
+                                                margin: "2px 0 0",
+                                                whiteSpace: "nowrap",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                            }
+                                    }
+                                >
+                                    {userChatData?.lastUnread?.[user?._id]
+                                        ? `${userChatData.lastUnread[user._id]?.sender?.username || "Someone"}: ${userChatData.lastUnread[user._id]?.text || "Attachment"}`
+                                        : `~${user?.members?.map(m => `~${m.username}`).join(" , ")}`}
+                                </p>
+                            </div>
+
+
+
+                            {userChatData?.number_of_unreadMsg?.[user?._id] > 0 && (
+                                <div className="unread_badge">
+                                    {userChatData.number_of_unreadMsg[user._id]}
+                                </div>
+                            )}
 
                         </div>
 
@@ -255,7 +313,7 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
 
             </div>
 
-        </div>
+        </div >
     )
 }
 
