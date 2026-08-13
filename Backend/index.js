@@ -111,6 +111,6 @@ app.use("/api/logout", restrictToLoggedIn, userLogout)
 app.use("/api/connections", restrictToLoggedIn, connectionRouter)
 
 
-server.listen(8000, () => {
+server.listen(process.env.PORT || 8000, () => {
     console.log("Server Started");
 });
