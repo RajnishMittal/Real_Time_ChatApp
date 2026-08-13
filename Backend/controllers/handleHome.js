@@ -1,4 +1,4 @@
-const path = require("path");
+const uploadToCloudinary = require("../service/cloudinaryUpload");
 const userModel = require("../model/userModel")
 const msgModel = require("../model/msgModel")
 const metaModel = require("../model/UserMeta")
@@ -41,64 +41,92 @@ async function getme(req, res) {
 
 async function setMessages(req, res) {
     try {
-        const filePath = req.file
-            ? path.join("uploads", req.file.filename).replace(/\\/g, "/")
-            : undefined;
+        let fileData;
+
+        if (req.file) {
+            const result = await uploadToCloudinary(
+                req.file.buffer,
+                "LinkSync/messages"
+            );
+
+            fileData = {
+                filename: req.file.originalname,
+                path: result.secure_url,
+                mimetype: req.file.mimetype,
+                size: req.file.size
+            };
+        }
 
         const response = await msgModel.create({
             sender: req.body.sender,
             to: req.body.to,
             text: req.body.text,
-            file: req.file ? {
-                filename: req.file.filename,
-                path: filePath,
-                mimetype: req.file.mimetype,
-                size: req.file.size,
-            } : undefined,
+            file: fileData
         });
 
-        // Persist unread state for the recipient regardless of online status
         await metaModel.findOneAndUpdate(
             { userId: req.body.to },
             {
-                $inc: { [`number_of_unreadMsg.${req.body.sender}`]: 1 },
-                $set: { [`lastUnread.${req.body.sender}`]: response }
+                $inc: {
+                    [`number_of_unreadMsg.${req.body.sender}`]: 1
+                },
+                $set: {
+                    [`lastUnread.${req.body.sender}`]: response
+                }
             },
-            { upsert: true, returnDocument: 'after' }
+            {
+                upsert: true,
+                returnDocument: "after"
+            }
         );
 
         return res.status(201).json({
             message: "Message sent successfully",
-            data: response,
+            data: response
         });
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Something went wrong" });
+
+        return res.status(500).json({
+            error: "Something went wrong"
+        });
     }
 }
 
 async function setGroupMessages(req, res) {
     try {
-        const filePath = req.file
-            ? path.join("uploads", req.file.filename).replace(/\\/g, "/")
-            : undefined;
+        let fileData;
+
+        if (req.file) {
+            const result = await uploadToCloudinary(
+                req.file.buffer,
+                "LinkSync/messages"
+            );
+
+            fileData = {
+                filename: req.file.originalname,
+                path: result.secure_url,
+                mimetype: req.file.mimetype,
+                size: req.file.size
+            };
+        }
 
         const response = await msgModel.create({
             sender: req.body.sender,
             text: req.body.text,
             group: req.body.group,
-            file: req.file ? {
-                filename: req.file.filename,
-                path: filePath,
-                mimetype: req.file.mimetype,
-                size: req.file.size,
-            } : undefined,
+            file: fileData
         });
 
-        await response.populate("sender", "name username profilePic");
+        await response.populate(
+            "sender",
+            "name username profilePic"
+        );
 
-        const grp = await groupModel.findById(req.body.group).select("members");
+        const grp = await groupModel
+            .findById(req.body.group)
+            .select("members");
 
         if (grp?.members?.length) {
             const bulkOps = grp.members
@@ -107,24 +135,33 @@ async function setGroupMessages(req, res) {
                     updateOne: {
                         filter: { userId: memberId },
                         update: {
-                            $inc: { [`number_of_unreadMsg.${req.body.group}`]: 1 },
-                            $set: { [`lastUnread.${req.body.group}`]: response } // add this
+                            $inc: {
+                                [`number_of_unreadMsg.${req.body.group}`]: 1
+                            },
+                            $set: {
+                                [`lastUnread.${req.body.group}`]: response
+                            }
                         },
                         upsert: true
                     }
                 }));
 
-            if (bulkOps.length) await metaModel.bulkWrite(bulkOps);
+            if (bulkOps.length) {
+                await metaModel.bulkWrite(bulkOps);
+            }
         }
 
         return res.status(201).json({
             message: "Message sent successfully",
-            data: response,
+            data: response
         });
 
     } catch (error) {
         console.error(error);
-        return res.status(500).json({ error: "Something went wrong" });
+
+        return res.status(500).json({
+            error: "Something went wrong"
+        });
     }
 }
 
@@ -267,6 +304,13 @@ async function gettInfo(req, res) {
     try {
         const userId = req.params.id;
 
+        if (!userId || userId === "null" || userId === "undefined") {
+            return res.status(400).json({
+                success: false,
+                error: "Invalid user ID"
+            });
+        }
+
         const meta = await metaModel.findOne({ userId });
 
         if (!meta) {
@@ -288,6 +332,7 @@ async function gettInfo(req, res) {
 
     } catch (error) {
         console.error(error);
+
         return res.status(500).json({
             success: false,
             error: "Failed to fetch user meta"

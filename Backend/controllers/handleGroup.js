@@ -1,20 +1,27 @@
 const { group } = require("console");
 const groupModel = require("../model/groupModel")
 const connectionsModel = require("../model/userConnections")
-const path = require("path");
+const uploadToCloudinary = require("../service/cloudinaryUpload");
 
 async function createGroup(req, res) {
     const userId = req.user._id;
     const body = req.body;
 
-    const imagePath = req.file
-        ? path.join("userImage", req.file.filename).replace(/\\/g, "/")
-        : undefined;
+    let imageUrl;
+
+    if (req.file) {
+        const result = await uploadToCloudinary(
+            req.file.buffer,
+            "LinkSync/groups"
+        );
+
+        imageUrl = result.secure_url;
+    }
 
     try {
         const response = await groupModel.create({
             grpName: body.grpName,
-            grpPic: imagePath,
+            grpPic: imageUrl,
             members: [userId],
             admins: [userId],
             createdBy: userId
@@ -126,9 +133,16 @@ async function update_group(req, res) {
 
     try {
 
-        const imagePath = req.file
-            ? path.join("userImage", req.file.filename).replace(/\\/g, "/")
-            : undefined;
+        let imageUrl;
+
+        if (req.file) {
+            const result = await uploadToCloudinary(
+                req.file.buffer,
+                "LinkSync/groups"
+            );
+
+            imageUrl = result.secure_url;
+        }
 
         const response = await groupModel
             .findByIdAndUpdate(
@@ -136,7 +150,7 @@ async function update_group(req, res) {
                 {
                     grpName: req.body.grpName,
                     grpBio: req.body.bio,
-                    ...(imagePath && { grpPic: imagePath })
+                    ...(imageUrl && { grpPic: imageUrl })
                 },
                 {
                     returnDocument: 'after',

@@ -1,13 +1,21 @@
 const userModel = require("../model/userModel")
-const path = require("path")
+const uploadToCloudinary = require("../service/cloudinaryUpload");
 
 async function setProfile(req, res) {
     try {
         const body = req.body;
         const id = req.params.id;
-        const imagePath = req.file
-            ? path.join("userImage", req.file.filename).replace(/\\/g, "/")
-            : undefined;
+
+        let imageUrl;
+
+        if (req.file) {
+            const result = await uploadToCloudinary(
+                req.file.buffer,
+                "LinkSync/profiles"
+            );
+
+            imageUrl = result.secure_url;
+        }
 
         const response = await userModel.findByIdAndUpdate(
             id,
@@ -16,33 +24,39 @@ async function setProfile(req, res) {
                 dob: body.dob,
                 country: body.country,
                 state: body.state,
-                ...(imagePath ? { profilePic: imagePath } : {})
+                ...(imageUrl ? { profilePic: imageUrl } : {})
             },
-            { returnDocument: 'after', runValidators: true }
+            {
+                returnDocument: "after",
+                runValidators: true
+            }
         );
 
         if (!response) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({
+                message: "User not found"
+            });
         }
 
         res.status(200).json(response);
+
     } catch (err) {
         if (err.name === "ValidationError") {
             return res.status(400).json({
-                message: err.message,
+                message: err.message
             });
         }
 
         if (err.code === 11000) {
             return res.status(409).json({
-                message: "Username already exists",
+                message: "Username already exists"
             });
         }
 
         console.error(err);
 
         return res.status(500).json({
-            message: "Internal Server Error",
+            message: "Internal Server Error"
         });
     }
 }
@@ -50,52 +64,61 @@ async function setProfile(req, res) {
 
 async function update_profile(req, res) {
     try {
-        const body = req.body
-        const id = req.user._id
-        const imagePath = req.file
-            ? path.join("userImage", req.file.filename).replace(/\\/g, "/")
-            : undefined;
+        const body = req.body;
+        const id = req.user._id;
 
         const update = {
             username: body.username,
             dob: body.dob,
             country: body.country,
-            state: body.state,
+            state: body.state
         };
 
-        if (imagePath) {
-            update.profilePic = imagePath;
+        if (req.file) {
+            const result = await uploadToCloudinary(
+                req.file.buffer,
+                "LinkSync/profiles"
+            );
+
+            update.profilePic = result.secure_url;
         }
 
         const response = await userModel.findByIdAndUpdate(
             id,
             update,
             {
-                returnDocument: 'after',
-                runValidators: true,
+                returnDocument: "after",
+                runValidators: true
             }
         );
 
         if (!response) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({
+                message: "User not found"
+            });
         }
 
-        res.status(200).json({ data: response });
+        res.status(200).json({
+            data: response
+        });
+
     } catch (err) {
         if (err.name === "ValidationError") {
             return res.status(400).json({
-                message: err.message,
+                message: err.message
             });
         }
 
         if (err.code === 11000) {
             return res.status(409).json({
-                message: "Username already exists",
+                message: "Username already exists"
             });
         }
 
+        console.error(err);
+
         return res.status(500).json({
-            message: "Internal Server Error",
+            message: "Internal Server Error"
         });
     }
 }
