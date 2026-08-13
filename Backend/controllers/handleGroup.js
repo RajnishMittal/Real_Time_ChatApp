@@ -29,7 +29,7 @@ async function createGroup(req, res) {
             },
             {
                 upsert: true,
-                new: true
+                returnDocument: 'after'
             }
         );
 
@@ -82,7 +82,7 @@ async function addUser(req, res) {
                 }
             },
             {
-                new: true
+                returnDocument: 'after'
             }
         );
 
@@ -100,7 +100,7 @@ async function addUser(req, res) {
                 }
             },
             {
-                new: true,
+                returnDocument: 'after',
                 upsert: true
             }
         );
@@ -139,7 +139,7 @@ async function update_group(req, res) {
                     ...(imagePath && { grpPic: imagePath })
                 },
                 {
-                    new: true,
+                    returnDocument: 'after',
                     runValidators: true
                 }
             )
@@ -179,7 +179,7 @@ async function promote_user(req, res) {
                     }
                 },
                 {
-                    new: true
+                    returnDocument: 'after'
                 }
             )
             .populate("createdBy", "name username profilePic _id")

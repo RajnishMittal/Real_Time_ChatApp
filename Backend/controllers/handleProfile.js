@@ -18,7 +18,7 @@ async function setProfile(req, res) {
                 state: body.state,
                 ...(imagePath ? { profilePic: imagePath } : {})
             },
-            { new: true, runValidators: true }
+            { returnDocument: 'after', runValidators: true }
         );
 
         if (!response) {
@@ -71,7 +71,7 @@ async function update_profile(req, res) {
             id,
             update,
             {
-                new: true,
+                returnDocument: 'after',
                 runValidators: true,
             }
         );

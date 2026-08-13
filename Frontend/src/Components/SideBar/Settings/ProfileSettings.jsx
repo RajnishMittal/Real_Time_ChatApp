@@ -190,7 +190,7 @@ function ProfileSettings({ loggedIn, setLoggedIn }) {
     return (
         <>
             <div className="settings_cardd">
-                {/* {error && (
+                {error && (
                     <div className="settings_alert settings_alert--error">
                         <svg className="settings_alert_icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                             <circle cx="12" cy="12" r="10" /><line x1="12" y1="8" x2="12" y2="13" /><line x1="12" y1="16.5" x2="12" y2="16.5" />
@@ -205,7 +205,7 @@ function ProfileSettings({ loggedIn, setLoggedIn }) {
                         </svg>
                         {success}
                     </div>
-                )} */}
+                )}
                 <div className="mainSettings">
 
                     <div className="settings_card_head">

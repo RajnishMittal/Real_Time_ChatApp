@@ -16,6 +16,7 @@
     border-color: var(--border-hover);
     box-shadow: var(--shadow-large);
 }
+
 /* ========== FORM ELEMENTS ========== */
 .settings_form {
     display: flex;
@@ -430,35 +431,123 @@
     left: calc(100% - 26px);
 }
 
-.cont{
+.cont {
     display: flex;
     align-items: center;
     text-align: center;
 }
 
-.cont p{
+.cont p {
     margin-top: 15px;
 }
 
 
 /* ---------- Responsive ---------- */
 
-@media(max-width:700px) {
+@media (max-width: 700px) {
+
+    /* =========================
+       PROFILE SETTINGS CARD
+    ========================= */
+
+    .settings_cardd {
+        width: 100%;
+        max-width: 500px;
+
+        height: auto;
+        min-height: 0;
+
+        padding: 18px;
+
+        border-radius: 22px;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================
+       AVATAR
+    ========================= */
 
     .settings_avatar_wrap {
         flex-direction: column;
+
+        align-items: center;
+        justify-content: center;
+
         text-align: center;
+
+        gap: 10px;
     }
 
     .settings_avatar_meta {
         align-items: center;
     }
 
-    .settings_row {
-        flex-direction: column;
+
+    /* =========================
+       FORM
+    ========================= */
+
+    .settings_form {
+        width: 100%;
+        gap: 14px;
     }
 
-    .buttonsss {
+    .settings_label {
+        width: 100%;
+        padding: 0;
+    }
+
+    .settings_label input,
+    .settings_label textarea,
+    .settings_label select {
+        width: 100%;
+        margin-right: 0;
+
+        box-sizing: border-box;
+    }
+
+
+    /* =========================
+       COUNTRY / STATE
+    ========================= */
+
+    .settings_row {
+        width: 100%;
+
         flex-direction: column;
+
+        gap: 14px;
+    }
+
+
+    /* =========================
+       BUTTONS
+    ========================= */
+
+    .buttonsss {
+        width: 100%;
+
+        display: flex;
+        flex-direction: row;
+
+        gap: 10px;
+    }
+
+    .settings_save_btn,
+    .settings_logout_btn {
+        flex: 1;
+        width: auto;
+    }
+
+
+    /* =========================
+       PRIVATE TOGGLE
+    ========================= */
+
+    .cont {
+        justify-content: center;
+        width: 100%;
     }
 }

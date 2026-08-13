@@ -445,6 +445,7 @@
 
     .contacts input[type="search"] {
         margin: 16px;
+        width: 340px;
     }
 
     .contacts {
@@ -460,14 +461,23 @@
 
     .choices {
         margin: 14px 16px 6px;
+        width: 79.5%;
     }
 
     .create_group {
-        margin: 16px 16px 0;
+        width: 78%;
     }
 
     .searched_items {
         top: 70px;
         width: 92%;
+    }
+
+    .contact_tab{
+        width: 85%;
+    }
+
+    .get_users, .get_groups{
+        width: 0px;
     }
 }

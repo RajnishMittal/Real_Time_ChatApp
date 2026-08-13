@@ -1,4 +1,5 @@
 import React from "react";
+import io from "socket.io-client";
 import "./css/Mainwindow.css";
 import { FiPlus } from "react-icons/fi";
 import userIcon from "../assets/icons/group.png"
@@ -11,11 +12,12 @@ import ProfilePanel from "./MainWindow/ProfilePanel";
 function MainWindow() {
 
   const navigate = useNavigate();
+  const [socket, setSocket] = React.useState(null)
   const [loggedIn, setLoggedIn] = React.useState(null);
   const [users, setUsers] = React.useState([]);
   const [friends, setFriends] = React.useState([])
   const [group, setGroup] = React.useState([])
-  const [groupJoined,setGroupsJoined] = React.useState([])
+  const [groupJoined, setGroupsJoined] = React.useState([])
   const [mess, setMess] = React.useState([]);
   const [joinGroup, setGroupJoin] = React.useState(false)
   const [activeContactId, setActiveContactId] = React.useState(null);
@@ -28,6 +30,35 @@ function MainWindow() {
   const [showProfile, setShowProfile] = React.useState(false)
   const [isPrivate, setIsPrivate] = React.useState(false)
 
+  React.useEffect(() => {
+    const s = io("http://localhost:8000");
+
+    setSocket(s);
+
+    return () => {
+      s.disconnect();
+    };
+  }, []);
+
+  React.useEffect(() => {
+    if (!socket) return;
+
+    const handleFriendAdded = () => {
+      fetchFriends();
+    };
+
+    socket.on("friend_added", handleFriendAdded);
+
+    return () => {
+      socket.off("friend_added", handleFriendAdded);
+    };
+  }, [socket]);
+
+  React.useEffect(() => {
+    if (!socket || !loggedIn?._id) return;
+
+    socket.emit("join", loggedIn._id);
+  }, [socket, loggedIn]);
 
   const [userChatData, setUserChatData] = React.useState({
     number_of_unreadMsg: {},
@@ -165,69 +196,73 @@ function MainWindow() {
 
   }, []);
 
-  React.useEffect(() => {
+  const fetchFriends = async () => {
+    try {
+      const response = await fetch("/api/connections/friends", {
+        credentials: "include"
+      });
 
-    async function fetchFriends() {
-      try {
-        const response = await fetch("/api/connections/friends", {
-          credentials: "include"
-        });
-
-        if (response.status === 401) {
-          navigate("/");
-          return;
-        }
-
-        if (!response.ok) {
-          const errBody = await response.json().catch(() => ({}));
-          setError(errBody.error || "Failed to fetch users");
-          return;
-        }
-
-        const result = await response.json();
-        setError(null)
-        setFriends(result.data);
-
-      } catch (err) {
-        setError(err.message);
+      if (response.status === 401) {
+        navigate("/");
+        return;
       }
+
+      if (!response.ok) {
+        const errBody = await response.json().catch(() => ({}));
+        setError(errBody.error || "Failed to fetch friends");
+        return;
+      }
+
+      const result = await response.json();
+
+      setError(null);
+      setFriends(result.data || []);
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
     }
-
-    fetchFriends();
-
-  }, []);
+  };
 
   React.useEffect(() => {
-
-    async function fetchJoinedGroups() {
-      try {
-        const response = await fetch("/api/connections/joinedGroups", {
-          credentials: "include"
-        });
-
-        if (response.status === 401) {
-          navigate("/");
-          return;
-        }
-
-        if (!response.ok) {
-          const errBody = await response.json().catch(() => ({}));
-          setError(errBody.error || "Failed to fetch users");
-          return;
-        }
-
-        const result = await response.json();
-        setError(null)
-        setGroupsJoined(result.data);
-
-      } catch (err) {
-        setError(err.message);
-      }
+    if (loggedIn?._id) {
+      fetchFriends();
     }
+  }, [loggedIn]);
 
-    fetchJoinedGroups();
+  const fetchJoinedGroups = async () => {
+    try {
+      const response = await fetch("/api/connections/joinedGroups", {
+        credentials: "include"
+      });
 
-  }, []);
+      if (response.status === 401) {
+        navigate("/");
+        return;
+      }
+
+      if (!response.ok) {
+        const errBody = await response.json().catch(() => ({}));
+        setError(errBody.error || "Failed to fetch joined groups");
+        return;
+      }
+
+      const result = await response.json();
+
+      setError(null);
+      setGroupsJoined(result.data || []);
+
+    } catch (err) {
+      console.error(err);
+      setError(err.message);
+    }
+  };
+
+  React.useEffect(() => {
+    if (loggedIn?._id) {
+      fetchJoinedGroups();
+    }
+  }, [loggedIn]);
 
   React.useEffect(() => {
 
@@ -407,6 +442,7 @@ function MainWindow() {
           isPrivate={isPrivate}
           friends={friends}
           fetchMeta={fetchMeta}
+          fetchJoinedGroups={fetchJoinedGroups}
         />
 
         <ProfilePanel

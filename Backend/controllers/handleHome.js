@@ -64,7 +64,7 @@ async function setMessages(req, res) {
                 $inc: { [`number_of_unreadMsg.${req.body.sender}`]: 1 },
                 $set: { [`lastUnread.${req.body.sender}`]: response }
             },
-            { upsert: true, new: true }
+            { upsert: true, returnDocument: 'after' }
         );
 
         return res.status(201).json({
@@ -210,7 +210,7 @@ async function handleInfo(req, res) {
                 }
             },
             {
-                new: true,
+                returnDocument: 'after',
                 upsert: true
             }
         );

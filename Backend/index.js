@@ -9,6 +9,7 @@ const { connectDB } = require("./config/connecton");
 const { restrictToLoggedIn } = require("./middlewares/restrictUser");
 
 const onlineUsers = require("./service/userStatus");
+const { setIO } = require("./service/socket");
 
 const userRouter = require("./routes/user");
 const userLogout = require("./routes/logout")
@@ -16,7 +17,6 @@ const homeRouter = require("./routes/home");
 const profileRouter = require("./routes/profile");
 const groupRouter = require("./routes/group");
 const connectionRouter = require("./routes/connection");
-
 
 const msgModel = require("./model/msgModel")
 const metaModel = require("./model/UserMeta");
@@ -30,6 +30,8 @@ const io = new Server(server, {
         credentials: true
     }
 });
+
+setIO(io)
 
 io.on("connection", (socket) => {
     socket.on("join", userId => {

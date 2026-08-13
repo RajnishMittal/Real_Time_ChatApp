@@ -1,4 +1,5 @@
 const connectionsModel = require("../model/userConnections");
+const { getIO } = require("../service/socket");
 
 async function handlePrivate(req, res) {
     const user = req.user._id;
@@ -154,11 +155,22 @@ async function acceptRequest(req, res) {
             { new: true }
         );
 
-        res.status(200).json({message: "friend added successfully"})
+        if (!response || !response2) {
+            return res.status(404).json({
+                message: "User connection data not found"
+            });
+        }
+
+        const io = getIO();
+
+        io.to(user.toString()).emit("friend_added");
+        io.to(loggedIn.toString()).emit("friend_added");
+
+        res.status(200).json({ message: "friend added successfully" })
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: "Server Error"})
+        res.status(500).json({ message: "Server Error" })
     }
 }
 
@@ -177,11 +189,11 @@ async function declineRequest(req, res) {
             { new: true }
         );
 
-        res.status(200).json({message: "friend request removed successfully"})
+        res.status(200).json({ message: "friend request removed successfully" })
 
     } catch (err) {
         console.error(err);
-        res.status(500).json({message: "Server Error"})
+        res.status(500).json({ message: "Server Error" })
     }
 }
 
@@ -198,7 +210,7 @@ async function getFriends(req, res) {
             data: response?.friends || []
         })
     }
-    
+
     catch (error) {
         console.log(error)
         return res.status(500).json({ error: "Something went wrong" })
@@ -212,14 +224,23 @@ async function getJoinedGroups(req, res) {
     try {
         const response = await connectionsModel
             .findOne({ userId: user })
-            .populate("groupJoined", "grpName grpBio members admins createdBy grpPic");
+            .populate({
+                path: "groupJoined",
+                select: "grpName grpBio members admins createdBy grpPic",
+                populate: [
+                    {
+                        path: "members",
+                        select: "name username profilePic"
+                    },
+                ]
+            });
 
         return res.status(200).json({
             message: "Requests fetched successfully",
             data: response?.groupJoined || []
         })
     }
-    
+
     catch (error) {
         console.log(error)
         return res.status(500).json({ error: "Something went wrong" })

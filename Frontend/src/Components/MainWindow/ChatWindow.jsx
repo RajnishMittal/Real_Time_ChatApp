@@ -5,7 +5,7 @@ import io from "socket.io-client"
 import sendIcon from "../../assets/icons/send.png";
 import fileIcon from "../../assets/icons/file.png";
 
-function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup, setGroupJoin, fetchGroups, setShowProfile, showProfile, setUnreadCounts, setLastUnread, setLastLoggedIn, othersChatData, isPrivate, friends, fetchMeta }) {
+function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup, setGroupJoin, fetchGroups, setShowProfile, showProfile, setUnreadCounts, setLastUnread, setLastLoggedIn, othersChatData, isPrivate, friends, fetchMeta, fetchJoinedGroups }) {
 
     const [error, setError] = React.useState(null);
     const [selectedFile, setSelectedFile] = React.useState(null)
@@ -252,6 +252,8 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
         })
 
         await fetchGroups();
+
+        await fetchJoinedGroups()
 
         if (response.ok) setGroupJoin(false)
     }

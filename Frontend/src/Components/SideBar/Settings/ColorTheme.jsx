@@ -8,11 +8,6 @@ const themes = [
         colors: ["#E8973A", "#35261D", "#F3EAD9"]
     },
     {
-        id: "forest",
-        name: "Forest",
-        colors: ["#56C596", "#1B4332", "#E8F5E9"]
-    },
-    {
         id: "ocean",
         name: "Ocean",
         colors: ["#4EA8DE", "#14213D", "#F4FAFF"]

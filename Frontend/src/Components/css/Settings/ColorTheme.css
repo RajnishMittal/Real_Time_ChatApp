@@ -90,3 +90,13 @@
     font-size:.8rem;
     font-weight:600;
 }
+
+@media (max-width: 700px) {
+    .theme_grid{
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .settings_carddd {
+        padding: 10px;
+    }
+}

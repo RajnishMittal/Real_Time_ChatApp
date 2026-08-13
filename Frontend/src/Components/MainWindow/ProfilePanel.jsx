@@ -1,9 +1,14 @@
 import React, { useState, useMemo, useEffect } from 'react';
+import menuImage from "../../assets/icons/menu.png"
+import reportImage from "../../assets/icons/report-user.png"
+import blockImage from "../../assets/icons/block-user.png"
+import removeImage from "../../assets/icons/remove-user.png"
 import "../css/Mainwindow/ProfilePanel.css";
 import { Country, State } from "country-state-city";
 
 function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUsers, setIsGroup, setActiveContactId, setShowProfile, showProfile }) {
     const [searchUser, setSearchUser] = useState("");
+    const [menuOpen, setMenuOpen] = useState(false)
 
     const sortedMembers = useMemo(() => {
         if (!activeContact?.members) return [];
@@ -63,6 +68,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
         );
     }
 
+
     return (
         <aside className={`profile-panel ${showProfile ? "profile-visible-mobile" : ""}`}>
             <header className="panel-header">
@@ -75,66 +81,125 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
 
             <div className="profile-scroll-content">
                 {!isGroup ? (
-                    /* --- INDIVIDUAL USER PROFILE --- */
-                    <div className="profile-content-wrapper">
-                        <div className="avatar-container">
-                            {activeContact?.profilePic && (
-                                <img
-                                    className="panel-avatar"
-                                    src={
-                                        activeContact.profilePic.startsWith("http")
-                                            ? activeContact.profilePic
-                                            : `http://localhost:8000/${activeContact.profilePic}`
-                                    }
-                                    alt={activeContact?.name}
-                                />
-                            )}
-                            {onlineUsers?.[activeContact?._id] && <span className="online-indicator" />}
+                    <>
+                        <div className="manage">
+                            <img
+                                src={menuImage}
+                                alt="menu"
+                                onClick={() => setMenuOpen(prev => !prev)}
+                            />
                         </div>
 
-                        <div className="profile-primary-info">
-                            <h2 className="profile-name">{activeContact?.name}</h2>
-                            <p className="profile-username">@{activeContact?.username}</p>
-                            {activeContact?.bio && <p className="profile-bio">{activeContact.bio}</p>}
-                        </div>
+                        {!menuOpen ? (
+                            <div className="profile-content-wrapper">
+                                {/* YOUR EXISTING PROFILE CONTENT */}
+                                <div className="avatar-container">
+                                    {activeContact?.profilePic && (
+                                        <img
+                                            className="panel-avatar"
+                                            src={
+                                                activeContact.profilePic.startsWith("http")
+                                                    ? activeContact.profilePic
+                                                    : `http://localhost:8000/${activeContact.profilePic}`
+                                            }
+                                            alt={activeContact?.name}
+                                        />
+                                    )}
 
-                        <hr className="panel-divider" />
+                                    {onlineUsers?.[activeContact?._id] && (
+                                        <span className="online-indicator" />
+                                    )}
+                                </div>
 
-                        <div className="details-list">
-                            <div className="detail-row">
-                                <span className="detail-label">Date of Birth</span>
-                                <span className="detail-value">
-                                    {activeContact?.dob
-                                        ? new Date(activeContact.dob).toLocaleDateString(undefined, {
-                                            year: "numeric", month: "long", day: "numeric",
-                                        })
-                                        : "Not specified"}
-                                </span>
-                            </div>
-                            <div className="detail-row">
-                                <span className="detail-label">Age</span>
-                                <span className="detail-value">
-                                    {activeContact?.dob ? `${getAge(activeContact.dob)} years` : "Not specified"}
-                                </span>
-                            </div>
-                            <div className="detail-row">
-                                <span className="detail-label">Location</span>
-                                <span className="detail-value">
-                                    {(() => {
-                                        const stateName = activeContact?.state
-                                            ? State.getStateByCodeAndCountry(activeContact.state, activeContact.country)?.name
-                                            : null;
-                                        const countryName = activeContact?.country
-                                            ? Country.getCountryByCode(activeContact.country)?.name
-                                            : null;
+                                <div className="profile-primary-info">
+                                    <h2 className="profile-name">
+                                        {activeContact?.name}
+                                    </h2>
 
-                                        if (!stateName && !countryName) return "Not specified";
-                                        return `${stateName ?? ""}${stateName && countryName ? ", " : ""}${countryName ?? ""}`;
-                                    })()}
-                                </span>
+                                    <p className="profile-username">
+                                        @{activeContact?.username}
+                                    </p>
+
+                                    {activeContact?.bio && (
+                                        <p className="profile-bio">
+                                            {activeContact.bio}
+                                        </p>
+                                    )}
+                                </div>
+
+                                <hr className="panel-divider" />
+
+                                <div className="details-list">
+                                    <div className="detail-row">
+                                        <span className="detail-label">Date of Birth</span>
+                                        <span className="detail-value">
+                                            {activeContact?.dob
+                                                ? new Date(activeContact.dob).toLocaleDateString(undefined, {
+                                                    year: "numeric", month: "long", day: "numeric",
+                                                })
+                                                : "Not specified"}
+                                        </span>
+                                    </div>
+                                    <div className="detail-row">
+                                        <span className="detail-label">Age</span>
+                                        <span className="detail-value">
+                                            {activeContact?.dob ? `${getAge(activeContact.dob)} years` : "Not specified"}
+                                        </span>
+                                    </div>
+                                    <div className="detail-row">
+                                        <span className="detail-label">Location</span>
+                                        <span className="detail-value">
+                                            {(() => {
+                                                const stateName = activeContact?.state
+                                                    ? State.getStateByCodeAndCountry(activeContact.state, activeContact.country)?.name
+                                                    : null;
+                                                const countryName = activeContact?.country
+                                                    ? Country.getCountryByCode(activeContact.country)?.name
+                                                    : null;
+
+                                                if (!stateName && !countryName) return "Not specified";
+                                                return `${stateName ?? ""}${stateName && countryName ? ", " : ""}${countryName ?? ""}`;
+                                            })()}
+                                        </span>
+                                    </div>
+                                </div>
                             </div>
-                        </div>
-                    </div>
+                        ) : (
+                            <div className="profile-menu-options">
+
+                                <button
+                                    className="profile-menu-item remove"
+                                    onClick={() => {
+                                        console.log("Remove", activeContact?._id);
+                                    }}
+                                >
+                                    <span>Remove</span>
+                                    <img src={removeImage} alt="" />
+                                </button>
+
+                                <button
+                                    className="profile-menu-item block"
+                                    onClick={() => {
+                                        console.log("Block", activeContact?._id);
+                                    }}
+                                >
+                                    <span>Block</span>
+                                    <img src= {blockImage} alt="" />
+                                </button>
+
+                                <button
+                                    className="profile-menu-item report"
+                                    onClick={() => {
+                                        console.log("Report", activeContact?._id);
+                                    }}
+                                >
+                                    <span>Report</span>
+                                    <img src= {reportImage} alt="" />
+                                </button>
+
+                            </div>
+                        )}
+                    </>
                 ) : (
                     /* --- GROUP PROFILE --- */
                     <div className="profile-content-wrapper">
