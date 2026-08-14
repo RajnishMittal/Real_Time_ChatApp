@@ -1,0 +1,8 @@
+{
+    "rewrites": [
+        {
+            "source": "/api/:path*",
+            "destination": "https://linksync-backend-mpi0.onrender.com/api/:path*"
+        }
+    ]
+}
