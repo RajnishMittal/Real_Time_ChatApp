@@ -17,7 +17,7 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
     const navigate = useNavigate();
 
     React.useEffect(() => {
-        const s = io("http://localhost:8000");
+        const s = io(import.meta.env.VITE_API_URL);
         setSocket(s);
         return () => s.disconnect();
     }, []);

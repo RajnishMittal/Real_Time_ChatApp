@@ -31,7 +31,7 @@ function MainWindow() {
   const [isPrivate, setIsPrivate] = React.useState(false)
 
   React.useEffect(() => {
-    const s = io("http://localhost:8000");
+    const s = io(import.meta.env.VITE_API_URL);
 
     setSocket(s);
 
