@@ -64,16 +64,18 @@ async function handleLogin(req, res) {
         });
 
     } catch (err) {
-        if (err.name === "ValidationError") {
-            return res.status(400).json({
-                message: err.message,
-            });
-        }
+    console.error("LOGIN ERROR:", err);
 
-        return res.status(500).json({
-            message: "Internal Server Error",
+    if (err.name === "ValidationError") {
+        return res.status(400).json({
+            message: err.message,
         });
     }
+
+    return res.status(500).json({
+        message: "Internal Server Error",
+    });
+}
 }
 
 module.exports = {
