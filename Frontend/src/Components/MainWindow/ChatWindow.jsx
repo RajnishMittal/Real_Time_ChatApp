@@ -123,10 +123,10 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                     ...prev,
                     [msg.group]: (prev[msg.group] || 0) + 1
                 }));
-                setLastUnread(prev => ({       
-                    ...prev,                  
-                    [msg.group]: msg            
-                }));                               
+                setLastUnread(prev => ({
+                    ...prev,
+                    [msg.group]: msg
+                }));
             }
             if (isGroup && msg.group === activeContactId) {
                 setMess(prev => [...prev, msg]);
@@ -261,7 +261,9 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
     function renderMessageFile(file) {
         if (!file || !file.path) return null;
 
-        const url = `http://localhost:8000/${file.path.replace(/\\/g, "/")}`;
+        const url = file.path?.startsWith("http")
+            ? file.path
+            : `${import.meta.env.VITE_API_URL}/${file.path.replace(/\\/g, "/")}`;
 
         if (file.mimetype?.startsWith("image/")) {
             return (
@@ -393,7 +395,7 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                 src={
                                     activeContact?.profilePic?.startsWith("http")
                                         ? activeContact?.profilePic
-                                        : `http://localhost:8000/${activeContact?.profilePic}`
+                                        : `${import.meta.env.VITE_API_URL}/${activeContact?.profilePic}`
                                 }
                                 alt={activeContact.name}
                             />
@@ -427,7 +429,7 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                     src={
                                         activeContact?.grpPic.startsWith("http")
                                             ? activeContact?.grpPic
-                                            : `http://localhost:8000/${activeContact?.grpPic}`
+                                            : `${import.meta.env.VITE_API_URL}/${activeContact?.grpPic}`
                                     }
                                     alt=""
                                 />
@@ -493,7 +495,7 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                             src={
                                                 msg?.sender?.profilePic?.startsWith("http")
                                                     ? msg?.sender?.profilePic
-                                                    : `http://localhost:8000/${msg?.sender?.profilePic}`
+                                                    : `${import.meta.env.VITE_API_URL}/${msg?.sender?.profilePic}`
                                             }
                                             alt={activeContact?.name}
                                         />
