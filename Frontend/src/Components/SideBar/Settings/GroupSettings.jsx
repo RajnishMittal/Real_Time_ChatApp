@@ -256,7 +256,9 @@ function GroupSettings() {
 
     function groupImgSrc(pic) {
         if (!pic) return null;
-        return pic.startsWith("http") ? pic : `http://localhost:8000/${pic}`;
+        return pic.startsWith("http")
+            ? pic
+            : `${import.meta.env.VITE_API_URL}/${pic}`;
     }
 
     return (

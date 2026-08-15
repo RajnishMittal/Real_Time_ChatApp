@@ -135,7 +135,7 @@ function Friend_Requests() {
                                         src={
                                             request?.profilePic?.startsWith("http")
                                                 ? request?.profilePic
-                                                : `http://localhost:8000/${request?.profilePic}`
+                                                : `${import.meta.env.VITE_API_URL}/${request?.profilePic}`
                                         }
                                         alt={request?.name || "User"}
                                     />

@@ -116,7 +116,7 @@ function ProfileUser() {
                             src={
                                 loggedIn?.profilePic?.startsWith("http")
                                     ? loggedIn?.profilePic
-                                    : `http://localhost:8000/${loggedIn?.profilePic}`
+                                    : `${import.meta.env.VITE_API_URL}/${loggedIn?.profilePic}`
                             }
                             alt="image"
                         />

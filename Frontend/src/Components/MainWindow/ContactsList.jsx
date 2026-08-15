@@ -98,7 +98,7 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
                                             src={
                                                 user?.profilePic?.startsWith("http")
                                                     ? user.profilePic
-                                                    : `http://localhost:8000/${user?.profilePic}`
+                                                    : `${import.meta.env.VITE_API_URL}/${user?.profilePic}`
                                             }
                                             style={{
                                                 border: onlineUsers?.[user._id]
@@ -145,7 +145,7 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
                                                 src={
                                                     grp?.grpPic?.startsWith("http")
                                                         ? grp.grpPic
-                                                        : `http://localhost:8000/${grp?.grpPic}`
+                                                        : `${import.meta.env.VITE_API_URL}/${grp?.grpPic}`
                                                 }
                                                 alt={grp?.grpName}
                                             />
@@ -201,7 +201,7 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
                             src={
                                 user?.profilePic?.startsWith("http")
                                     ? user?.profilePic
-                                    : `http://localhost:8000/${user?.profilePic}`
+                                    : `${import.meta.env.VITE_API_URL}/${user?.profilePic}`
                             }
                             style={{
                                 border:
@@ -261,7 +261,7 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
                                 src={
                                     user?.grpPic?.startsWith("http")
                                         ? user?.grpPic
-                                        : `http://localhost:8000/${user?.grpPic}`
+                                        : `${import.meta.env.VITE_API_URL}/${user?.grpPic}`
                                 }
                                 alt=""
                             />

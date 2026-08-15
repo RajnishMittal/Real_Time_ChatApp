@@ -180,12 +180,12 @@ function ProfileSettings({ loggedIn, setLoggedIn }) {
     }
 
     const avatarSrc = preview
-        ? preview
-        : loggedIn?.profilePic?.startsWith("http")
-            ? loggedIn.profilePic
-            : loggedIn?.profilePic
-                ? `http://localhost:8000/${loggedIn.profilePic}`
-                : null;
+    ? preview
+    : loggedIn?.profilePic?.startsWith("http")
+        ? loggedIn.profilePic
+        : loggedIn?.profilePic
+            ? `${import.meta.env.VITE_API_URL}/${loggedIn.profilePic}`
+            : null;
 
     return (
         <>

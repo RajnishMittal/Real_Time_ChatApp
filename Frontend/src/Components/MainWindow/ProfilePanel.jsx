@@ -100,7 +100,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                                             src={
                                                 activeContact.profilePic.startsWith("http")
                                                     ? activeContact.profilePic
-                                                    : `http://localhost:8000/${activeContact.profilePic}`
+                                                    : `${import.meta.env.VITE_API_URL}/${activeContact.profilePic}`
                                             }
                                             alt={activeContact?.name}
                                         />
@@ -209,7 +209,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                                 src={
                                     activeContact?.grpPic?.startsWith("http")
                                         ? activeContact.grpPic
-                                        : `http://localhost:8000/${activeContact?.grpPic}`
+                                        : `${import.meta.env.VITE_API_URL}/${activeContact?.grpPic}`
                                 }
                                 alt={activeContact?.grpName}
                             />
@@ -279,7 +279,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                                                     src={
                                                         user?.profilePic?.startsWith("http")
                                                             ? user?.profilePic
-                                                            : `http://localhost:8000/${user?.profilePic}`
+                                                            : `${import.meta.env.VITE_API_URL}/${user?.profilePic}`
                                                     }
                                                     alt={user?.name}
                                                 />
