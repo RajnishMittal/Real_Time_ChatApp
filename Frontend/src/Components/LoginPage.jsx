@@ -39,7 +39,6 @@ function LoginPage() {
           }
         }, rand(60, 140));
       } else {
-        // word fully typed — hold it visible before deleting starts
         timeout = setTimeout(() => setPhase("deleting"), 1800);
       }
     }
@@ -96,7 +95,6 @@ function LoginPage() {
         return;
       }
       else {
-
         setError(null);
         navigate(result.needsProfile ? "/profile" : "/linksync");
       }
@@ -115,21 +113,27 @@ function LoginPage() {
       </div>
 
       <div className="web_app">
-        <h1 style={{ fontSize: 50 }}>LinkSync</h1>
-        <h2 style={{ fontSize: 30 }}>
+        <h1>LinkSync</h1>
+        <h2>
           <span className="typed">{typed}</span>
         </h2>
 
         <div className="social_media">
-          <img style={{ width: "40px", height: "40px" }} src={linkdin_image} alt="linkedin" />
-          <img style={{ width: "40px", height: "40px" }} src={github_image} alt="github" />
-          <img style={{ width: "40px", height: "40px" }} src={insta_image} alt="instagram" />
+          <a className="social_icon" href="#" target="_blank" rel="noreferrer">
+            <img src={linkdin_image} alt="linkedin" />
+          </a>
+          <a className="social_icon" href="#" target="_blank" rel="noreferrer">
+            <img src={github_image} alt="github" />
+          </a>
+          <a className="social_icon" href="#" target="_blank" rel="noreferrer">
+            <img src={insta_image} alt="instagram" />
+          </a>
         </div>
       </div>
 
       <div className="sign_up_wrapper">
         <div className="sign_in_box">
-          <h2 style={{ fontSize: 30, marginBottom: "30px" }}>Sign In</h2>
+          <h2 className="sign_in_title">Sign In</h2>
 
           <form onSubmit={handleUserCred}>
 

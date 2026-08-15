@@ -2,10 +2,7 @@
 .settings_page {
     display: flex;
     position: relative;
-    min-height: 100vh;
-    /* Layered accent background — was hardcoded to ember's orange (232,151,58);
-       now derives from the active theme's own accent color so every theme
-       gets its own tinted glow instead of ember-orange bleeding through. */
+    min-height: 100dvh;
     background:
         radial-gradient(circle at top right,
             color-mix(in srgb, var(--accent-color) 10%, transparent),
@@ -23,7 +20,7 @@
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--scroll-thumb) transparent;
-    height: 100vh;
+    height: 100dvh;
 }
 
 .settings_scroll::-webkit-scrollbar {

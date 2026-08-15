@@ -1,7 +1,7 @@
 .mainScreen {
     display: flex;
-    height: 100vh;
-    width: 100vw;
+    height: 100dvh;
+    width: 100dvw;
 }
 
 /* =========================
@@ -9,8 +9,9 @@
 ========================= */
 
 .reqWrapper {
-    gap: 30px;
+    gap: 20px;
     display: flex;
+    flex-direction: row;
     width: 100%;
 }
 
@@ -48,12 +49,14 @@
 }
 
 
-/* Show ONLY the preview belonging to hovered request */
+/* Show ONLY the preview belonging to hovered request — pointer devices only */
 
-.reqWrapper:hover .previewUser {
-    opacity: 1;
-    visibility: visible;
-    transform: translateX(0);
+@media (hover: hover) and (pointer: fine) {
+    .reqWrapper:hover .previewUser {
+        opacity: 1;
+        visibility: visible;
+        transform: translateX(0);
+    }
 }
 
 
@@ -296,8 +299,8 @@
 ========================= */
 
 .requestAvatar {
-    width: 100px;
-    height: 100px;
+    width: clamp(56px, 18vw, 100px);
+    height: clamp(56px, 18vw, 100px);
 
     border-radius: 70px;
 
@@ -331,7 +334,7 @@
 
     color: var(--text-primary);
 
-    font-size: 30px;
+    font-size: clamp(17px, 4.5vw, 30px);
     font-weight: 600;
 
     white-space: nowrap;
@@ -345,7 +348,7 @@
 
     color: var(--accent-color);
 
-    font-size: 18px;
+    font-size: clamp(13px, 3vw, 18px);
     font-style: italic;
     font-weight: 500;
 }
@@ -354,7 +357,7 @@
     position: relative;
     margin: 4px 0 0;
     color: var(--text-secondary);
-    font-size: 16px;
+    font-size: clamp(12px, 2.8vw, 16px);
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -465,6 +468,53 @@
 
 
 /* =========================
+   TOUCH DEVICES — TAP-TO-EXPAND PREVIEW
+   (replaces hover-popover with an inline accordion)
+========================= */
+
+@media (hover: none) {
+
+    .requestTab {
+        cursor: pointer;
+    }
+
+    .reqWrapper {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .previewUser {
+        position: relative;
+        left: auto;
+        top: auto;
+
+        transform: none;
+        opacity: 1;
+        visibility: visible;
+
+        width: 100%;
+        max-height: 0;
+
+        padding: 0 24px;
+        margin-top: 0;
+
+        overflow: hidden;
+
+        transition:
+            max-height 0.3s ease,
+            padding 0.3s ease,
+            margin-top 0.3s ease;
+    }
+
+    .previewUser.is-open {
+        max-height: 320px;
+        padding: 20px 24px;
+        margin-top: 10px;
+    }
+}
+
+
+/* =========================
    RESPONSIVE
 ========================= */
 
@@ -473,29 +523,10 @@
     .requestTab {
         width: 90%;
     }
-
-    .previewUser {
-        left: calc(90% + 15px);
-        width: 320px;
-    }
 }
 
 
 @media (max-width: 850px) {
-
-    .previewUser {
-        left: 0;
-
-        top: calc(100% + 10px);
-
-        width: 100%;
-
-        transform: translateY(-8px);
-    }
-
-    .reqWrapper:hover .previewUser {
-        transform: translateY(0);
-    }
 
     .requestTab {
         width: 100%;
@@ -506,33 +537,20 @@
 @media (max-width: 700px) {
 
     .friendsRequest {
-        padding: 20px;
+        padding: 10px;
     }
 
     .requestTab {
         flex-wrap: wrap;
-
+        height: fit-content;
+        width: 100%;
         gap: 12px;
+        padding: 14px;
     }
 
     .requestActions {
         width: 100%;
 
         justify-content: flex-end;
-    }
-
-    .previewUser {
-        position: relative;
-
-        top: auto;
-        left: auto;
-
-        width: 100%;
-
-        margin-top: 8px;
-    }
-
-    .reqWrapper:hover .previewUser {
-        display: block;
     }
 }

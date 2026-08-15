@@ -7,7 +7,7 @@ body {
 }
 
 .hero {
-    height: 100vh;
+    height: 100dvh;
     display: flex;
     background: var(--bg-main);
 }
@@ -286,7 +286,7 @@ body {
         justify-content: center;
         align-items: center;
 
-        overflow-y: auto;
+        overflow: hidden;
     }
 
     .profile-pagee,
@@ -302,6 +302,7 @@ body {
         min-height: 230px;
 
         border-radius: 20px;
+        overflow: hidden;
     }
 
     .profile_image {
@@ -320,8 +321,8 @@ body {
     }
 
     .profile_image .userPhoto {
-        width: 150px !important;
-        height: 150px !important;
+        width: 110px !important;
+        height: 110px !important;
 
         flex-shrink: 0;
 

@@ -11,6 +11,7 @@ function Friend_Requests() {
     const [loggedIn, setLoggedIn] = React.useState(null);
     const [requests, setRequests] = React.useState([]);
     const [error, setError] = React.useState(null);
+    const [expandedId, setExpandedId] = React.useState(null);
 
     React.useEffect(() => {
 
@@ -106,6 +107,10 @@ function Friend_Requests() {
         }
     }
 
+    function togglePreview(id) {
+        setExpandedId(prev => (prev === id ? null : id));
+    }
+
     return (
         <div className='mainScreen'>
             <SideBar />
@@ -129,7 +134,10 @@ function Friend_Requests() {
 
                         return (
                             <div className="reqWrapper" key={request._id}>
-                                <div className="requestTab">
+                                <div
+                                    className="requestTab"
+                                    onClick={() => togglePreview(request._id)}
+                                >
                                     <img
                                         className="requestAvatar"
                                         src={
@@ -151,20 +159,26 @@ function Friend_Requests() {
                                     <div className="requestActions">
                                         <button
                                             className="requestBtn accept"
-                                            onClick={() => handleRespond(request._id, "accept")}
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // NEW — don't toggle preview
+                                                handleRespond(request._id, "accept");
+                                            }}
                                         >
                                             Accept
                                         </button>
                                         <button
                                             className="requestBtn decline"
-                                            onClick={() => handleRespond(request._id, "decline")}
+                                            onClick={(e) => {
+                                                e.stopPropagation(); // NEW
+                                                handleRespond(request._id, "decline");
+                                            }}
                                         >
                                             Decline
                                         </button>
                                     </div>
                                 </div>
 
-                                <div className="previewUser">
+                                <div className={`previewUser ${expandedId === request._id ? "is-open" : ""}`}>
                                     <div className="previewDetails">
                                         <div className="previewRow">
                                             <span className="previewLabel">Country</span>

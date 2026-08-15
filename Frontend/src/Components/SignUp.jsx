@@ -105,73 +105,76 @@ function SignUp(props) {
     }
 
     return (
-        <div>
-            <div className="main_background">
+        <div className="main_background">
 
-                <div className="circle_wrapper">
-                    <div className="circle"></div>
-                </div>
-
-                <div className="web_app">
-                    <h1 style={{ fontSize: 50 }}>LinkSync</h1>
-                    <h2 style={{ fontSize: 30 }} className="typed_heading">
-                        <span className="typed">{typed}</span>
-                        <span className="dash">&nbsp;</span>
-                    </h2>
-
-                    <div className="social_media">
-                        <img style={{ width: "40px", height: "40px" }} src={linkdin_image} alt="linkedin" />
-                        <img style={{ width: "40px", height: "40px" }} src={github_image} alt="github" />
-                        <img style={{ width: "40px", height: "40px" }} src={insta_image} alt="instagram" />
-                    </div>
-                </div>
-
-                <div className="sign_up_wrapper">
-                    <div className="sign_in_box">
-                        <h2 style={{ fontSize: 30 }}>Sign Up</h2>
-
-                        <form onSubmit={handleUserCred}>
-                            <label htmlFor="name">Name</label>
-                            <input type="text" id="name" name="name" autoComplete='off' required />
-
-                            <label htmlFor="email">Email Id</label>
-                            <input type="email" id="email" name="email" autoComplete='off' required />
-
-                            <label htmlFor="pass">Password</label>
-                            <input
-                                className="pass"
-                                type={showPass ? "text" : "password"}
-                                id="pass"
-                                name="pass"
-                                required
-                                autoComplete="off"
-                            />
-
-                            <div className="show_pass">
-                                <input
-                                    type="checkbox"
-                                    id="showPass"
-                                    checked={showPass}
-                                    onChange={(e) => setShowPass(e.target.checked)}
-                                />
-                                <label htmlFor="showPass">Show Password</label>
-                            </div>
-
-                            <Link to="/" className="switch_auth" >Already Have An Account? Log In</Link>
-
-                            {error ? <div className="error">
-                                <p style={{ color: "white" }} >
-                                    {error}
-                                </p>
-                            </div> : null}
-
-                            <button type="submit">Link</button>
-                        </form>
-
-                    </div>
-                </div>
-
+            <div className="circle_wrapper">
+                <div className="circle"></div>
             </div>
+
+            <div className="web_app">
+                <h1>LinkSync</h1>
+                <h2>
+                    <span className="typed">{typed}</span>
+                </h2>
+
+                <div className="social_media">
+                    <a className="social_icon" href="#" target="_blank" rel="noreferrer">
+                        <img src={linkdin_image} alt="linkedin" />
+                    </a>
+                    <a className="social_icon" href="#" target="_blank" rel="noreferrer">
+                        <img src={github_image} alt="github" />
+                    </a>
+                    <a className="social_icon" href="#" target="_blank" rel="noreferrer">
+                        <img src={insta_image} alt="instagram" />
+                    </a>
+                </div>
+            </div>
+
+            <div className="sign_up_wrapper">
+                <div className="sign_in_box">
+                    <h2 className="sign_in_title">Sign Up</h2>
+
+                    <form onSubmit={handleUserCred}>
+                        <label htmlFor="name">Name</label>
+                        <input type="text" id="name" name="name" autoComplete='off' required />
+
+                        <label htmlFor="email">Email Id</label>
+                        <input type="email" id="email" name="email" autoComplete='off' required />
+
+                        <label htmlFor="pass">Password</label>
+                        <input
+                            className="pass"
+                            type={showPass ? "text" : "password"}
+                            id="pass"
+                            name="pass"
+                            required
+                            autoComplete="off"
+                        />
+
+                        <div className="show_pass">
+                            <input
+                                type="checkbox"
+                                id="showPass"
+                                checked={showPass}
+                                onChange={(e) => setShowPass(e.target.checked)}
+                            />
+                            <label htmlFor="showPass">Show Password</label>
+                        </div>
+
+                        <Link to="/" className="switch_auth" >Already Have An Account? Log In</Link>
+
+                        {error ? <div className="error">
+                            <p style={{ color: "white" }} >
+                                {error}
+                            </p>
+                        </div> : null}
+
+                        <button type="submit">Link</button>
+                    </form>
+
+                </div>
+            </div>
+
         </div>
     )
 }

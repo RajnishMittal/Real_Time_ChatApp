@@ -69,6 +69,12 @@
     color: var(--accent-hover);
 }
 
+.person_username {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    margin: 2px 0 0;
+}
+
 .name_row {
     display: flex;
     align-items: center;
@@ -95,6 +101,24 @@
     overflow: hidden;
     text-overflow: ellipsis;
     width: 100%;
+}
+
+.group_sender_row {
+    display: flex;
+    align-items: center;
+    font-size: 0.75rem;
+    margin: 2px 0 6px;
+    font-weight: 500;
+    font-style: italic;
+}
+
+.group_sender_avatar {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 6px;
+    vertical-align: middle;
 }
 
 @keyframes pulse {
@@ -257,6 +281,11 @@
     width: 100%;
 }
 
+.chat_text_input {
+    width: 80%;
+    font-size: larger;
+}
+
 .chat_text input[type="text"] {
     flex: 1;
     color: var(--text-primary);
@@ -275,6 +304,12 @@
     box-shadow: 0 0 18px color-mix(in srgb, var(--accent-color) 20%, transparent);
 }
 
+.chat_send_btn {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 10px;
+}
+
 .message-image {
     max-width: 200px;
     max-height: 200px;
@@ -284,6 +319,7 @@
     display: block;
     object-fit: cover;
     border-radius: 16px;
+    padding: 0;
     transition: .35s;
     cursor: pointer;
     box-shadow:
@@ -292,6 +328,16 @@
 
 .message-image:hover {
     transform: scale(1.03);
+}
+
+.message-video {
+    width: fit-content;
+    max-width: 320px;
+    max-height: 350px;
+    display: block;
+    margin-bottom: 6px;
+    border-radius: 18px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, .4);
 }
 
 .file-preview {
@@ -343,15 +389,6 @@
     flex-shrink: 0;
     margin-left: auto;
     transition: background 0.15s ease;
-}
-
-.message-video {
-    max-width: 320px;
-    max-height: 350px;
-    display: block;
-    margin-bottom: 6px;
-    border-radius: 18px;
-    box-shadow: 0 12px 30px rgba(0, 0, 0, .4);
 }
 
 .audio_message {
@@ -474,6 +511,100 @@
     white-space: nowrap;
 }
 
+/* =========================
+   FILE CARD (WhatsApp-style)
+========================= */
+
+.file_card {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+
+    padding: 10px 12px;
+    margin-bottom: 4px;
+
+    width: 280px;
+
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    border-radius: 14px;
+
+    text-decoration: none;
+
+    transition: .2s;
+}
+
+.file_card:hover {
+    background: var(--bg-card-hover);
+    border-color: var(--border-hover);
+}
+
+.file_card_icon {
+    flex-shrink: 0;
+
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: var(--message-me);
+    color: var(--text-inverse);
+
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+}
+
+.file_card_info {
+    flex: 1;
+    min-width: 0;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+.file_card_name {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-primary);
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.file_card_meta {
+    font-size: 11px;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+}
+
+.file_card_download {
+    flex-shrink: 0;
+
+    width: 30px;
+    height: 30px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    background: var(--accent-glow);
+    color: var(--accent-color);
+}
+
+/* =========================
+   MOBILE — everything below only applies at 700px and under
+========================= */
+
 @media (max-width: 700px) {
 
     .back_btn {
@@ -485,5 +616,175 @@
         opacity: 0;
         padding: 0;
         overflow: hidden;
+    }
+
+    /* ---- Nav bar ---- */
+
+    .contact_nav {
+        padding: 8px 12px;
+        gap: 8px;
+    }
+
+    .contact_nav img {
+        width: 40px;
+        height: 40px;
+    }
+
+    .contact_nav .person_name {
+        font-size: 16px;
+    }
+
+    .contact_nav .person_name p {
+        font-size: 10px;
+    }
+
+    .person_username {
+        font-size: 0.7rem;
+    }
+
+    .group_members_row {
+        font-size: 0.72rem;
+    }
+
+    .group_sender_row {
+        font-size: 0.68rem;
+    }
+
+    .group_sender_avatar {
+        width: 16px;
+        height: 16px;
+    }
+
+    .online_dot {
+        width: 8px;
+        height: 8px;
+    }
+
+    .lastSeen {
+        font-size: 0.7rem;
+    }
+
+    /* ---- Messages area ---- */
+
+    .messages {
+        padding: 14px 12px;
+        gap: 12px;
+    }
+
+    .messages .me,
+    .messages .them {
+        max-width: 68%;
+        padding: 6px 6px;
+    }
+
+    .messages .me p:first-child,
+    .messages .them p:first-child {
+        font-size: 16px;
+    }
+
+    .messages .me p:last-child,
+    .messages .them p:last-child {
+        font-size: 9px;
+    }
+
+    /* ---- Composer ---- */
+
+    .chat_text {
+        padding: 8px;
+        gap: 8px;
+    }
+
+    .chat_text_input {
+        width: 80%;
+        font-size: 14px;
+    }
+
+    .chat_text input[type="text"] {
+        padding: 10px 14px;
+        font-size: 14px;
+    }
+
+    .file-upload-label {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+
+    .chat_send_btn {
+        width: 42px;
+        height: 42px;
+        margin-bottom: 0;
+    }
+
+    .chat_text button {
+        width: 42px;
+        height: 42px;
+        font-size: 14px;
+    }
+
+    /* ---- Media ---- */
+
+    .message-image {
+        max-width: 150px;
+        max-height: 150px;
+        padding: 0;
+    }
+
+    .message-video {
+        width: fit-content;
+        max-width: 220px;
+        max-height: 240px;
+    }
+
+    .audio_message {
+        max-width: 220px;
+        padding: 8px 10px;
+    }
+
+    .audio_message audio {
+        width: 190px;
+        height: 34px;
+    }
+
+    .file-preview {
+        padding: 4px 8px;
+    }
+
+    .file-preview .message-image {
+        width: 50px;
+        height: 50px;
+        padding: 0;
+    }
+
+    .file-preview span {
+        font-size: 0.8rem;
+        max-width: 130px;
+    }
+
+    /* ---- File card ---- */
+
+    .file_card {
+        max-width: 220px;
+        padding: 8px 10px;
+        gap: 8px;
+    }
+
+    .file_card_icon {
+        width: 36px;
+        height: 36px;
+        font-size: 9px;
+    }
+
+    .file_card_name {
+        font-size: 12px;
+    }
+
+    .file_card_meta {
+        font-size: 10px;
+    }
+
+    .file_card_download {
+        width: 26px;
+        height: 26px;
     }
 }

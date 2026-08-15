@@ -1,14 +1,3 @@
-/* ============================================================
-   FREQUENCY DIRECTORY
-   Concept: contacts as stations on a dial. Warm walnut cabinet,
-   amber tuning accent, mono "call-sign" typography for handles,
-   a left needle that lights up on the tuned-in (active) contact,
-   faint scanline texture standing in for a CRT/radio readout.
-
-   All colors/surfaces are pulled from the shared :root palette —
-   no hardcoded hex values or undefined custom properties.
-   ============================================================ */
-
 @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
 
 .contacts{

@@ -5,6 +5,18 @@ import io from "socket.io-client"
 import sendIcon from "../../assets/icons/send.png";
 import fileIcon from "../../assets/icons/file.png";
 
+function getFileExt(filename = "") {
+    const parts = filename.split(".");
+    return parts.length > 1 ? parts.pop().toUpperCase() : "FILE";
+}
+
+function formatFileSize(bytes) {
+    if (!bytes) return "";
+    if (bytes < 1024) return `${bytes} B`;
+    if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+    return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
 function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, activeContact, loggedIn, onlineUsers, setOnlineUsers, users, setIsGroup, isGroup, joinGroup, setGroupJoin, fetchGroups, setShowProfile, showProfile, setUnreadCounts, setLastUnread, setLastLoggedIn, othersChatData, isPrivate, friends, fetchMeta, fetchJoinedGroups }) {
 
     const [error, setError] = React.useState(null);
@@ -288,7 +300,6 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
             );
         }
 
-
         if (file.mimetype?.startsWith("audio/")) {
             return (
                 <div className="audio_message">
@@ -303,15 +314,30 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
             );
         }
 
+        // WhatsApp-style generic file card (PDF, docs, zip, etc.)
+        const ext = getFileExt(file.filename);
 
         return (
             <a
                 href={url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="message-file"
+                className="file_card"
             >
-                {file.filename}
+                <div className="file_card_icon">
+                    <span>{ext}</span>
+                </div>
+                <div className="file_card_info">
+                    <span className="file_card_name">{file.filename}</span>
+                    <span className="file_card_meta">
+                        {ext}{file.size ? ` · ${formatFileSize(file.size)}` : ""}
+                    </span>
+                </div>
+                <div className="file_card_download">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M12 3v12m0 0l-4-4m4 4l4-4M4 21h16" />
+                    </svg>
+                </div>
             </a>
         );
     }
@@ -411,13 +437,7 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                     </span>}
                                 </span>
 
-                                <p
-                                    style={{
-                                        fontSize: "0.85rem",
-                                        color: "#888",
-                                        margin: "2px 0 0",
-                                    }}
-                                >
+                                <p className="person_username">
                                     @{activeContact?.username}
                                 </p>
                             </h2>
@@ -472,24 +492,10 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                     key={msg?._id ?? msg?.id}
                                     className={(msg.sender?._id ?? msg.sender) === loggedIn?._id ? "me" : "them"}
                                 >
-                                    <div
-                                        style={{
-                                            fontSize: "0.75rem",
-                                            color: getUserColor(msg?.sender?._id || msg?.sender?.username || ""),
-                                            margin: "2px 0 6px",
-                                            fontWeight: "500",
-                                            fontStyle: "italic",
-                                            display: "flex"
-                                        }}
-                                    >
+                                    <div className="group_sender_row">
                                         <img
+                                            className="group_sender_avatar"
                                             style={{
-                                                width: "20px",
-                                                height: "20px",
-                                                borderRadius: "50%",
-                                                objectFit: "cover",
-                                                marginRight: "6px",
-                                                verticalAlign: "middle",
                                                 border: "1px solid rgba(255,255,255,0.2)"
                                             }}
                                             src={
@@ -499,7 +505,9 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                             }
                                             alt={activeContact?.name}
                                         />
-                                        ~{msg?.sender?.name ? msg?.sender?.name : "Deleted User"} {msg?.sender?.username ? `@${msg?.sender?.username}` : null}
+                                        <span style={{ color: getUserColor(msg?.sender?._id || msg?.sender?.username || "") }}>
+                                            ~{msg?.sender?.name ? msg?.sender?.name : "Deleted User"} {msg?.sender?.username ? `@${msg?.sender?.username}` : null}
+                                        </span>
                                     </div>
                                     {renderMessageFile(msg?.file)}
                                     {msg?.text && <p>{msg?.text}</p>}
@@ -554,10 +562,7 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                         type="text"
                                         name="msg"
                                         autoComplete="off"
-                                        style={{
-                                            width: "80%",
-                                            fontSize: "larger",
-                                        }}
+                                        className="chat_text_input"
                                     />
 
                                     <input
@@ -573,11 +578,7 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                     </label>
 
                                     <button
-                                        style={{
-                                            width: "50px",
-                                            height: "50px",
-                                            marginBottom: "10px"
-                                        }}
+                                        className="chat_send_btn"
                                         type="submit"
                                     >
                                         <img src={sendIcon} alt="send" />
