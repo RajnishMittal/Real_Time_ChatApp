@@ -9,6 +9,7 @@ import { Country, State } from "country-state-city";
 function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUsers, setIsGroup, setActiveContactId, setShowProfile, showProfile }) {
     const [searchUser, setSearchUser] = useState("");
     const [menuOpen, setMenuOpen] = useState(false)
+    const [imageEnlarged, setImageEnlarged] = useState(false);
 
     const sortedMembers = useMemo(() => {
         if (!activeContact?.members) return [];
@@ -96,20 +97,31 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                                 <div className="avatar-container">
                                     {activeContact?.profilePic && (
                                         <img
-                                            className="panel-avatar"
+                                            className={`panel-avatar ${onlineUsers?.[activeContact?._id] ? "online-glow" : ""}`}
                                             src={
                                                 activeContact.profilePic.startsWith("http")
                                                     ? activeContact.profilePic
                                                     : `${import.meta.env.VITE_API_URL}/${activeContact.profilePic}`
                                             }
                                             alt={activeContact?.name}
+                                            onClick={() => setImageEnlarged(true)}
                                         />
                                     )}
-
-                                    {onlineUsers?.[activeContact?._id] && (
-                                        <span className="online-indicator" />
-                                    )}
                                 </div>
+
+                                {imageEnlarged && (
+                                    <div className="imageInlarged" onClick={() => setImageEnlarged(false)}>
+                                        <img
+                                            src={
+                                                activeContact.profilePic.startsWith("http")
+                                                    ? activeContact.profilePic
+                                                    : `${import.meta.env.VITE_API_URL}/${activeContact.profilePic}`
+                                            }
+                                            alt={activeContact?.name}
+                                            onClick={(e) => e.stopPropagation()}
+                                        />
+                                    </div>
+                                )}
 
                                 <div className="profile-primary-info">
                                     <h2 className="profile-name">
@@ -184,7 +196,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                                     }}
                                 >
                                     <span>Block</span>
-                                    <img src= {blockImage} alt="" />
+                                    <img src={blockImage} alt="" />
                                 </button>
 
                                 <button
@@ -194,7 +206,7 @@ function ProfilePanel({ activeContact, isGroup, group, activeContactId, onlineUs
                                     }}
                                 >
                                     <span>Report</span>
-                                    <img src= {reportImage} alt="" />
+                                    <img src={reportImage} alt="" />
                                 </button>
 
                             </div>
