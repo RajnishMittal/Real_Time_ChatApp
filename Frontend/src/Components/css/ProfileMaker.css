@@ -1,29 +1,93 @@
+/* =========================================================
+   PROFILE MAKER
+========================================================= */
+
 .profile_maker_container {
+    height: 100dvh;
+    width: 100%;
+
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100dvh;
-    background-color: #355872;
+
+    padding: 32px 20px;
+
+    background-color: #102a25;
     background-image: url(../../assets/background2.jpg);
     background-position: -10px center;
     background-size: cover;
     background-attachment: fixed;
-    padding: 20px;
-    font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+
+    font-family:
+        'Segoe UI',
+        Roboto,
+        'Helvetica Neue',
+        Arial,
+        sans-serif;
+
+    color: #F3F8F5;
+
+    overflow-y: hidden;
 }
 
+
+/* =========================================================
+   MAIN PROFILE CARD
+========================================================= */
+
 .profile_maker {
-    width: 100%;
-    max-width: 1000px;
-    padding: 20px;
-    background-color:rgba(12, 33, 31, 0.3);
-    backdrop-filter: blur(5px);
-    -webkit-backdrop-filter: blur(5px);
-    border-radius: 20px;
-    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-    border: 1px solid rgba(122, 170, 206, 0.2);
-    animation: slideUp 0.4s ease;
+    position: relative;
+
+    width: min(100%, 920px);
+
+    padding: 38px 46px;
+
+    background: rgba(8, 30, 25, 0.42);
+
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+
+    border: 1px solid rgba(86, 150, 125, 0.22);
+
+    border-radius: 26px;
+
+    box-shadow:
+        0 20px 60px rgba(0, 0, 0, 0.38),
+        inset 0 1px 0 rgba(120, 180, 155, 0.05);
+
+    animation: slideUp 0.45s ease;
 }
+
+
+/* =========================================================
+   TOP CARD HIGHLIGHT
+========================================================= */
+
+.profile_maker::before {
+    content: "";
+
+    position: absolute;
+
+    top: 0;
+    left: 15%;
+
+    width: 70%;
+    height: 1px;
+
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(93, 170, 139, 0.45),
+        transparent
+    );
+
+    pointer-events: none;
+}
+
+
+/* =========================================================
+   CARD ANIMATION
+========================================================= */
 
 @keyframes slideUp {
     from {
@@ -37,51 +101,92 @@
     }
 }
 
+
+/* =========================================================
+   TITLE
+========================================================= */
+
 .profile_title {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #F7F8F0;
-    margin-bottom: 10px;
+    margin: 0 0 30px;
+
     text-align: center;
-    letter-spacing: 0.5px;
+
+    font-size: 2rem;
+    font-weight: 650;
+
+    letter-spacing: 0.3px;
+
+    color: #F3F8F5;
 }
 
-/* Image Upload Section */
+
+/* =========================================================
+   IMAGE SECTION
+========================================================= */
+
 .image_section {
     display: flex;
+
     flex-direction: column;
+
     align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
+
+    gap: 14px;
+
+    margin-bottom: 32px;
 }
 
+
+/* =========================================================
+   IMAGE PREVIEW
+========================================================= */
+
 .image_preview_wrapper {
-    width: 80px;
-    height: 80px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(156, 213, 255, 0.2), rgba(75, 115, 144, 0.4));
+    width: 108px;
+    height: 108px;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
-    border: 2px solid rgba(122, 170, 206, 0.3);
+
+    border-radius: 50%;
+
+    background:
+        radial-gradient(
+            circle at 35% 30%,
+            rgba(93, 170, 139, 0.22),
+            rgba(8, 30, 25, 0.65)
+        );
+
+    border: 2px solid rgba(93, 170, 139, 0.4);
+
     overflow: hidden;
-    box-shadow: 0 4px 15px rgba(122, 170, 206, 0.2);
+
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.3),
+        0 0 0 6px rgba(93, 170, 139, 0.05);
 }
 
 .image_preview {
     width: 100%;
     height: 100%;
+
     object-fit: cover;
+
     border-radius: 50%;
 }
 
 .image_placeholder {
-    width: 50px;
-    height: 50px;
-    color: rgba(247, 248, 240, 0.5);
+    width: 52px;
+    height: 52px;
+
     display: flex;
+
     align-items: center;
     justify-content: center;
+
+    color: rgba(243, 248, 245, 0.42);
 }
 
 .image_placeholder svg {
@@ -89,228 +194,413 @@
     height: 100%;
 }
 
+
+/* =========================================================
+   UPLOAD BUTTON
+========================================================= */
+
 .upload_btn {
-    padding: 12px 28px;
-    background-color: #7AAACE;
-    color: #355872;
-    border: none;
-    border-radius: 30px;
+    display: inline-flex;
+
+    align-items: center;
+    justify-content: center;
+
+    padding: 10px 22px;
+
+    border-radius: 999px;
+
+    background: rgba(76, 145, 116, 0.16);
+
+    border: 1px solid rgba(93, 170, 139, 0.35);
+
+    color: #8fd3b1;
+
+    font-size: 13px;
     font-weight: 600;
+
+    letter-spacing: 0.2px;
+
     cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(122, 170, 206, 0.3);
-    font-size: 14px;
-    letter-spacing: 0.3px;
+
+    transition:
+        background 0.2s ease,
+        border-color 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .upload_btn:hover {
-    background-color: #9CD5FF;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(122, 170, 206, 0.4);
+    background: rgba(76, 145, 116, 0.25);
+
+    border-color: rgba(120, 190, 158, 0.55);
+
+    box-shadow:
+        0 8px 20px rgba(60, 130, 100, 0.12);
 }
 
 .upload_btn:active {
-    transform: translateY(0);
+    opacity: 0.85;
 }
+
+
+/* =========================================================
+   FORM GRID
+========================================================= */
 
 .input_field {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    max-width: 700px;
+    width: min(100%, 720px);
+
     margin: 0 auto;
-    gap: 10px 20px;
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, minmax(0, 1fr));
+
+    column-gap: 26px;
+
+    row-gap: 2px;
 }
 
-/* Form Fields */
+
+/* =========================================================
+   FORM GROUP
+========================================================= */
+
 .form_group {
     display: flex;
+
     flex-direction: column;
-    gap: 6px;
+
+    gap: 7px;
+
     margin-bottom: 20px;
 }
 
 .form_group label {
-    font-weight: 600;
-    color: #F7F8F0;
-    font-size: 14px;
-    letter-spacing: 0.3px;
+    color: rgba(243, 248, 245, 0.86);
+
+    font-size: 12px;
+    font-weight: 650;
+
+    letter-spacing: 0.7px;
+
     text-transform: uppercase;
-    opacity: 0.9;
 }
 
+
+/* =========================================================
+   TEXT INPUT
+========================================================= */
+
 .form_group input {
-    padding: 10px;
-    background: none;
-    border: thick double rgb(12, 33, 31);
-    border-radius: 30px;
-    color: #F7F8F0;
-    font-size: medium;
-    transition: all 0.3s ease;
-    backdrop-filter: blur(8px);
+    width: 100%;
+
+    height: 44px;
+
+    padding: 0 16px;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(86, 150, 125, 0.25);
+
+    background: rgba(5, 25, 21, 0.38);
+
+    color: #F3F8F5;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
 }
 
 .form_group input::placeholder {
-    color: rgba(247, 248, 240, 0.5);
+    color: rgba(243, 248, 245, 0.38);
+}
+
+.form_group input:hover {
+    border-color: rgba(93, 170, 139, 0.42);
 }
 
 .form_group input:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(122, 170, 206, 0.2);
+
+    border-color: rgba(120, 190, 158, 0.65);
+
+    background: rgba(5, 25, 21, 0.5);
+
+    box-shadow:
+        0 0 0 3px rgba(76, 145, 116, 0.12);
 }
 
-.form_group input:hover {
-    border-color: rgba(122, 170, 206, 0.4);
-}
 
-/* Date input styling */
+/* =========================================================
+   DATE INPUT
+========================================================= */
+
 .form_group input[type="date"] {
     color-scheme: dark;
+
     cursor: pointer;
 }
 
 .form_group input[type="date"]::-webkit-calendar-picker-indicator {
     filter: invert(0.9);
+
     cursor: pointer;
+
+    opacity: 0.75;
 }
 
-/* Button Group */
-.button_group {
-    display: flex;
-    gap: 12px;
-    margin-top: 35px;
-}
 
-.save_btn,
-.reset_btn {
-    flex: 1;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 10px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-}
-
-.save_btn {
-    background-color: #7AAACE;
-    color: #355872;
-}
-
-.save_btn:hover {
-    background-color: #9CD5FF;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(122, 170, 206, 0.4);
-}
-
-.save_btn:active {
-    transform: translateY(0);
-}
-
-.reset_btn {
-    background-color: #4B7390;
-    color: #F7F8F0;
-}
-
-.reset_btn:hover {
-    background-color: #5B84A3;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-}
-
-.reset_btn:active {
-    transform: translateY(0);
-}
-
-/* Success Message */
-.success_message {
-    margin-top: 20px;
-    padding: 12px 16px;
-    background-color: rgba(122, 170, 206, 0.2);
-    border: 1px solid #7AAACE;
-    border-radius: 10px;
-    color: #9CD5FF;
-    text-align: center;
-    font-weight: 600;
-    font-size: 14px;
-    animation: slideDown 0.3s ease;
-}
+/* =========================================================
+   SELECT
+========================================================= */
 
 .form_group select {
-    width: 85%;
-    padding: 10px 12px;
-    margin-top: 6px;
-    border-radius: 30px;
-    border: 5px double rgb(9, 24, 23);
-    background-color: transparent;
-    color: #fff;
-    font-size: 0.95rem;
+    width: 100%;
+
+    height: 44px;
+
+    padding: 0 42px 0 16px;
+
+    margin-top: 0;
+
+    border-radius: 14px;
+
+    border: 1px solid rgba(86, 150, 125, 0.25);
+
+    background-color: rgba(5, 25, 21, 0.38);
+
+    color: #F3F8F5;
+
     font-family: inherit;
+
+    font-size: 14px;
+
     appearance: none;
     -webkit-appearance: none;
-    cursor: pointer;
-    transition: border-color 0.15s ease, background-color 0.15s ease;
 
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    cursor: pointer;
+
+    transition:
+        border-color 0.2s ease,
+        background 0.2s ease,
+        box-shadow 0.2s ease;
+
+    background-image:
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238fd3b1' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+
     background-repeat: no-repeat;
-    background-position: right 12px center;
-    background-size: 16px;
-    padding-right: 36px;
+
+    background-position: right 14px center;
+
+    background-size: 15px;
 }
 
 .form_group select:hover {
-    border-color: rgba(255, 255, 255, 0.3);
+    border-color: rgba(93, 170, 139, 0.42);
+
+    background-color: rgba(5, 25, 21, 0.48);
 }
 
 .form_group select:focus {
     outline: none;
-    background-color: rgba(255, 255, 255, 0.08);
+
+    border-color: rgba(120, 190, 158, 0.65);
+
+    background-color: rgba(5, 25, 21, 0.52);
+
+    box-shadow:
+        0 0 0 3px rgba(76, 145, 116, 0.12);
 }
 
 .form_group select:disabled {
-    opacity: 0.5;
+    opacity: 0.45;
+
     cursor: not-allowed;
-    background-color: rgba(255, 255, 255, 0.02);
+
+    background-color: rgba(5, 25, 21, 0.25);
 }
 
-/* dropdown list background */
+
+/* =========================================================
+   DROPDOWN OPTIONS
+========================================================= */
+
 .form_group select option {
-    background-color: #1e1e1e;
-    color: #fff;
+    background-color: #182A2D;
+
+    color: #F3F8F5;
 }
 
-/* scrollbar inside the dropdown list — Chromium only */
-.form_group select {
-    scrollbar-width: thin;
-    scrollbar-color: #22c55e #1e1e1e;
+
+/* =========================================================
+   ERROR
+========================================================= */
+
+.error {
+    width: min(100%, 720px);
+
+    margin: 4px auto 0;
+
+    padding: 10px 14px;
+
+    border-radius: 10px;
+
+    background: rgba(255, 60, 60, 0.12);
+
+    border: 1px solid rgba(255, 92, 92, 0.28);
+
+    border-left: 3px solid #ff5c5c;
+
+    color: #ffd0d0;
+
+    font-size: 13px;
+
+    text-align: left;
 }
 
-.form_group select::-webkit-scrollbar {
-    width: 10px;
+.error p {
+    margin: 0;
 }
 
-.form_group select::-webkit-scrollbar-track {
-    background: #1e1e1e;
+
+/* =========================================================
+   BUTTON GROUP
+========================================================= */
+
+.button_group {
+    width: min(100%, 720px);
+
+    margin: 28px auto 0;
+
+    display: flex;
+
+    gap: 12px;
 }
 
-.form_group select::-webkit-scrollbar-thumb {
-    background-color: #22c55e;
-    border-radius: 8px;
-    border: 2px solid #1e1e1e;
+
+/* =========================================================
+   BUTTONS
+========================================================= */
+
+.save_btn,
+.reset_btn {
+    flex: 1;
+
+    height: 44px;
+
+    padding: 0 20px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    font-family: inherit;
+
+    font-size: 13px;
+    font-weight: 650;
+
+    letter-spacing: 0.4px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
 }
 
-.form_group select::-webkit-scrollbar-thumb:hover {
-    background-color: #16a34a;
+
+/* =========================================================
+   SAVE BUTTON
+========================================================= */
+
+.save_btn {
+    background: #4f9678;
+
+    color: #f1fff8;
+
+    box-shadow:
+        0 6px 18px rgba(60, 130, 100, 0.18);
 }
 
+.save_btn:hover {
+    background: #62ad8d;
+
+    box-shadow:
+        0 10px 24px rgba(60, 130, 100, 0.22);
+}
+
+.save_btn:active {
+    opacity: 0.85;
+}
+
+
+/* =========================================================
+   RESET BUTTON
+========================================================= */
+
+.reset_btn {
+    background: rgba(55, 105, 87, 0.5);
+
+    color: #e8f7ef;
+
+    border: 1px solid rgba(86, 150, 125, 0.2);
+}
+
+.reset_btn:hover {
+    background: rgba(65, 120, 98, 0.65);
+
+    box-shadow:
+        0 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.reset_btn:active {
+    opacity: 0.85;
+}
+
+
+/* =========================================================
+   SUCCESS MESSAGE
+========================================================= */
+
+.success_message {
+    width: min(100%, 720px);
+
+    margin: 18px auto 0;
+
+    padding: 11px 14px;
+
+    border-radius: 10px;
+
+    background: rgba(76, 145, 116, 0.1);
+
+    border: 1px solid rgba(93, 170, 139, 0.35);
+
+    color: #8fd3b1;
+
+    text-align: center;
+
+    font-size: 13px;
+    font-weight: 600;
+
+    animation: slideDown 0.3s ease;
+}
+
+
+/* =========================================================
+   SUCCESS ANIMATION
+========================================================= */
 
 @keyframes slideDown {
     from {
         opacity: 0;
-        transform: translateY(-10px);
+        transform: translateY(-8px);
     }
 
     to {
@@ -319,54 +609,212 @@
     }
 }
 
-/* Responsive */
-@media (max-width: 600px) {
+
+/* =========================================================
+   TABLET
+========================================================= */
+
+@media (max-width: 760px) {
+
+    .profile_maker_container {
+        align-items: flex-start;
+
+        padding: 24px 16px;
+
+        background-attachment: scroll;
+    }
+
     .profile_maker {
-        padding: 30px 20px;
-        border-radius: 16px;
+        width: 100%;
+
+        padding: 30px 24px;
+
+        border-radius: 22px;
+    }
+
+    .profile_title {
+        font-size: 1.7rem;
+
+        margin-bottom: 26px;
+    }
+
+    .image_section {
+        margin-bottom: 26px;
+    }
+
+    .input_field {
+        width: 100%;
+
+        grid-template-columns: 1fr;
+
+        column-gap: 0;
+    }
+
+    .form_group {
+        margin-bottom: 17px;
+    }
+
+    .button_group {
+        width: 100%;
+    }
+
+    .error {
+        width: 100%;
+    }
+
+    .success_message {
+        width: 100%;
+    }
+}
+
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 520px) {
+
+    .profile_maker_container {
+        min-height: 100dvh;
+
+        padding: 14px 12px;
+
+        align-items: flex-start;
+    }
+
+    .profile_maker {
+        padding: 24px 18px;
+
+        border-radius: 20px;
     }
 
     .profile_title {
         font-size: 1.5rem;
-        margin-bottom: 25px;
+
+        margin-bottom: 22px;
+    }
+
+
+    /* -------------------------
+       IMAGE
+    ------------------------- */
+
+    .image_section {
+        gap: 12px;
+
+        margin-bottom: 24px;
     }
 
     .image_preview_wrapper {
-        width: 120px;
-        height: 120px;
+        width: 94px;
+        height: 94px;
     }
 
-    .form_group input {
-        font-size: 16px;
+    .image_placeholder {
+        width: 46px;
+        height: 46px;
     }
+
+    .upload_btn {
+        padding: 9px 19px;
+
+        font-size: 12px;
+    }
+
+
+    /* -------------------------
+       FORM
+    ------------------------- */
+
+    .form_group {
+        gap: 6px;
+
+        margin-bottom: 15px;
+    }
+
+    .form_group label {
+        font-size: 11px;
+    }
+
+    .form_group input,
+    .form_group select {
+        height: 43px;
+
+        font-size: 14px;
+    }
+
+
+    /* -------------------------
+       BUTTONS
+    ------------------------- */
 
     .button_group {
         flex-direction: column;
-        gap: 10px;
+
+        gap: 9px;
+
+        margin-top: 20px;
     }
 
     .save_btn,
     .reset_btn {
-        padding: 14px 20px;
+        width: 100%;
+
+        height: 43px;
     }
 }
 
-@media (max-width: 400px) {
+
+/* =========================================================
+   VERY SMALL PHONES
+========================================================= */
+
+@media (max-width: 380px) {
+
+    .profile_maker_container {
+        padding: 10px 8px;
+    }
+
     .profile_maker {
-        padding: 20px;
+        padding: 20px 15px;
+
+        border-radius: 18px;
     }
 
     .profile_title {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
+
+        margin-bottom: 18px;
     }
 
     .image_preview_wrapper {
-        width: 100px;
-        height: 100px;
+        width: 84px;
+        height: 84px;
     }
 
-    .image_placeholder {
-        width: 60px;
-        height: 60px;
+    .upload_btn {
+        padding: 8px 17px;
+
+        font-size: 11px;
+    }
+
+    .form_group input,
+    .form_group select {
+        height: 41px;
+
+        padding-left: 13px;
+
+        font-size: 13px;
+    }
+
+    .form_group select {
+        padding-right: 38px;
+    }
+
+    .save_btn,
+    .reset_btn {
+        height: 41px;
+
+        font-size: 12px;
     }
 }

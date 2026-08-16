@@ -431,10 +431,15 @@ function ChatWindow({ mess, setMess, setActiveContactId, activeContactId, active
                                     {activeContactId === loggedIn?._id ? <> {activeContact?.name}(me) </> : <>{activeContact?.name}</>}
 
                                     {onlineUsers?.[activeContact?._id] ? (
-                                        <span className="online_dot"></span>
-                                    ) : <span className='lastSeen' >
-                                        Last seen {getLastSeen(othersChatData?.lastOnline)}
-                                    </span>}
+                                        <span className="online_status">
+                                            <span className="online_dot"></span>
+                                            Online
+                                        </span>
+                                    ) : (
+                                        <span className="lastSeen">
+                                            Last seen {getLastSeen(othersChatData?.lastOnline)}
+                                        </span>
+                                    )}
                                 </span>
 
                                 <p className="person_username">

@@ -499,9 +499,6 @@
 ========================= */
 
 .searched_items .contact_tab:has(.group_members_row) {
-    flex-direction: row;
-    align-items: center;
-    justify-content: flex-start;
     gap: 12px;
 }
 
@@ -576,6 +573,87 @@
     min-width: 0;       
     max-width: 100%;  
     display: block;
+}
+
+/* =========================================================
+   GROUP CONTACTS — NORMAL GROUP TAB
+========================================================= */
+
+.contacts_list .contact_tab:has(.group_members_row) {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+
+    gap: 12px;
+}
+
+
+/* Group image */
+
+.contacts_list .contact_tab:has(.group_members_row) > img {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+
+/* Group name + members */
+
+.contacts_list .contact_tab:has(.group_members_row) .person_name {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+    justify-content: center;
+
+    width: auto;
+    min-width: 0;
+    flex: 1;
+
+    gap: 0;
+}
+
+
+/* Group name */
+
+.contacts_list .contact_tab:has(.group_members_row) .person_name > :not(.group_members_row) {
+    width: 100%;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: var(--text-primary);
+
+    text-align: left;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+
+/* Group members */
+
+.contacts_list .contact_tab:has(.group_members_row) .group_members_row {
+    width: 100%;
+
+    margin: 3px 0 0 !important;
+
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 10.5px !important;
+
+    color: var(--text-muted) !important;
+
+    text-align: left;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 /* ---------- Mobile ---------- */
@@ -714,11 +792,6 @@
     .searched_list {
         width: 100%;
     }
-
-    .searched_items .contact_tab {
-        width: 100%;
-    }
-
 
     /* =====================================================
        WHEN A CHAT IS OPEN

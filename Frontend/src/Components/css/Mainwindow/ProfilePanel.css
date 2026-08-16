@@ -43,6 +43,7 @@
 }
 
 .profile-panel.empty-state {
+    display: flex;
     align-items: center;
     justify-content: center;
     color: var(--text-secondary);
