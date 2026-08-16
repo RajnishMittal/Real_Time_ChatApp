@@ -288,16 +288,22 @@ input {
         box-shadow 0.2s ease;
 }
 
-input::placeholder {
+input:focus{
+    outline: none;
+}
+
+
+.sign_in_box input::placeholder {
     color: rgba(243, 248, 245, 0.38);
 }
 
-input:hover {
+
+.sign_in_box input:hover {
     border-color: rgba(93, 170, 139, 0.42);
 }
 
-input:focus {
-    outline: none;
+
+.sign_in_box input:focus {
 
     border-color: rgba(120, 190, 158, 0.65);
 
@@ -339,11 +345,7 @@ input[type="checkbox"] {
 ========================= */
 
 button {
-    margin-top: 12px;
-
-    width: 110px;
-
-    padding: 9px;
+    
 
     border-radius: 999px;
 
@@ -355,28 +357,31 @@ button {
 
     border: none;
 
-    background-color: #4f9678;
-    color: #f1fff8;
-
     cursor: pointer;
-
-    box-shadow:
-        0 6px 18px rgba(60, 130, 100, 0.18);
-
     transition:
         background 0.2s ease,
         box-shadow 0.2s ease,
         opacity 0.2s ease;
 }
 
-button:hover {
+.sign_in_box button{
+    padding: 9px;
+    margin-top: 12px;
+    color: #f1fff8;
+    background-color: #4f9678;
+    box-shadow:
+        0 6px 18px rgba(60, 130, 100, 0.18);
+    width: 110px;
+}
+
+.sign_in_box button:hover {
     background-color: #62ad8d;
 
     box-shadow:
         0 10px 24px rgba(60, 130, 100, 0.22);
 }
 
-button:active {
+.sign_in_box button:active {
     opacity: 0.85;
 }
 
@@ -790,7 +795,7 @@ button:active {
     ------------------------- */
 
     .sign_up_wrapper {
-        margin-top: 70px;
+        margin-top: 10px;
 
         max-width: 96%;
     }

@@ -102,37 +102,6 @@
     gap: 0.6rem;
 }
 
-.settings_save_btn {
-    align-self: flex-start;
-    padding: 0.55rem 1.2rem;
-    border-radius: 10px;
-    background: var(--accent);
-    color: var(--light);
-    border: none;
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s ease;
-}
-
-
-.settings_logout_btn {
-    padding: 0.55rem 1.2rem;
-    border-radius: 10px;
-    background: transparent;
-    color: var(--danger);
-    border: 1px solid var(--danger);
-    font-size: 0.82rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.15s ease, color 0.15s ease;
-}
-
-.settings_logout_btn:hover {
-    background: var(--danger);
-    color: var(--light);
-}
-
 /* ---------- Avatar ---------- */
 
 .settings_avatar_wrap {
