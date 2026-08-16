@@ -45,13 +45,16 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
     return (
         <div className={`contacts ${activeContactId ? "contacts_collapsed" : ""}`}>
 
-            <input
-                type="search"
-                placeholder="SEARCH CHAT"
-                autoComplete='off'
-                value={searchUser}
-                onChange={(e) => setSearchUser(e.target.value)}
-            />
+            <div className="input">
+                <input
+                    className='searchBar'
+                    type="search"
+                    placeholder="SEARCH CHAT"
+                    autoComplete='off'
+                    value={searchUser}
+                    onChange={(e) => setSearchUser(e.target.value)}
+                />
+            </div>
 
             {searchUser && (
                 <div className="searched_items">

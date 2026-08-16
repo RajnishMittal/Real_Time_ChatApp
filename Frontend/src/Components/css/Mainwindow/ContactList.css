@@ -40,7 +40,14 @@
 
 /* ---------- Tuning input (search) ---------- */
 
-.contacts input[type="search"] {
+.input{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.searchBar{
     margin: 20px 16px;
     padding: 13px 14px;
     border: 1px solid var(--border-hover);
@@ -60,6 +67,7 @@
     outline: none;
     position: relative;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    max-width: 90%;
 }
 
 .contacts input[type="search"]::placeholder {
@@ -73,6 +81,7 @@
     border-color: var(--accent-soft);
     box-shadow: 0 0 0 3px var(--accent-glow);
 }
+
 
 /* ---------- Create group : power-knob button ---------- */
 
@@ -223,15 +232,22 @@
 }
 
 /* keep the badge aligned in the same row as the name block */
-.contacts_list .person_name {
+.contacts_list{
     display: flex;
-    flex-direction: column;
     align-items: start;
-    justify-content: start;
     width: 100%;
     min-width: 0;
     gap: 5px;
 }
+
+.person_name{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    min-width: 0;
+}
+
 
 /* the @username line reads like a call-sign */
 .person_name p {
@@ -430,43 +446,176 @@
 
 /* ---------- Mobile ---------- */
 
+/* =========================================================
+   MOBILE ONLY
+========================================================= */
+
 @media (max-width: 700px) {
 
-    .contacts input[type="search"] {
-        margin: 16px;
-        width: 340px;
-    }
+    /* =====================================================
+       CONTACT PANEL
+
+       When no chat is selected, contacts takes all
+       available space beside the sidebar.
+    ===================================================== */
 
     .contacts {
+        width: auto;
+        flex: 1 1 auto;
+        min-width: 0;
+        max-width: none;
+    }
+
+
+    /* =====================================================
+       HIDE CHAT WHEN NO CONTACT IS SELECTED
+
+       ContactsList comes immediately before ChatWindow,
+       so this hides the empty chat screen on mobile.
+    ===================================================== */
+
+    .contacts:not(.contacts_collapsed) + .chats {
+        display: none;
+    }
+
+
+    /* =====================================================
+       SEARCH BAR
+    ===================================================== */
+
+    .input {
+        width: 100%;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .searchBar {
+        width: 90%;
+        max-width: 300px;
+
+        margin: 14px auto;
+    }
+
+
+    /* =====================================================
+       CREATE GROUP
+    ===================================================== */
+
+    .create_group {
+        width: auto;
+
+        margin: 10px 16px 0;
+    }
+
+
+    /* =====================================================
+       CHATS / GROUPS
+    ===================================================== */
+
+    .choices {
+        width: auto;
+
+        margin: 10px 16px 6px;
+
+        display: flex;
+
+        justify-content: center;
+
+        gap: 6px;
+    }
+
+    .get_users,
+    .get_groups {
+        flex: 1;
+        width: auto;
+    }
+
+
+    /* =====================================================
+       CONTACT LIST
+    ===================================================== */
+
+    .contacts_list {
+        width: 100%;
+
+        padding: 6px 14px 18px;
+    }
+
+    .contact_tab {
         width: 100%;
     }
 
-    .contacts_collapsed {
-        width: 0;
-        opacity: 0;
-        padding: 0;
-        border: none;
-    }
 
-    .choices {
-        margin: 14px 16px 6px;
-        width: 79.5%;
-    }
-
-    .create_group {
-        width: 78%;
-    }
+    /* =====================================================
+       SEARCH RESULTS
+    ===================================================== */
 
     .searched_items {
         top: 70px;
-        width: 92%;
+
+        left: 50%;
+
+        width: calc(100% - 24px);
+
+        transform: translateX(-50%);
     }
 
-    .contact_tab{
-        width: 85%;
+    .searchChoice {
+        width: 100%;
+
+        display: flex;
+
+        align-items: center;
+        justify-content: center;
+
+        gap: 14px;
     }
 
-    .get_users, .get_groups{
-        width: 0px;
+    .choice {
+        width: 84px;
+    }
+
+    .searched_list {
+        width: 100%;
+    }
+
+    .searched_items .contact_tab {
+        width: 100%;
+    }
+
+
+    /* =====================================================
+       WHEN A CHAT IS OPEN
+
+       Completely remove ContactsList from the layout.
+    ===================================================== */
+
+    .contacts_collapsed {
+        width: 0 !important;
+        min-width: 0 !important;
+
+        flex: 0 0 0 !important;
+
+        opacity: 0;
+
+        padding: 0 !important;
+
+        border: none !important;
+
+        overflow: hidden;
+    }
+
+
+    /* Chat takes the full mobile area */
+
+    .contacts_collapsed + .chats {
+        display: flex;
+
+        flex: 1 1 auto;
+
+        width: 100%;
+        min-width: 0;
     }
 }
