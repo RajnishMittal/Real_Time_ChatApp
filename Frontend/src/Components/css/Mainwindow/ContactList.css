@@ -420,10 +420,144 @@
     background-color: transparent;
     width: 100%;
     border: 1px solid var(--border-color);
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+
+    padding: 10px 12px;
+    gap: 12px;
 }
 
 .searched_items .contact_tab:hover {
     background-color: var(--bg-card-hover);
+}
+
+.searchedData {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    min-width: 0;
+    gap: 12px;
+}
+
+.searchedData img {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    object-fit: cover;
+    background: var(--bg-secondary);
+}
+
+.searchedUserInfo {
+    display: flex;
+    flex-direction: column;
+
+    justify-content: center;
+    align-items: flex-start;
+
+    min-width: 0;
+    flex: 1;
+}
+
+.searchedUserName {
+    display: flex;
+    align-items: center;
+
+    gap: 6px;
+
+    min-width: 0;
+
+    color: var(--text-primary);
+
+    font-size: 14px;
+    font-weight: 600;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.friend_badge {
+    flex-shrink: 0;
+
+    font-size: 10px;
+    font-weight: 500;
+
+    color: var(--accent-color);
+
+    opacity: 0.8;
+
+    white-space: nowrap;
+}
+
+/* =========================
+   SEARCHED GROUPS
+========================= */
+
+.searched_items .contact_tab:has(.group_members_row) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 12px;
+}
+
+.searched_items .contact_tab:has(.group_members_row) > img {
+    width: 42px;
+    height: 42px;
+
+    flex-shrink: 0;
+
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.searched_items .contact_tab:has(.group_members_row) .person_name {
+    display: flex;
+    flex-direction: column;
+
+    align-items: flex-start;
+    justify-content: center;
+
+    min-width: 0;
+    flex: 1;
+
+    width: auto;
+}
+
+.searched_items .contact_tab:has(.group_members_row) .name_row {
+    width: 100%;
+
+    font-size: 14px;
+    font-weight: 600;
+
+    color: var(--text-primary);
+
+    text-align: left;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.searched_items .contact_tab:has(.group_members_row) .group_members_row {
+    width: 100%;
+
+    margin: 3px 0 0 !important;
+
+    text-align: left;
+
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: 10.5px !important;
+
+    color: var(--text-muted) !important;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .name_row {

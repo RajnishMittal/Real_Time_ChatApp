@@ -97,39 +97,41 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
                                         className="contact_tab"
                                         onClick={() => show_chats(user?._id, false)}
                                     >
-                                        <img
-                                            src={
-                                                user?.profilePic?.startsWith("http")
-                                                    ? user.profilePic
-                                                    : `${import.meta.env.VITE_API_URL}/${user?.profilePic}`
-                                            }
-                                            style={{
-                                                border: onlineUsers?.[user._id]
-                                                    ? "3px solid #22c55e"
-                                                    : "2px solid transparent"
-                                            }}
-                                            alt={user?.name}
-                                        />
+                                        <div className="searchedData">
 
-                                        <h2 className="person_name">
-                                            {user?.name}
+                                            <img
+                                                src={
+                                                    user?.profilePic?.startsWith("http")
+                                                        ? user.profilePic
+                                                        : `${import.meta.env.VITE_API_URL}/${user?.profilePic}`
+                                                }
+                                                style={{
+                                                    border: onlineUsers?.[user._id]
+                                                        ? "3px solid #22c55e"
+                                                        : "2px solid transparent"
+                                                }}
+                                                alt={user?.name}
+                                            />
 
-                                            {friends?.some(friend => friend._id === user._id) && (
-                                                <span className="friend_badge" style={{
-                                                    fontSize: "0.65rem",
-                                                    color: "var(--accent)",
-                                                    marginLeft: "6px",
-                                                    fontWeight: "500",
-                                                    opacity: "0.8"
-                                                }} > ✓ Friend</span>
-                                            )}
+                                            <div className="searchedUserInfo">
 
-                                            <br />
+                                                <div className="searchedUserName">
+                                                    <span>{user?.name}</span>
 
-                                            <p>
-                                                @{user?.username}
-                                            </p>
-                                        </h2>
+                                                    {friends?.some(friend => friend._id === user._id) && (
+                                                        <span className="friend_badge">
+                                                            ✓ Friend
+                                                        </span>
+                                                    )}
+                                                </div>
+
+                                                <p className="searchedUsername">
+                                                    @{user?.username}
+                                                </p>
+
+                                            </div>
+
+                                        </div>
                                     </div>
                                 ))
                             ) : (
