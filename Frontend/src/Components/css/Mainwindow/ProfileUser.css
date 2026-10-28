@@ -450,3 +450,76 @@ body {
         letter-spacing: 1.2px;
     }
 }
+
+
+/* Fix profile page height and mobile scrolling */
+
+.hero {
+    height: 100dvh;
+    min-height: 0;
+    overflow: hidden;
+}
+
+.main_container {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    justify-content: flex-start;
+}
+
+/* Profile header */
+.profile-pagee {
+    flex-shrink: 0;
+    height: auto;
+    min-height: 230px;
+}
+
+/* Personal information card */
+.user_data {
+    height: auto;
+    flex-shrink: 0;
+    margin-top: 20px;
+}
+
+/* Analytics cards */
+.analytics {
+    height: auto;
+    flex-shrink: 0;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+/* Phone screens */
+@media (max-width: 700px) {
+    .main_container {
+        height: 100%;
+        min-height: 0;
+        padding: 16px;
+        justify-content: flex-start;
+        align-items: stretch;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .profile-pagee,
+    .user_data,
+    .analytics {
+        width: 100%;
+    }
+
+    .profile-pagee {
+        min-height: 0;
+    }
+
+    .user_data {
+        padding: 8px 16px;
+    }
+
+    .analytics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 12px;
+        padding: 14px 0;
+    }
+}
