@@ -192,131 +192,146 @@ function ContactsList({ setActiveContactId, activeContactId, users, setNewGroup,
                 </div>
             </div>
 
-            <div className="contacts_list">
+           
+<div className="contacts_list">
 
-                {showChat ? <> {friends?.map(user => (
+    {showChat ? (
+        friends?.length > 0 ? (
+            friends.map(user => (
 
-                    <div
-                        key={user?._id}
-                        className="contact_tab"
-                        onClick={() => show_chats(user?._id, false)}
-                    >
+                <div
+                    key={user?._id}
+                    className="contact_tab"
+                    onClick={() => show_chats(user?._id, false)}
+                >
 
-                        <img
-                            src={
-                                user?.profilePic?.startsWith("http")
-                                    ? user?.profilePic
-                                    : `${import.meta.env.VITE_API_URL}/${user?.profilePic}`
+                    <img
+                        src={
+                            user?.profilePic?.startsWith("http")
+                                ? user?.profilePic
+                                : `${import.meta.env.VITE_API_URL}/${user?.profilePic}`
+                        }
+                        style={{
+                            border: onlineUsers?.[user._id]
+                                ? "3px solid #22c55e"
+                                : "2px solid transparent"
+                        }}
+                        alt={user?.name}
+                    />
+
+                    <div className="person_name">
+                        <div>
+                            {user?._id === loggedIn?._id
+                                ? <>{user?.name}(me)</>
+                                : <>{user?.name}</>
                             }
-                            style={{
-                                border:
-                                    onlineUsers?.[user._id]
-                                        ? "3px solid #22c55e"
-                                        : "2px solid transparent"
-                            }}
-                            alt={user?.name}
-                        />
 
-                        <div className="person_name">
-                            <div>
-                                {user?._id === loggedIn?._id ? <> {user?.name}(me) </> : <>{user?.name}</>}
-                                <p
-                                    style={
-                                        userChatData?.lastUnread?.[user?._id]
-                                            ? {
-                                                fontSize: "0.85rem",
-                                                fontWeight: 600,
-                                                margin: "2px 0 0",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                                maxWidth: "160px",
-                                            }
-                                            : {
-                                                fontSize: "0.85rem",
-                                                color: "#888",
-                                                margin: "2px 0 0",
-                                            }
-                                    }
-                                >
-                                    {userChatData?.lastUnread?.[user?._id]
-                                        ? `: ${userChatData.lastUnread[user._id].text || "Attachment"}`
-                                        : `@${user?.username}`}
-                                </p>
-                            </div>
-                            {userChatData?.number_of_unreadMsg?.[user?._id] > 0 && (
-                                <div className="unread_badge">
-                                    {userChatData.number_of_unreadMsg[user._id]}
-                                </div>
-                            )}
+                            <p
+                                style={
+                                    userChatData?.lastUnread?.[user?._id]
+                                        ? {
+                                            fontSize: "0.85rem",
+                                            fontWeight: 600,
+                                            margin: "2px 0 0",
+                                            whiteSpace: "nowrap",
+                                            overflow: "hidden",
+                                            textOverflow: "ellipsis",
+                                            maxWidth: "160px",
+                                        }
+                                        : {
+                                            fontSize: "0.85rem",
+                                            color: "#888",
+                                            margin: "2px 0 0",
+                                        }
+                                }
+                            >
+                                {userChatData?.lastUnread?.[user?._id]
+                                    ? `: ${userChatData.lastUnread[user._id].text || "Attachment"}`
+                                    : `@${user?.username}`
+                                }
+                            </p>
                         </div>
 
+                        {userChatData?.number_of_unreadMsg?.[user?._id] > 0 && (
+                            <div className="unread_badge">
+                                {userChatData.number_of_unreadMsg[user._id]}
+                            </div>
+                        )}
                     </div>
 
-                ))} </> : <> {
-                    groupJoined?.map(user => (
+                </div>
 
-                        <div
-                            key={user?._id}
-                            className="contact_tab"
-                            onClick={() => show_chats(user?._id, true)}
-                        >
+            ))
+        ) : (
+            <p className="empty_message">No friends yet</p>
+        )
 
-                            <img
-                                src={
-                                    user?.grpPic?.startsWith("http")
-                                        ? user?.grpPic
-                                        : `${import.meta.env.VITE_API_URL}/${user?.grpPic}`
-                                }
-                                alt=""
-                            />
+    ) : (
+        groupJoined?.length > 0 ? (
+            groupJoined.map(user => (
 
+                <div
+                    key={user?._id}
+                    className="contact_tab"
+                    onClick={() => show_chats(user?._id, true)}
+                >
 
+                    <img
+                        src={
+                            user?.grpPic?.startsWith("http")
+                                ? user?.grpPic
+                                : `${import.meta.env.VITE_API_URL}/${user?.grpPic}`
+                        }
+                        alt={user?.grpName}
+                    />
 
-                            <div className="person_name">
-                                {user?.grpName}
-                                <p
-                                    className="group_members_row"
-                                    style={
-                                        userChatData?.lastUnread?.[user?._id]
-                                            ? {
-                                                fontSize: "0.85rem",
-                                                fontWeight: 600,
-                                                margin: "2px 0 0",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }
-                                            : {
-                                                fontSize: "0.85rem",
-                                                color: "#888",
-                                                margin: "2px 0 0",
-                                                whiteSpace: "nowrap",
-                                                overflow: "hidden",
-                                                textOverflow: "ellipsis",
-                                            }
+                    <div className="person_name">
+                        {user?.grpName}
+
+                        <p
+                            className="group_members_row"
+                            style={
+                                userChatData?.lastUnread?.[user?._id]
+                                    ? {
+                                        fontSize: "0.85rem",
+                                        fontWeight: 600,
+                                        margin: "2px 0 0",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
                                     }
-                                >
-                                    {userChatData?.lastUnread?.[user?._id]
-                                        ? `${userChatData.lastUnread[user._id]?.sender?.username || "Someone"}: ${userChatData.lastUnread[user._id]?.text || "Attachment"}`
-                                        : `~${user?.members?.map(m => `~${m.username}`).join(" , ")}`}
-                                </p>
-                            </div>
+                                    : {
+                                        fontSize: "0.85rem",
+                                        color: "#888",
+                                        margin: "2px 0 0",
+                                        whiteSpace: "nowrap",
+                                        overflow: "hidden",
+                                        textOverflow: "ellipsis",
+                                    }
+                            }
+                        >
+                            {userChatData?.lastUnread?.[user?._id]
+                                ? `${userChatData.lastUnread[user._id]?.sender?.username || "Someone"}: ${userChatData.lastUnread[user._id]?.text || "Attachment"}`
+                                : `~${user?.members?.map(m => `~${m.username}`).join(" , ")}`
+                            }
+                        </p>
+                    </div>
 
-
-
-                            {userChatData?.number_of_unreadMsg?.[user?._id] > 0 && (
-                                <div className="unread_badge">
-                                    {userChatData.number_of_unreadMsg[user._id]}
-                                </div>
-                            )}
-
+                    {userChatData?.number_of_unreadMsg?.[user?._id] > 0 && (
+                        <div className="unread_badge">
+                            {userChatData.number_of_unreadMsg[user._id]}
                         </div>
+                    )}
 
-                    ))
-                } </>}
+                </div>
 
-            </div>
+            ))
+        ) : (
+            <p className="empty_message">No groups joined yet</p>
+        )
+    )}
+
+</div>
 
         </div >
     )
